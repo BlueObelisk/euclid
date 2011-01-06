@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntArray;
 import org.xmlcml.euclid.IntMatrix;
 import org.xmlcml.euclid.IntSquareMatrix;
@@ -290,8 +291,10 @@ public class IntSquareMatrixTest extends MatrixTest {
     public void testLowerTriangle() {
         IntSquareMatrix m = new IntSquareMatrix(3, new int[] { 6, 7, 8, 2, 5, 4, 3, 2, 9 });
         IntArray ra = m.lowerTriangle();
-        IntTest.assertEquals("lower triangle", new int[] { 6, 2, 5, 3, 2, 9 },
-                ra.getArray());
+        String s = Int.testEquals((new int[] { 6, 2, 5, 3, 2, 9 }), ra.getArray());
+		if (s != null) {
+			Assert.fail("lower triangle" + "; " + s);
+		}
     }
 
     /**

@@ -9,6 +9,7 @@ import org.xmlcml.euclid.Angle;
 import org.xmlcml.euclid.Axis.Axis3;
 import org.xmlcml.euclid.EC;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntSet;
 import org.xmlcml.euclid.Line3;
 import org.xmlcml.euclid.Plane3;
@@ -621,7 +622,10 @@ public class Point3VectorTest {
 	public void testGet3SeparatedPoints() {
 		p1.add(new Point3(20., 10., 0.));
 		int[] idx = p1.get3SeparatedPoints();
-		IntTest.assertEquals("separated points", new int[] { 4, 3, 0 }, idx);
+		String s = Int.testEquals((new int[] { 4, 3, 0 }), idx);
+		if (s != null) {
+			Assert.fail("separated points" + "; " + s);
+		}
 	}
 
 	/**
