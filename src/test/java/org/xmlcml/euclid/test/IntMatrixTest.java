@@ -1,8 +1,6 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.S_RBRAK;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
-import static org.xmlcml.euclid.test.EuclidTestBase.neverThrow;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -314,7 +312,7 @@ public class IntMatrixTest extends MatrixTest {
 				new int[] { 40, 50, 60 }, });
 		try {
 			m2.multiplyEquals(m);
-			alwaysFail("non-conformable matrices");
+			Assert.fail("should always throw " + "non-conformable matrices");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("multiplyEquals", "unequal matrices (4, 2)", e
 					.getMessage());
@@ -872,7 +870,7 @@ public class IntMatrixTest extends MatrixTest {
 			m2.writeXML(w);
 			w.close();
 		} catch (IOException e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 		Assert
 				.assertEquals(

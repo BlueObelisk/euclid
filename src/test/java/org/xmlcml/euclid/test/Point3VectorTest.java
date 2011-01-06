@@ -1,7 +1,6 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EuclidConstants.EPS;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -306,7 +305,7 @@ public class Point3VectorTest {
 				72., 73. });
 		try {
 			p1.plus(p);
-			alwaysFail("incompatible sizes");
+			Assert.fail("should always throw " + "incompatible sizes");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("plus", "incompatible Point3Vector sizes: 4/2",
 					e.getMessage());
@@ -328,7 +327,7 @@ public class Point3VectorTest {
 				72., 73. });
 		try {
 			p1.subtract(p);
-			alwaysFail("incompatible sizes");
+			Assert.fail("should always throw " + "incompatible sizes");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("plus", "incompatible Point3Vector sizes: 4/2",
 					e.getMessage());

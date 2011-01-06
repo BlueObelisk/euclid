@@ -1,7 +1,6 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.EPS;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -136,7 +135,7 @@ public class Plane3Test extends GeomTest {
 				1. / s3, 1. / s3 }, pl, EPS);
 		try {
 			pl = new Plane3(p100, p010, p100);
-			alwaysFail("zero normal");
+			Assert.fail("should always throw " + "zero normal");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("plane", "zero length normal", e.getMessage());
 		}
