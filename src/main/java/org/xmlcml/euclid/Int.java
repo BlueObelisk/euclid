@@ -45,4 +45,87 @@ public abstract class Int implements EuclidConstants {
         }
         logger.info("");
     }
+	/**
+	 * tests equality of int arrays. arrays must be of same length
+	 * 
+	 * @param a
+	 *            first array
+	 * @param b
+	 *            second array
+	 * @return array elements equal
+	 */
+	public static boolean equals(int[] a, int[] b) {
+		boolean result = false;
+		if (a.length == b.length) {
+			result = true;
+			for (int i = 0; i < a.length; i++) {
+				if (a[i] != b[i]) {
+					result = false;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	/**
+	 * compare integer arrays.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return message or null
+	 */
+	public static String testEquals(int[] a, int[] b) {
+		String s = null;
+		if (a == null) {
+			s = "a is null";
+		} else if (b == null) {
+			s = "b is null";
+		} else if (a.length != b.length) {
+			s = "unequal arrays: " + a.length + S_SLASH + b.length;
+		} else {
+			for (int i = 0; i < a.length; i++) {
+				if (a[i] != b[i]) {
+					s = "unequal element (" + i + "), " + a[i] + " != " + b[i];
+					break;
+				}
+			}
+		}
+		return s;
+	}
+	/**
+	 * compare arrays.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return message or null if equal
+	 */
+	public static String testEquals(int[][] a, int[][] b) {
+		String s = null;
+		if (a == null) {
+			s = "a is null";
+		} else if (b == null) {
+			s = "b is null";
+		} else if (a.length != b.length) {
+			s = "unequal arrays: " + a.length + S_SLASH + b.length;
+		} else {
+			for (int i = 0; i < a.length; i++) {
+				if (a[i].length != b[i].length) {
+					s = "row (" + i + ") has unequal lengths: " + a[i].length
+							+ S_SLASH + b[i].length;
+					break;
+				}
+				for (int j = 0; j < a[i].length; j++) {
+					if (a[i][j] != b[i][j]) {
+						s = "unequal element at (" + i + ", " + j + "), ("
+								+ a[i][j] + " != " + b[i][j] + S_RBRAK;
+						break;
+					}
+				}
+			}
+		}
+		return s;
+	}
+    
+    
+    
 }

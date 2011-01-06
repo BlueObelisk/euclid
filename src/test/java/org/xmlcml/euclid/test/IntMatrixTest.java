@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.Int2;
 import org.xmlcml.euclid.IntArray;
 import org.xmlcml.euclid.IntMatrix;
@@ -74,8 +75,11 @@ public class IntMatrixTest extends MatrixTest {
 				.getRows(), expected.getRows());
 		Assert.assertEquals("columns should be equal (" + msg + S_RBRAK, test
 				.getCols(), expected.getCols());
-		IntTest.assertEquals(msg, test.getMatrixAsArray(), expected
-				.getMatrixAsArray());
+		String s = Int.testEquals(test.getMatrixAsArray(), expected
+						.getMatrixAsArray());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -97,7 +101,10 @@ public class IntMatrixTest extends MatrixTest {
 				expected.getRows());
 		Assert.assertEquals("columns should be equal (" + msg + S_RBRAK, cols,
 				expected.getCols());
-		IntTest.assertEquals(msg, test, expected.getMatrixAsArray());
+		String s = Int.testEquals(test, expected.getMatrixAsArray());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -237,8 +244,11 @@ public class IntMatrixTest extends MatrixTest {
 	@Test
 	public void testGetMatrixAsArray() {
 		int[] array = m2.getMatrixAsArray();
-		IntTest.assertEquals("matrix as array", new int[] { 11, 12, 13, 14, 21,
-				22, 23, 24, 31, 32, 33, 34 }, array);
+		String s = Int.testEquals((new int[] { 11, 12, 13, 14, 21,
+						22, 23, 24, 31, 32, 33, 34 }), array);
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**
@@ -680,8 +690,11 @@ public class IntMatrixTest extends MatrixTest {
 	public void testInsertRows() {
 		m2.insertRows(1, 2);
 		int[] array = m2.getMatrixAsArray();
-		IntTest.assertEquals("matrix as array", new int[] { 11, 12, 13, 14, 0,
-				0, 0, 0, 0, 0, 0, 0, 21, 22, 23, 24, 31, 32, 33, 34, }, array);
+		String s = Int.testEquals((new int[] { 11, 12, 13, 14, 0,
+						0, 0, 0, 0, 0, 0, 0, 21, 22, 23, 24, 31, 32, 33, 34, }), array);
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**
@@ -692,8 +705,11 @@ public class IntMatrixTest extends MatrixTest {
 	public void testReplaceRowDataIntIntArray() {
 		m2.replaceRowData(1, new IntArray(new int[] { 71, 72, 73, 74 }));
 		int[] array = m2.getMatrixAsArray();
-		IntTest.assertEquals("matrix as array", new int[] { 11, 12, 13, 14, 71,
-				72, 73, 74, 31, 32, 33, 34, }, array);
+		String s = Int.testEquals((new int[] { 11, 12, 13, 14, 71,
+						72, 73, 74, 31, 32, 33, 34, }), array);
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**
@@ -703,8 +719,11 @@ public class IntMatrixTest extends MatrixTest {
 	public void testReplaceRowDataIntIntegerArray() {
 		m2.replaceRowData(1, new int[] { 71, 72, 73, 74 });
 		int[] array = m2.getMatrixAsArray();
-		IntTest.assertEquals("matrix as array", new int[] { 11, 12, 13, 14, 71,
-				72, 73, 74, 31, 32, 33, 34, }, array);
+		String s = Int.testEquals((new int[] { 11, 12, 13, 14, 71,
+						72, 73, 74, 31, 32, 33, 34, }), array);
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**
@@ -735,8 +754,11 @@ public class IntMatrixTest extends MatrixTest {
 				82, 83, 84, }));
 		IntMatrix expect = new IntMatrix(5, 4, new int[] { 11, 12, 13, 14, 21,
 				22, 23, 24, 71, 72, 73, 74, 81, 82, 83, 84, 31, 32, 33, 34, });
-		IntTest.assertEquals("matrix as array", expect.getMatrixAsArray(), m2
-				.getMatrixAsArray());
+		String s = Int.testEquals(expect.getMatrixAsArray(), m2
+						.getMatrixAsArray());
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**
@@ -759,8 +781,11 @@ public class IntMatrixTest extends MatrixTest {
 	public void testAppendColumnDataIntArray() {
 		m2.appendColumnData(new IntArray(new int[] { 17, 27, 37, }));
 		int[] array = m2.getMatrixAsArray();
-		IntTest.assertEquals("matrix as array", new int[] { 11, 12, 13, 14, 17,
-				21, 22, 23, 24, 27, 31, 32, 33, 34, 37 }, array);
+		String s = Int.testEquals((new int[] { 11, 12, 13, 14, 17,
+						21, 22, 23, 24, 27, 31, 32, 33, 34, 37 }), array);
+		if (s != null) {
+			Assert.fail("matrix as array" + "; " + s);
+		}
 	}
 
 	/**

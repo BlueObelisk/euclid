@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntArray;
 import org.xmlcml.euclid.IntRange;
 import org.xmlcml.euclid.IntSet;
@@ -47,7 +48,10 @@ public class IntArrayTest {
 		Assert.assertNotNull("test should not be null (" + msg + S_RBRAK, test);
 		Assert.assertNotNull("expected should not be null (" + msg + S_RBRAK,
 				expected);
-		IntTest.assertEquals(msg, test.getArray(), expected.getArray());
+		String s = Int.testEquals(test.getArray(), expected.getArray());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -64,7 +68,10 @@ public class IntArrayTest {
 				expected);
 		Assert.assertEquals("must be of equal length ", test.length, expected
 				.getArray().length);
-		IntTest.assertEquals(msg, test, expected.getArray());
+		String s = Int.testEquals(test, expected.getArray());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -219,8 +226,14 @@ public class IntArrayTest {
 	 */
 	@Test
 	public void testGetArray() {
-		IntTest.assertEquals("array", new int[] {}, a0.getArray());
-		IntTest.assertEquals("array", new int[] { 1, 2, 4, 6 }, a1.getArray());
+		String s = Int.testEquals((new int[] {}), a0.getArray());
+		if (s != null) {
+			Assert.fail("array" + "; " + s);
+		}
+		s = Int.testEquals((new int[] { 1, 2, 4, 6 }), a1.getArray());
+		if (s != null) {
+			Assert.fail("array" + "; " + s);
+		}
 	}
 
 	/**
@@ -238,7 +251,10 @@ public class IntArrayTest {
 	@Test
 	public void testGetReverseArray() {
 		int[] d = a1.getReverseArray();
-		IntTest.assertEquals("clear", new int[] { 6, 4, 2, 1 }, d);
+		String s = Int.testEquals((new int[] { 6, 4, 2, 1 }), d);
+		if (s != null) {
+			Assert.fail("clear" + "; " + s);
+		}
 	}
 
 	/**

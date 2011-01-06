@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xmlcml.euclid.EC;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.Int2;
 import org.xmlcml.euclid.IntMatrix;
 import org.xmlcml.euclid.IntSet;
@@ -1025,8 +1026,11 @@ public class RealMatrixTest extends MatrixTest {
 	@Test
 	public void testElementsInRange() {
 		IntMatrix im = m2.elementsInRange(new RealRange(13.1, 31.1));
-		IntTest.assertEquals("sub matrix", new int[] { 0, 0, 0, 1, 1, 1, 1, 1,
-				1, 0, 0, 0 }, im.getMatrixAsArray());
+		String s = Int.testEquals((new int[] { 0, 0, 0, 1, 1, 1, 1, 1,
+						1, 0, 0, 0 }), im.getMatrixAsArray());
+		if (s != null) {
+			Assert.fail("sub matrix" + "; " + s);
+		}
 	}
 
 	/**
