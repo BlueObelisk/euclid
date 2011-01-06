@@ -26,7 +26,7 @@ import org.xmlcml.euclid.RealRange;
  * @author pmr
  * 
  */
-public class RealMatrixTest extends MatrixTest {
+public class RealMatrixTest{
 
 	static Logger logger = Logger.getLogger(RealMatrixTest.class.getName());
 
@@ -41,7 +41,6 @@ public class RealMatrixTest extends MatrixTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		logger.setLevel(Level.WARN);
 		m0 = new RealMatrix();
 		m1 = new RealMatrix(3, 4);
@@ -761,7 +760,23 @@ public class RealMatrixTest extends MatrixTest {
 		m2.replaceColumnData(1, m);
 		RealMatrix expect = new RealMatrix(3, 4, new double[] { 11.0, 72.0,
 				73.0, 14.0, 21.0, 82.0, 83.0, 24.0, 31.0, 92.0, 93.0, 34.0, });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -774,7 +789,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(3, 7, new double[] { 11.0, 0.0, 0.0,
 				0.0, 12.0, 13.0, 14.0, 21.0, 0.0, 0.0, 0.0, 22.0, 23.0, 24.0,
 				31.0, 0.0, 0.0, 0.0, 32.0, 33.0, 34.0, });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -788,7 +819,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(3, 5, new double[] { 11.0, 12.0,
 				91.0, 13.0, 14.0, 21.0, 22.0, 92.0, 23.0, 24.0, 31.0, 32.0,
 				93.0, 33.0, 34.0, });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -804,7 +851,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(3, 6, new double[] { 11.0, 12.0,
 				72.0, 73.0, 13.0, 14.0, 21.0, 22.0, 82.0, 83.0, 23.0, 24.0,
 				31.0, 32.0, 92.0, 93.0, 33.0, 34.0, });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -857,7 +920,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(3, 4, new double[] { 11.0, 12.0,
 				13.0, 14.0, 71.0, 72.0, 73.0, 74.0, 81.0, 82.0, 83.0, 84.0, });
 		// rows 2 and 3 are not filled
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -872,7 +951,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(5, 4, new double[] { 11.0, 12.0,
 				13.0, 14.0, 21.0, 22.0, 23.0, 24.0, 71.0, 72.0, 73.0, 74.0,
 				81.0, 82.0, 83.0, 84.0, 31.0, 32.0, 33.0, 34.0, });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -913,7 +1008,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(3, 6, new double[] { 11.0, 12.0,
 				13.0, 14.0, 17.0, 18.0, 21.0, 22.0, 23.0, 24.0, 27.0, 28.0,
 				31.0, 32.0, 33.0, 34.0, 37.0, 38.0 });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
@@ -942,7 +1053,23 @@ public class RealMatrixTest extends MatrixTest {
 		RealMatrix expect = new RealMatrix(5, 4, new double[] { 11.0, 12.0,
 				13.0, 14.0, 21.0, 22.0, 23.0, 24.0, 31.0, 32.0, 33.0, 34.0,
 				41.0, 42.0, 43.0, 44.0, 51.0, 52.0, 53.0, 54.0 });
-		RealMatrixTest.assertEquals("matrix as array", m2, expect, EC.EPS);
+		Assert.assertNotNull("test should not be null (" + "matrix as array" + EC.S_RBRAK, m2);
+		Assert.assertNotNull("expected should not be null (" + "matrix as array" + EC.S_RBRAK,
+				expect);
+		Assert.assertNotNull("expected should have columns (" + "matrix as array" + EC.S_RBRAK,
+				expect.getCols());
+		Assert.assertNotNull("expected should have rows (" + "matrix as array" + EC.S_RBRAK,
+				expect.getRows());
+		Assert.assertNotNull("test should have columns (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols());
+		Assert.assertNotNull("test should have rows (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows());
+		Assert.assertEquals("rows should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getRows(), expect.getRows());
+		Assert.assertEquals("columns should be equal (" + "matrix as array" + EC.S_RBRAK, m2
+				.getCols(), expect.getCols());
+		DoubleTestBase.assertEquals("matrix as array", m2.getMatrixAsArray(), expect
+				.getMatrixAsArray(), EC.EPS);
 	}
 
 	/**
