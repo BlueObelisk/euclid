@@ -24,7 +24,7 @@ import org.xmlcml.euclid.IntSet;
  * @author pmr
  * 
  */
-public class IntMatrixTest extends MatrixTest {
+public class IntMatrixTest {
 
 	final static Logger logger = Logger.getLogger(IntMatrixTest.class);
 
@@ -41,7 +41,6 @@ public class IntMatrixTest extends MatrixTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		logger.setLevel(Level.WARN);
 		m0 = new IntMatrix();
 		m1 = new IntMatrix(3, 4);
