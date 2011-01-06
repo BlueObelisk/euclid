@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xmlcml.euclid.EC;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntRange;
 import org.xmlcml.euclid.IntSet;
 
@@ -53,7 +54,10 @@ public class IntSetTest {
 		Assert.assertNotNull("test should not be null (" + msg + EC.S_RBRAK, test);
 		Assert.assertNotNull("expected should not be null (" + msg + EC.S_RBRAK,
 				expected);
-		IntTest.assertEquals(msg, test.getElements(), expected.getElements());
+		String s = Int.testEquals(test.getElements(), expected.getElements());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -70,7 +74,10 @@ public class IntSetTest {
 				expected);
 		Assert.assertEquals("must be of equal length ", test.length, expected
 				.getElements().length);
-		IntTest.assertEquals(msg, test, expected.getElements());
+		String s = Int.testEquals(test, expected.getElements());
+		if (s != null) {
+			Assert.fail(msg + "; " + s);
+		}
 	}
 
 	/**
@@ -160,9 +167,15 @@ public class IntSetTest {
 	 */
 	@Test
 	public void testGetElements() {
-		IntTest.assertEquals("getElements", new int[] {}, i0.getElements());
-		IntTest.assertEquals("getElements", new int[] { 3, 4, 1, 2 }, i1
-				.getElements());
+		String s = Int.testEquals((new int[] {}), i0.getElements());
+		if (s != null) {
+			Assert.fail("getElements" + "; " + s);
+		}
+		s = Int.testEquals((new int[] { 3, 4, 1, 2 }), i1
+						.getElements());
+		if (s != null) {
+			Assert.fail("getElements" + "; " + s);
+		}
 	}
 
 	/**
@@ -174,8 +187,11 @@ public class IntSetTest {
 		i1.addElement(6);
 		IntSetTest.assertEquals("getElements", new int[] { 3, 4, 1, 2, 6 }, i1);
 		i1.addElement(7);
-		IntTest.assertEquals("getElements", new int[] { 3, 4, 1, 2, 6, 7 }, i1
-				.getElements());
+		String s = Int.testEquals((new int[] { 3, 4, 1, 2, 6, 7 }), i1
+						.getElements());
+		if (s != null) {
+			Assert.fail("getElements" + "; " + s);
+		}
 		try {
 			i1.addElement(8);
 		} catch (EuclidRuntimeException e) {
@@ -259,10 +275,16 @@ public class IntSetTest {
 	 */
 	@Test
 	public void testGetIntArray() {
-		IntTest.assertEquals("getIntArray", new int[] { 3, 4, 1, 2 }, i1
-				.getIntArray().getArray());
-		IntTest.assertEquals("getIntArray", new int[] {}, i0.getIntArray()
-				.getArray());
+		String s = Int.testEquals((new int[] { 3, 4, 1, 2 }), i1
+						.getIntArray().getArray());
+		if (s != null) {
+			Assert.fail("getIntArray" + "; " + s);
+		}
+		s = Int.testEquals((new int[] {}), i0.getIntArray()
+						.getArray());
+		if (s != null) {
+			Assert.fail("getIntArray" + "; " + s);
+		}
 	}
 
 	/**
@@ -369,15 +391,21 @@ public class IntSetTest {
 	@Test
 	public final void testGetPermutations() {
 		List<int[]> perm3 = IntSet.getPermutations(new Integer(3));
-		IntTest
-				.assertEquals("permutation", new int[] { 3, 2, 1 }, perm3
-						.get(0));
-		IntTest
-				.assertEquals("permutation", new int[] { 2, 3, 1 }, perm3
-						.get(1));
-		IntTest
-				.assertEquals("permutation", new int[] { 1, 2, 3 }, perm3
-						.get(5));
+		String s = Int.testEquals((new int[] { 3, 2, 1 }), perm3
+								.get(0));
+		if (s != null) {
+			Assert.fail("permutation" + "; " + s);
+		}
+		s = Int.testEquals((new int[] { 2, 3, 1 }), perm3
+								.get(1));
+		if (s != null) {
+			Assert.fail("permutation" + "; " + s);
+		}
+		s = Int.testEquals((new int[] { 1, 2, 3 }), perm3
+								.get(5));
+		if (s != null) {
+			Assert.fail("permutation" + "; " + s);
+		}
 	}
 
 }

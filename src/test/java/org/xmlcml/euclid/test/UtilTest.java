@@ -20,6 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.euclid.EuclidConstants;
 import org.xmlcml.euclid.EuclidRuntimeException;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.Util;
 
 /**
@@ -691,9 +692,15 @@ public class UtilTest {
 	@Test
 	public final void testSplitToIntArray() {
 		int[] ii = Util.splitToIntArray("1 2 3 4", EuclidConstants.S_SPACE);
-		IntTest.assertEquals("int split", new int[] { 1, 2, 3, 4 }, ii);
+		String s = Int.testEquals((new int[] { 1, 2, 3, 4 }), ii);
+		if (s != null) {
+			Assert.fail("int split" + "; " + s);
+		}
 		ii = Util.splitToIntArray("1,2,3,4", EuclidConstants.S_COMMA);
-		IntTest.assertEquals("int split", new int[] { 1, 2, 3, 4 }, ii);
+		s = Int.testEquals((new int[] { 1, 2, 3, 4 }), ii);
+		if (s != null) {
+			Assert.fail("int split" + "; " + s);
+		}
 	}
 
 	/**

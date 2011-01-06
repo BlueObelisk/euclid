@@ -10,6 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntMatrix;
 import org.xmlcml.euclid.Real;
 import org.xmlcml.euclid.RealMatrix;
@@ -104,7 +105,7 @@ public class MatrixTest {
 			Assert.fail(getAssertFormat(message + "; unequal cols in matrices",
 					S_EMPTY + aCols, S_EMPTY + bCols));
 		}
-		String s = IntTest.testEquals(a.getMatrix(), b.getMatrix());
+		String s = Int.testEquals(a.getMatrix(), b.getMatrix());
 		if (s != null) {
 			Assert.fail(message + "; " + s);
 		}
