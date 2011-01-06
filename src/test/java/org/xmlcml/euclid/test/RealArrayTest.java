@@ -6,7 +6,7 @@ import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.xmlcml.cml.base.CMLConstants;
+import org.xmlcml.euclid.EuclidConstants;
 import org.xmlcml.euclid.EuclidRuntimeException;
 import org.xmlcml.euclid.IntArray;
 import org.xmlcml.euclid.IntSet;
@@ -58,8 +58,8 @@ public class RealArrayTest {
 	 */
 	public static void assertEquals(String msg, RealArray test,
 			RealArray expected, double epsilon) {
-		Assert.assertNotNull("test should not be null (" + msg + CMLConstants.S_RBRAK, test);
-		Assert.assertNotNull("expected should not be null (" + msg + CMLConstants.S_RBRAK,
+		Assert.assertNotNull("test should not be null (" + msg + EuclidConstants.S_RBRAK, test);
+		Assert.assertNotNull("expected should not be null (" + msg + EuclidConstants.S_RBRAK,
 				expected);
 		DoubleTestBase.assertEquals(msg, test.getArray(), expected.getArray(),
 				epsilon);
@@ -77,8 +77,8 @@ public class RealArrayTest {
 	 */
 	public static void assertEquals(String msg, double[] test,
 			RealArray expected, double epsilon) {
-		Assert.assertNotNull("test should not be null (" + msg + CMLConstants.S_RBRAK, test);
-		Assert.assertNotNull("expected should not be null (" + msg + CMLConstants.S_RBRAK,
+		Assert.assertNotNull("test should not be null (" + msg + EuclidConstants.S_RBRAK, test);
+		Assert.assertNotNull("expected should not be null (" + msg + EuclidConstants.S_RBRAK,
 				expected);
 		Assert.assertEquals("must be of equal length ", test.length, expected
 				.getArray().length);

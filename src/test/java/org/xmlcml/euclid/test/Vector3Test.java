@@ -5,8 +5,8 @@ import static org.xmlcml.euclid.EC.EPS;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.xmlcml.cml.base.CMLConstants;
 import org.xmlcml.euclid.Angle;
+import org.xmlcml.euclid.EuclidConstants;
 import org.xmlcml.euclid.EuclidRuntimeException;
 import org.xmlcml.euclid.Vector3;
 import org.xmlcml.euclid.Axis.Axis3;
@@ -40,8 +40,8 @@ public class Vector3Test extends GeomTest {
 	 */
 	public static void assertEquals(String msg, Vector3 test, Vector3 expected,
 			double epsilon) {
-		Assert.assertNotNull("test should not be null (" + msg + CMLConstants.S_RBRAK, test);
-		Assert.assertNotNull("expected should not be null (" + msg + CMLConstants.S_RBRAK,
+		Assert.assertNotNull("test should not be null (" + msg + EuclidConstants.S_RBRAK, test);
+		Assert.assertNotNull("expected should not be null (" + msg + EuclidConstants.S_RBRAK,
 				expected);
 		DoubleTestBase.assertEquals(msg, test.getArray(), expected.getArray(),
 				epsilon);
@@ -59,9 +59,9 @@ public class Vector3Test extends GeomTest {
 	 */
 	public static void assertEquals(String msg, double[] test,
 			Vector3 expected, double epsilon) {
-		Assert.assertNotNull("test should not be null (" + msg + CMLConstants.S_RBRAK, test);
+		Assert.assertNotNull("test should not be null (" + msg + EuclidConstants.S_RBRAK, test);
 		Assert.assertEquals("must be of length 3", 3, test.length);
-		Assert.assertNotNull("expected should not be null (" + msg + CMLConstants.S_RBRAK,
+		Assert.assertNotNull("expected should not be null (" + msg + EuclidConstants.S_RBRAK,
 				expected);
 		DoubleTestBase.assertEquals(msg, test, expected.getArray(), epsilon);
 	}

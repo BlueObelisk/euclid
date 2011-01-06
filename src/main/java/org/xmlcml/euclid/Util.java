@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.xmlcml.cml.base.CMLUtil;
 
 
 /**
@@ -2467,6 +2466,39 @@ public class Util implements EuclidConstants {
 		return splitToDoubleArray(s, EC.S_SPACE);
 	}
 
+	
+	/**
+	 * Parses double, taking account of lexical forms of special cases allowed
+	 * by the XSD spec: INF, -INF and NaN.
+	 * 
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
+	@Deprecated
+	public static double parseFlexibleDouble(String value)
+			throws ParseException {
+		//LOG.debug("Parsing "+ value);
+		if (value != null) {
+			// 0, -0, INF, -INF and NaN : Special cases from the XSD spec.
+			if ("INF".equals(value)) {
+				return Double.POSITIVE_INFINITY;
+			} else if ("-INF".equals(value)) {
+				return Double.NEGATIVE_INFINITY;
+			} else if ("NaN".equals(value)) {
+				return Double.NaN;
+			} else {
+				try {
+					return Double.valueOf(value);
+				} catch (NumberFormatException e) {
+					throw new ParseException(e.toString(), 0);
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Null double string not allowed");
+		}
+	}
+	
 	/**
 	 * splits string into doubles.
 	 * 
@@ -2486,7 +2518,7 @@ public class Util implements EuclidConstants {
 		double[] dd = new double[ss.length];
 		for (int i = 0; i < ss.length; i++) {
 			try {
-				dd[i] = CMLUtil.parseFlexibleDouble(ss[i]);
+				dd[i] = parseFlexibleDouble(ss[i]);
 			} catch (NumberFormatException nfe) {
 				throw new EuclidRuntimeException(S_EMPTY + nfe.getMessage(),
 						nfe);

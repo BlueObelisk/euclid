@@ -1,7 +1,7 @@
 package org.xmlcml.euclid.test;
 
 import org.junit.Assert;
-import org.xmlcml.cml.base.CMLConstants;
+import org.xmlcml.euclid.EuclidConstants;
 import org.xmlcml.euclid.EuclidRuntimeException;
 
 /**
@@ -29,7 +29,7 @@ public final class EuclidTestBase {
 			Object actual) {
 		String formatted = "";
 		if (message != null) {
-			formatted = message + CMLConstants.S_SPACE;
+			formatted = message + EuclidConstants.S_SPACE;
 		}
 		return formatted + "expected:<" + expected + "> but was:<" + actual
 				+ ">";

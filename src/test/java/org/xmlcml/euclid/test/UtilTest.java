@@ -17,14 +17,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.xmlcml.cml.base.CMLConstants;
-import org.xmlcml.cml.base.CMLXOMTestUtils;
+import org.xmlcml.euclid.EuclidConstants;
 import org.xmlcml.euclid.Util;
 
 /**
@@ -65,7 +61,7 @@ public class UtilTest {
 	public final void testCreateFile() {
 		File dir = null;
 		try {
-			dir = Util.getResourceFile(CMLXOMTestUtils.BASE_RESOURCE);
+			dir = Util.getResourceFile(EuclidTestUtils.BASE_RESOURCE);
 		} catch (Exception e1) {
 			neverThrow(e1);
 		}
@@ -172,7 +168,7 @@ public class UtilTest {
 	 */
 	@Test
 	public final void testGetInputStreamFromResource() {
-		String filename = CMLXOMTestUtils.BASE_RESOURCE +CMLConstants.U_S + "cml0.xml";
+		String filename = EuclidTestUtils.BASE_RESOURCE +EuclidConstants.U_S + "cml0.xml";
 		InputStream is = null;
 		try {
 			is = Util.getInputStreamFromResource(filename);
@@ -180,8 +176,8 @@ public class UtilTest {
 			neverThrow(e);
 		}
 		try {
-			Document doc = new Builder().build(is);
-			Assert.assertNotNull("resource", doc);
+			int read=is.read();
+			Assert.assertTrue(read!=-1);
 		} catch (Exception e) {
 			neverThrow(e);
 		}
@@ -193,11 +189,11 @@ public class UtilTest {
 	 */
 	@Test
 	public final void testGetResource() {
-		String filename = CMLXOMTestUtils.BASE_RESOURCE +CMLConstants.U_S + "cml0.xml";
+		String filename = EuclidTestUtils.BASE_RESOURCE +EuclidConstants.U_S + "cml0.xml";
 		URL url = Util.getResource(filename);
 		Assert.assertNotNull("url", url);
 		Assert.assertTrue("target", url.toString().endsWith(
-				"/org/xmlcml/cml/base/cml0.xml"));
+				"/org/xmlcml/euclid/cml0.xml"));
 	}
 
 	/**
@@ -206,7 +202,7 @@ public class UtilTest {
 	 */
 	@Test
 	public final void testGetResourceFile() {
-		String filename = CMLXOMTestUtils.BASE_RESOURCE +CMLConstants.U_S + "cml0.xml";
+		String filename = EuclidTestUtils.BASE_RESOURCE +EuclidConstants.U_S + "cml0.xml";
 		File file = null;
 		try {
 			file = Util.getResourceFile(filename);
@@ -215,8 +211,7 @@ public class UtilTest {
 		}
 		Assert.assertNotNull("url", file);
 		Assert.assertTrue("target", file.toString().endsWith(
-				"" + F_S + "org" + F_S + "xmlcml" + F_S + "cml" + F_S + "base"
-						+ F_S + "cml0.xml"));
+				"" + F_S + "org" + F_S + "xmlcml" + F_S + "euclid" + F_S+ "cml0.xml"));
 		Assert.assertTrue("file", file.exists());
 	}
 
@@ -539,7 +534,7 @@ public class UtilTest {
 	@Test
 	public final void testSubstituteEquals() {
 		String ss = Util.substituteEquals("=20");
-		Assert.assertEquals("equals", CMLConstants.S_SPACE, ss);
+		Assert.assertEquals("equals", EuclidConstants.S_SPACE, ss);
 	}
 
 	/**
@@ -661,9 +656,9 @@ public class UtilTest {
 	@Test
 	public final void testConcatenateDoubleArrayString() {
 		double[] ss = new double[] { 1.2, 3.4, 5.6 };
-		String s = Util.concatenate(ss, CMLConstants.S_SPACE);
+		String s = Util.concatenate(ss, EuclidConstants.S_SPACE);
 		Assert.assertEquals("Concat", "1.2 3.4 5.6", s);
-		s = Util.concatenate(ss, CMLConstants.S_COMMA);
+		s = Util.concatenate(ss, EuclidConstants.S_COMMA);
 		Assert.assertEquals("Concat", "1.2,3.4,5.6", s);
 	}
 
@@ -672,7 +667,7 @@ public class UtilTest {
 		double[] ss = new double[] { Double.POSITIVE_INFINITY,
 				Double.NEGATIVE_INFINITY, Double.NaN };
 		Assert.assertEquals("Concat infinities according to XSD",
-				"INF -INF NaN", Util.concatenate(ss, CMLConstants.S_SPACE));
+				"INF -INF NaN", Util.concatenate(ss, EuclidConstants.S_SPACE));
 	}
 
 	/**
@@ -683,9 +678,9 @@ public class UtilTest {
 	public final void testConcatenateDoubleArrayArrayString() {
 		double[][] ss = new double[][] { new double[] { 1.2, 3.4, 5.6 },
 				new double[] { 1.1, 2.2, 3.3, 4.4 } };
-		String s = Util.concatenate(ss, CMLConstants.S_SPACE);
+		String s = Util.concatenate(ss, EuclidConstants.S_SPACE);
 		Assert.assertEquals("Concat", "1.2 3.4 5.6 1.1 2.2 3.3 4.4", s);
-		s = Util.concatenate(ss, CMLConstants.S_COMMA);
+		s = Util.concatenate(ss, EuclidConstants.S_COMMA);
 		Assert.assertEquals("Concat", "1.2,3.4,5.6,1.1,2.2,3.3,4.4", s);
 	}
 
@@ -696,9 +691,9 @@ public class UtilTest {
 	 */
 	@Test
 	public final void testSplitToIntArray() {
-		int[] ii = Util.splitToIntArray("1 2 3 4", CMLConstants.S_SPACE);
+		int[] ii = Util.splitToIntArray("1 2 3 4", EuclidConstants.S_SPACE);
 		IntTest.assertEquals("int split", new int[] { 1, 2, 3, 4 }, ii);
-		ii = Util.splitToIntArray("1,2,3,4", CMLConstants.S_COMMA);
+		ii = Util.splitToIntArray("1,2,3,4", EuclidConstants.S_COMMA);
 		IntTest.assertEquals("int split", new int[] { 1, 2, 3, 4 }, ii);
 	}
 
@@ -709,10 +704,10 @@ public class UtilTest {
 	 */
 	@Test
 	public final void testSplitToDoubleArray() {
-		double[] dd = Util.splitToDoubleArray("1.1 2.2 3.3 4.4", CMLConstants.S_SPACE);
+		double[] dd = Util.splitToDoubleArray("1.1 2.2 3.3 4.4", EuclidConstants.S_SPACE);
 		DoubleTestBase.assertEquals("double split", new double[] { 1.1, 2.2,
 				3.3, 4.4 }, dd, EPS);
-		dd = Util.splitToDoubleArray("1.1,2.2,3.3,4.4", CMLConstants.S_COMMA);
+		dd = Util.splitToDoubleArray("1.1,2.2,3.3,4.4", EuclidConstants.S_COMMA);
 		DoubleTestBase.assertEquals("double split", new double[] { 1.1, 2.2,
 				3.3, 4.4 }, dd, EPS);
 	}
@@ -724,10 +719,10 @@ public class UtilTest {
 	@Test
 	public final void testConcatenateIntArrayString() {
 		int[] ii = new int[] { 1, 2, 3, 4 };
-		String s = Util.concatenate(ii, CMLConstants.S_SPACE);
+		String s = Util.concatenate(ii, EuclidConstants.S_SPACE);
 		Assert.assertEquals("int split", "1 2 3 4", s);
 		ii = new int[] { 1, 2, 3, 4 };
-		s = Util.concatenate(ii, CMLConstants.S_COMMA);
+		s = Util.concatenate(ii, EuclidConstants.S_COMMA);
 		Assert.assertEquals("int split", "1,2,3,4", s);
 	}
 
@@ -739,10 +734,10 @@ public class UtilTest {
 	@Test
 	public final void testConcatenateStringArrayString() {
 		String[] ii = new String[] { "a", "b", "c", "d" };
-		String s = Util.concatenate(ii, CMLConstants.S_SPACE);
+		String s = Util.concatenate(ii, EuclidConstants.S_SPACE);
 		Assert.assertEquals("int split", "a b c d", s);
 		ii = new String[] { "a", "b", "c", "d" };
-		s = Util.concatenate(ii, CMLConstants.S_COMMA);
+		s = Util.concatenate(ii, EuclidConstants.S_COMMA);
 		Assert.assertEquals("int split", "a,b,c,d", s);
 	}
 
