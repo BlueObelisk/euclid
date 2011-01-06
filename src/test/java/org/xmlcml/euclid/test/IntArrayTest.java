@@ -2,7 +2,6 @@ package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.S_EMPTY;
 import static org.xmlcml.euclid.EC.S_RBRAK;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -118,7 +117,7 @@ public class IntArrayTest {
 		IntArrayTest.assertEquals("r", new int[] { 1, 2, 3 }, r);
 		try {
 			r = new IntArray(5, d);
-			alwaysFail("Array size too small");
+			Assert.fail("should always throw " + "Array size too small");
 		} catch (EuclidRuntimeException e) {
 			Assert
 					.assertEquals("int[]", "Array would overflow", e
@@ -199,7 +198,7 @@ public class IntArrayTest {
 		Assert.assertEquals("element at", 4, a1.elementAt(2));
 		try {
 			Assert.assertEquals("element at", 4, a1.elementAt(5));
-			alwaysFail("ArrayIndexOutOfBoundsException");
+			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			Assert.assertEquals("ArrayIndexOutOfBoundsException", "5", e
 					.getMessage());
@@ -336,7 +335,7 @@ public class IntArrayTest {
 		IntArrayTest.assertEquals("subArray", new int[] { 1, 2, 4, 6 }, a);
 		try {
 			a = a1.getSubArray(0, 5);
-			alwaysFail("ArrayIndexOutOfBoundsException");
+			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			Assert.assertEquals("subArray ArrayIndexOutOfBoundsException",
 					"java.lang.ArrayIndexOutOfBoundsException", S_EMPTY + e);
@@ -352,7 +351,7 @@ public class IntArrayTest {
 		IntArrayTest.assertEquals("setElement", new int[] { 1, 10, 20, 6 }, a1);
 		try {
 			a1.setElements(1, new int[] { 10, 20, 30, 40 });
-			alwaysFail("ArrayIndexOutOfBoundsException");
+			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			Assert.assertEquals("subArray ArrayIndexOutOfBoundsException",
 					"java.lang.ArrayIndexOutOfBoundsException", S_EMPTY + e);
@@ -416,7 +415,7 @@ public class IntArrayTest {
 		a = new IntArray("1 2 3");
 		try {
 			a1.dotProduct(a);
-			alwaysFail("ArrayIndexOutOfBoundsException");
+			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("dot",
 					"org.xmlcml.euclid.EuclidRuntimeException", S_EMPTY + e);

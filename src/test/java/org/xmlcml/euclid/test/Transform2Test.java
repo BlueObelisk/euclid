@@ -1,7 +1,6 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.EPS;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -224,7 +223,7 @@ public class Transform2Test {
 				0., 0., 1. });
 		try {
 			t = new Transform2(rsm, new Vector2(2., 3.));
-			alwaysFail("must have 2*2 rotation matrix");
+			Assert.fail("should always throw " + "must have 2*2 rotation matrix");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("matrix vector",
 					"must have 2*2 rotation matrix", e.getMessage());

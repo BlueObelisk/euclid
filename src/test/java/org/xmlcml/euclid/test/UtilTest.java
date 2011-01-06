@@ -5,8 +5,6 @@ package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EuclidConstants.EPS;
 import static org.xmlcml.euclid.EuclidConstants.F_S;
-import static org.xmlcml.euclid.test.EuclidTestBase.neverFail;
-import static org.xmlcml.euclid.test.EuclidTestBase.neverThrow;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.euclid.EuclidConstants;
+import org.xmlcml.euclid.EuclidRuntimeException;
 import org.xmlcml.euclid.Util;
 
 /**
@@ -63,7 +62,7 @@ public class UtilTest {
 		try {
 			dir = Util.getResourceFile(EuclidTestUtils.BASE_RESOURCE);
 		} catch (Exception e1) {
-			neverThrow(e1);
+			throw new EuclidRuntimeException("should never throw " + e1);
 		}
 		File junk = new File(dir, "junk");
 		if (junk.exists()) {
@@ -74,7 +73,7 @@ public class UtilTest {
 			Util.createFile(dir, "junk");
 		} catch (Exception e) {
 			e.printStackTrace();
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 		Assert.assertTrue("should exist: " + junk.toString(), junk.exists());
 	}
@@ -108,7 +107,7 @@ public class UtilTest {
 					"BUG: (foo)should never throw: java.lang.Exception: bar", e
 							.getMessage());
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 	}
 
@@ -125,7 +124,7 @@ public class UtilTest {
 					"BUG: should never throw: java.lang.Exception: bar", e
 							.getMessage());
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 	}
 
@@ -140,7 +139,7 @@ public class UtilTest {
 		} catch (RuntimeException e) {
 			Assert.assertEquals("NYI", "not yet implemented", e.getMessage());
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 	}
 
@@ -157,7 +156,7 @@ public class UtilTest {
 					"BUG: (foo)should never throw: java.lang.RuntimeException",
 					e.getMessage());
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 	}
 
@@ -173,13 +172,13 @@ public class UtilTest {
 		try {
 			is = Util.getInputStreamFromResource(filename);
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 		try {
 			int read=is.read();
 			Assert.assertTrue(read!=-1);
 		} catch (Exception e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 	}
 
@@ -207,7 +206,7 @@ public class UtilTest {
 		try {
 			file = Util.getResourceFile(filename);
 		} catch (Exception e) {
-			neverFail(e);
+			Assert.fail("should never throw " + e);
 		}
 		Assert.assertNotNull("url", file);
 		Assert.assertTrue("target", file.toString().endsWith(
