@@ -2,7 +2,6 @@ package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.EPS;
 import static org.xmlcml.euclid.EC.S_RBRAK;
-import static org.xmlcml.euclid.test.EuclidTestBase.alwaysFail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -115,7 +114,7 @@ public class Point3Test extends GeomTest {
 				EPS);
 		try {
 			pp = new Point3(new double[] { 1., 3. });
-			alwaysFail("must have 3 coordinates");
+			Assert.fail("should always throw " + "must have 3 coordinates");
 		} catch (EuclidRuntimeException e) {
 			Assert.assertEquals("bad coordinates",
 					"array size required (3) found 2", e.getMessage());

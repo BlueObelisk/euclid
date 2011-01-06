@@ -1,6 +1,5 @@
 package org.xmlcml.euclid.test;
 
-import static org.xmlcml.euclid.test.EuclidTestBase.neverThrow;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -1040,7 +1039,7 @@ public class RealMatrixTest extends MatrixTest {
 			m2.writeXML(w);
 			w.close();
 		} catch (IOException e) {
-			neverThrow(e);
+			throw new EuclidRuntimeException("should never throw " + e);
 		}
 		Assert
 				.assertEquals(
