@@ -1,0 +1,7 @@
+foo
+^target$
+^.project$
+^.settings/
+^.classpath$
+^.hgignore~$
+
