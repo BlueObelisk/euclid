@@ -1,4 +1,4 @@
-package org.xmlcml.euclid;
+package org.xmlcml.euclidnew;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,8 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -26,10 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -265,19 +261,6 @@ public class Util implements EuclidConstants {
 		return url;
 	}
 
-	public static InputStream getResourceUsingContextClassLoader(String name, Class<?> clazz) throws FileNotFoundException {
-
-		 ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		 if (cl == null) {
-			 cl = clazz.getClassLoader();
-		 }
-		 InputStream is = cl.getResourceAsStream(name);
-		 if (is == null) {
-		   throw new FileNotFoundException("Resource not found: "+name);
-		 }
-		 return is;
-	}
-	
 	/**
 	 * gets file from build path components. pm286 is not quite sure how it does
 	 * this...
@@ -1475,6 +1458,32 @@ public class Util implements EuclidConstants {
 	}
 
 	/**
+	 * replace tabs with spaces while trying to preserve the formatting
+	 * @param s
+	 * @param width
+	 * @return
+	 */
+	public static String replaceTabs(String s, int width) {
+		StringBuilder sb = new StringBuilder();
+		int in = 0;
+		int out = 0;
+		for (; in < s.length(); in++) {
+			char c = s.charAt(in);
+			if (c == EuclidConstants.C_TAB) {
+				int mod = width - (out % width);
+				for (int i = 0; i < mod; i++) {
+					sb.append(EuclidConstants.C_SPACE);
+					out++;
+				}
+			} else {
+				sb.append(c);
+				out++;
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * @param s
 	 *            string to be edited
 	 * @param ent
@@ -1541,7 +1550,6 @@ public class Util implements EuclidConstants {
 
 	/** UPPER_GREEK entities */
 	public final static String[] UPPER_GREEK_ENTITIES = new String[968];
-	public final static Map<String, Character> GREEK2CHARACTER_MAP;
 	static {
 		UPPER_GREEK_ENTITIES[912] = "Alpha";
 		UPPER_GREEK_ENTITIES[914] = "Beta";
@@ -1590,56 +1598,6 @@ public class Util implements EuclidConstants {
 		UPPER_GREEK_ENTITIES[965] = "chi";
 		UPPER_GREEK_ENTITIES[966] = "psi";
 		UPPER_GREEK_ENTITIES[967] = "omega";
-		
-		GREEK2CHARACTER_MAP = new HashMap<String, Character>();
-		GREEK2CHARACTER_MAP.put("Alpha", (char)912);
-		GREEK2CHARACTER_MAP.put("Beta", (char)914);
-		GREEK2CHARACTER_MAP.put("Gamma", (char)915);
-		GREEK2CHARACTER_MAP.put("Delta", (char)916);
-		GREEK2CHARACTER_MAP.put("Epsilon", (char)917);
-		GREEK2CHARACTER_MAP.put("Zeta", (char)918);
-		GREEK2CHARACTER_MAP.put("Eta", (char)919);
-		GREEK2CHARACTER_MAP.put("Theta", (char)920);
-		GREEK2CHARACTER_MAP.put("Iota", (char)921);
-		GREEK2CHARACTER_MAP.put("Kappa", (char)922);
-		GREEK2CHARACTER_MAP.put("Lambda", (char)923);
-		GREEK2CHARACTER_MAP.put("Mu", (char)924);
-		GREEK2CHARACTER_MAP.put("Nu", (char)925);
-		GREEK2CHARACTER_MAP.put("Omicron", (char)926);
-		GREEK2CHARACTER_MAP.put("Pi", (char)927);
-		GREEK2CHARACTER_MAP.put("Rho", (char)928);
-		GREEK2CHARACTER_MAP.put("Sigma", (char)929);
-		GREEK2CHARACTER_MAP.put("Tau", (char)930);
-		GREEK2CHARACTER_MAP.put("Upsilon", (char)931);
-		GREEK2CHARACTER_MAP.put("Phi", (char)932);
-		GREEK2CHARACTER_MAP.put("Phi", (char)933);
-		GREEK2CHARACTER_MAP.put("Psi", (char)934);
-		GREEK2CHARACTER_MAP.put("Omega", (char)935);
-
-		GREEK2CHARACTER_MAP.put("alpha", (char)945);
-		GREEK2CHARACTER_MAP.put("beta", (char)946);
-		GREEK2CHARACTER_MAP.put("gamma", (char)947);
-		GREEK2CHARACTER_MAP.put("delta", (char)948);
-		GREEK2CHARACTER_MAP.put("epsilon", (char)949);
-		GREEK2CHARACTER_MAP.put("zeta", (char)950);
-		GREEK2CHARACTER_MAP.put("eta", (char)951);
-		GREEK2CHARACTER_MAP.put("theta", (char)952);
-		GREEK2CHARACTER_MAP.put("iota", (char)953);
-		GREEK2CHARACTER_MAP.put("kappa", (char)954);
-		GREEK2CHARACTER_MAP.put("lambda", (char)955);
-		GREEK2CHARACTER_MAP.put("mu", (char)956);
-		GREEK2CHARACTER_MAP.put("nu", (char)957);
-		GREEK2CHARACTER_MAP.put("omicron", (char)958);
-		GREEK2CHARACTER_MAP.put("pi", (char)959);
-		GREEK2CHARACTER_MAP.put("rho", (char)960);
-		GREEK2CHARACTER_MAP.put("sigma", (char)961);
-		GREEK2CHARACTER_MAP.put("tau", (char)962);
-		GREEK2CHARACTER_MAP.put("upsilon", (char)963);
-		GREEK2CHARACTER_MAP.put("phi", (char)964);
-		GREEK2CHARACTER_MAP.put("chi", (char)965);
-		GREEK2CHARACTER_MAP.put("psi", (char)966);
-		GREEK2CHARACTER_MAP.put("omega", (char)967);
-
 	};
 
 	/**
@@ -1836,54 +1794,6 @@ public class Util implements EuclidConstants {
 		return s1;
 	}
 
-	public static String substituteNonASCIIChars(String s, char replacement) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < s.length(); i++) {
-			int c = s.charAt(i);
-			c = (c > 256) ? (int) replacement : c;
-			sb.append((char)c);
-		}
-		return sb.toString();
-	}
-	
-	/*
-	&#8204;     &zwnj;      Zero Width Non Joiner
-	&#8205;     &zwj;       Zero Width Joiner
-	&#8206;     &lrm;       Left-Right Mark
-	&#8207;     &rlm;       Right-Left Mark
-	&#8211;	 	&ndash;	 	en dash
-	&#8212;	 	&mdash;		em dash
-	&#8216;		&lsquo;	 	left single quotation mark
-	&#8217;	 	&rsquo;	 	right single quotation mark
-	&#8220;	 	&ldquo;	 	left double quotation mark
-	&#8221;	 	&rdquo;	 	right double quotation mark
-
-		 */
-	
-	public static String substituteSmartCharacters(String s) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < s.length(); i++) {
-			int c = s.charAt(i);
-			if (c == 8204 || c == 160) {
-				c = ' ';
-			} else if (c == 8205) {
-				c = -1;
-			} else if (c == 8211 || c == 8212) {
-				c = '-';
-			} else if (c == 8216 || c == 8217) {
-				c = '\'';
-			} else if (c == 8220 || c == 8221) {
-				c = '"';
-			} else if (c > 127) {
-				c = '?';
-			}
-			if (c > 0) {
-				sb.append((char)c);
-			}
-		}
-		return sb.toString();
-		 
-	}
 	/**
 	 * substitute hex representation of character, for example =2E by char(46).
 	 * If line ends with =, ignore that character.
@@ -2466,39 +2376,6 @@ public class Util implements EuclidConstants {
 		return splitToDoubleArray(s, EC.S_SPACE);
 	}
 
-	
-	/**
-	 * Parses double, taking account of lexical forms of special cases allowed
-	 * by the XSD spec: INF, -INF and NaN.
-	 * 
-	 * @param value
-	 * @return
-	 * @throws ParseException
-	 */
-	@Deprecated
-	public static double parseFlexibleDouble(String value)
-			throws ParseException {
-		//LOG.debug("Parsing "+ value);
-		if (value != null) {
-			// 0, -0, INF, -INF and NaN : Special cases from the XSD spec.
-			if ("INF".equals(value)) {
-				return Double.POSITIVE_INFINITY;
-			} else if ("-INF".equals(value)) {
-				return Double.NEGATIVE_INFINITY;
-			} else if ("NaN".equals(value)) {
-				return Double.NaN;
-			} else {
-				try {
-					return Double.valueOf(value);
-				} catch (NumberFormatException e) {
-					throw new ParseException(e.toString(), 0);
-				}
-			}
-		} else {
-			throw new IllegalArgumentException("Null double string not allowed");
-		}
-	}
-	
 	/**
 	 * splits string into doubles.
 	 * 
@@ -2518,7 +2395,7 @@ public class Util implements EuclidConstants {
 		double[] dd = new double[ss.length];
 		for (int i = 0; i < ss.length; i++) {
 			try {
-				dd[i] = parseFlexibleDouble(ss[i]);
+				dd[i] = XMLUtil.parseFlexibleDouble(ss[i]);
 			} catch (NumberFormatException nfe) {
 				throw new EuclidRuntimeException(S_EMPTY + nfe.getMessage(),
 						nfe);
@@ -2907,89 +2784,6 @@ public class Util implements EuclidConstants {
 		conn.disconnect();
 		return bytes;
 	}
-	/**
-	 * borrowed from somewhere. 
-	 * @param s
-	 * @return
-	 */
-	public static String calculateMD5(String s) {
-		String md5String = null;
-		if (s != null && s.trim().length() > 0) {
-			StringBuffer hexString = new StringBuffer();
-			try{
-				MessageDigest algorithm = MessageDigest.getInstance("MD5");
-				algorithm.reset();
-				algorithm.update(s.getBytes());
-				byte messageDigest[] = algorithm.digest();
-				for (int i=0; i < messageDigest.length; i++) {
-					hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-				}
-			} catch(NoSuchAlgorithmException nsae) {
-			            
-			}
-			md5String = hexString.toString();
-		}
-		return md5String;
-	}
-	
-	   /**
-     * avoids the checked exception
-     * @param file
-     * @return
-     */
-	public static String getCanonicalPath(File file) {
-		String path = null;
-		try {
-			File absoluteFile = file.getAbsoluteFile();
-			path = absoluteFile.getCanonicalPath();
-		} catch (IOException e) {
-			throw new RuntimeException("cannot canonicalize "+file+" ... "+e.getMessage(), e);
-		}
-		return path;
-	}
-
-	
-	/** path to create file2 from file1
-	 *@param file1 
-	 *@param file2
-	 *@param newSeparator if not null, use as new separator
-	 */
-	public static String getRelativeFilename(File file1, File file2, String newSeparator) {
-		if (newSeparator == null) {
-			newSeparator = File.separator;
-		}
-		String regex = (File.separator.equals("\\")) ? "\\\\" : File.separator;
-		String path = null;
-		try {
-			String path1 = file1.getCanonicalPath();
-			String path2 = file2.getCanonicalPath();
-			String[] pathComponent1 = path1.split(regex);
-			String[] pathComponent2 = path2.split(regex);
-			int minComponents = Math.min(pathComponent1.length, pathComponent2.length);
-			int i = 0;
-			for (; i < pathComponent1.length; i++) {
-				if (!pathComponent2[i].equals(pathComponent1[i])) {
-					break;
-				}
-			}
-			path = "";
-			for (int j = i; j < pathComponent1.length; j++) {
-				path += ".."+newSeparator;
-			}
-			for (int j = i; j < pathComponent2.length-1; j++) {
-				path += pathComponent2[j]+newSeparator;
-			}
-			path += pathComponent2[pathComponent2.length-1];
-			
-		} catch (Exception e) {
-			throw new RuntimeException("bad names/BUG", e);
-			// return null
-		}
-		return path;
-	}
-
-
-
 }
 
 class StringIntegerComparator implements Comparator<Object> {
@@ -3013,5 +2807,4 @@ class StringIntegerComparator implements Comparator<Object> {
 		}
 		return new Integer(ss);
 	}
-	
- }
+}
