@@ -31,6 +31,7 @@ public class JodaDateTest {
 		Assert.assertEquals("date format", 443837520000L, dateTime.getMillis());
     }
 
+	@SuppressWarnings("deprecation")
 	@Test
     public void testParseJavaDate() {
     	Date date = new Date(2001-1900, 12, 25, 10, 20, 30);
