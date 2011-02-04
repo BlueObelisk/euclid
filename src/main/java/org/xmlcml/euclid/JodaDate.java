@@ -65,7 +65,8 @@ public class JodaDate {
     	return new DateTime(seconds);
     }
 
-    public static Date parseJodaDate(DateTime jodaDate) {
+    @SuppressWarnings("deprecation")
+	public static Date parseJodaDate(DateTime jodaDate) {
     	int year = jodaDate.getYear();
     	int month = jodaDate.getMonthOfYear();
     	int day = jodaDate.getDayOfMonth();
