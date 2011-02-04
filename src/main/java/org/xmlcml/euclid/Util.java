@@ -2502,7 +2502,7 @@ public class Util implements EuclidConstants {
 	 * @return
 	 * @throws ParseException
 	 */
-	@Deprecated
+	
 	public static double parseFlexibleDouble(String value)
 			throws ParseException {
 		//LOG.debug("Parsing "+ value);
@@ -2992,7 +2992,7 @@ public class Util implements EuclidConstants {
 			String path2 = file2.getCanonicalPath();
 			String[] pathComponent1 = path1.split(regex);
 			String[] pathComponent2 = path2.split(regex);
-			int minComponents = Math.min(pathComponent1.length, pathComponent2.length);
+			//int minComponents = Math.min(pathComponent1.length, pathComponent2.length);
 			int i = 0;
 			for (; i < pathComponent1.length; i++) {
 				if (!pathComponent2[i].equals(pathComponent1[i])) {
