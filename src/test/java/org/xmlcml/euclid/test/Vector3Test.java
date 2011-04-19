@@ -352,8 +352,8 @@ public class Vector3Test extends GeomTest {
 	 */
 	@Test
 	public void testDotVector3() {
-		Assert.assertEquals("dot", 3., v001.dot(v123));
-		Assert.assertEquals("dot", 0., v100.dot(v001));
+		Assert.assertEquals("dot", 3., v001.dot(v123),EPS);
+		Assert.assertEquals("dot", 0., v100.dot(v001),EPS);
 	}
 
 	/**

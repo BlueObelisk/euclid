@@ -16,6 +16,8 @@ import org.xmlcml.euclid.Real2;
  */
 public class ComplexTest {
 
+	private static final double EPS = 1E-14;
+
 	Complex c0;
 
 	Complex c1;
@@ -40,8 +42,8 @@ public class ComplexTest {
 	@Test
 	public void testNegative() {
 		c2.negative();
-		Assert.assertEquals("negative", -1., c2.getReal());
-		Assert.assertEquals("negative", -2., c2.getImaginary());
+		Assert.assertEquals("negative", -1., c2.getReal(),EPS);
+		Assert.assertEquals("negative", -2., c2.getImaginary(),EPS);
 	}
 
 	/**
@@ -60,8 +62,8 @@ public class ComplexTest {
 	public void testComplex() {
 		String s = c0.toString();
 		Assert.assertEquals("to string", "0.0,0.0", s);
-		Assert.assertEquals("empty ", 0., c0.getReal());
-		Assert.assertEquals("empty", 0., c0.getImaginary());
+		Assert.assertEquals("empty ", 0., c0.getReal(),EPS);
+		Assert.assertEquals("empty", 0., c0.getImaginary(),EPS);
 	}
 
 	/**
