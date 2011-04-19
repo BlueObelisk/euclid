@@ -10,7 +10,7 @@
 
   <groupId>cml</groupId>
   <artifactId>euclid</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <name>CML Euclid</name>
   <description>A Java library for 2D and 3D geometric calculations</description>
 
