@@ -157,7 +157,7 @@ public class RealRangeTest {
 	 */
 	@Test
 	public void testGetMin() {
-		Assert.assertEquals("min", 1.0, r2.getMin());
+		Assert.assertEquals("min", 1.0, r2.getMin(), EPS);
 	}
 
 	/**

@@ -56,8 +56,8 @@ public class Vector2Test {
 	 */
 	@Test
 	public void testVector2Real2() {
-		Assert.assertEquals("vector2 real2", 3., v0.getX());
-		Assert.assertEquals("vector2 real2", 4., v0.getY());
+		Assert.assertEquals("vector2 real2", 3., v0.getX(),EPS);
+		Assert.assertEquals("vector2 real2", 4., v0.getY(),EPS);
 	}
 
 	/**
@@ -65,8 +65,8 @@ public class Vector2Test {
 	 */
 	@Test
 	public void testVector2DoubleDouble() {
-		Assert.assertEquals("vector2 real2", 1., v1.getX());
-		Assert.assertEquals("vector2 real2", 2., v1.getY());
+		Assert.assertEquals("vector2 real2", 1., v1.getX(),EPS);
+		Assert.assertEquals("vector2 real2", 2., v1.getY(),EPS);
 	}
 
 	/**

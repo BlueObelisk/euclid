@@ -160,8 +160,8 @@ public class Real2VectorTest {
 	public void testAdd() {
 		r1.add(new Real2(7., 8.));
 		Assert.assertEquals("add", 4, r1.size());
-		Assert.assertEquals("add", 7., r1.get(3).getX());
-		Assert.assertEquals("add", 8., r1.get(3).getY());
+		Assert.assertEquals("add", 7., r1.get(3).getX(),EPS);
+		Assert.assertEquals("add", 8., r1.get(3).getY(),EPS);
 	}
 
 	/**
@@ -170,8 +170,8 @@ public class Real2VectorTest {
 	@Test
 	public void testSet() {
 		r1.set(1, new Real2(9., 8.));
-		Assert.assertEquals("set", 9., r1.get(1).getX());
-		Assert.assertEquals("set", 8., r1.get(1).getY());
+		Assert.assertEquals("set", 9., r1.get(1).getX(),EPS);
+		Assert.assertEquals("set", 8., r1.get(1).getY(),EPS);
 		Assert.assertEquals("add", 3, r1.size());
 	}
 
@@ -181,21 +181,21 @@ public class Real2VectorTest {
 	@Test
 	public void testGetRange() {
 		RealRange r = r1.getRange(Axis2.X);
-		Assert.assertEquals("range", 1., r.getMin());
-		Assert.assertEquals("range", 5., r.getMax());
+		Assert.assertEquals("range", 1., r.getMin(),EPS);
+		Assert.assertEquals("range", 5., r.getMax(),EPS);
 		r1.set(0, new Real2(-9., 8.));
 		r1.set(1, new Real2(9., 8.));
 		r = r1.getRange(Axis2.X);
-		Assert.assertEquals("range", -9., r.getMin());
-		Assert.assertEquals("range", 9., r.getMax());
+		Assert.assertEquals("range", -9., r.getMin(),EPS);
+		Assert.assertEquals("range", 9., r.getMax(),EPS);
 		r = r1.getRange(Axis2.Y);
-		Assert.assertEquals("range", 6., r.getMin());
-		Assert.assertEquals("range", 8., r.getMax());
+		Assert.assertEquals("range", 6., r.getMin(),EPS);
+		Assert.assertEquals("range", 8., r.getMax(),EPS);
 		r1.set(0, new Real2(-9., 8.));
 		r1.set(1, new Real2(9., 8.));
 		r = r1.getRange(Axis2.Y);
-		Assert.assertEquals("range", 6., r.getMin());
-		Assert.assertEquals("range", 8., r.getMax());
+		Assert.assertEquals("range", 6., r.getMin(),EPS);
+		Assert.assertEquals("range", 8., r.getMax(),EPS);
 	}
 
 	/**
@@ -206,19 +206,19 @@ public class Real2VectorTest {
 		Real2Range r2 = r1.getRange2();
 		RealRange xr = r2.getXRange();
 		RealRange yr = r2.getYRange();
-		Assert.assertEquals("range", 1., xr.getMin());
-		Assert.assertEquals("range", 5., xr.getMax());
-		Assert.assertEquals("range", 2., yr.getMin());
-		Assert.assertEquals("range", 6., yr.getMax());
+		Assert.assertEquals("range", 1., xr.getMin(),EPS);
+		Assert.assertEquals("range", 5., xr.getMax(),EPS);
+		Assert.assertEquals("range", 2., yr.getMin(),EPS);
+		Assert.assertEquals("range", 6., yr.getMax(),EPS);
 		r1.set(0, new Real2(-9., 8.));
 		r1.set(1, new Real2(9., 8.));
 		r2 = r1.getRange2();
 		xr = r2.getXRange();
 		yr = r2.getYRange();
-		Assert.assertEquals("range", -9., xr.getMin());
-		Assert.assertEquals("range", 9., xr.getMax());
-		Assert.assertEquals("range", 6., yr.getMin());
-		Assert.assertEquals("range", 8., yr.getMax());
+		Assert.assertEquals("range", -9., xr.getMin(),EPS);
+		Assert.assertEquals("range", 9., xr.getMax(),EPS);
+		Assert.assertEquals("range", 6., yr.getMin(),EPS);
+		Assert.assertEquals("range", 8., yr.getMax(),EPS);
 	}
 
 	/**
