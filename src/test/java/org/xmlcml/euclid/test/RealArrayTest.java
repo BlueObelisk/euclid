@@ -395,9 +395,9 @@ public class RealArrayTest {
 	 */
 	@Test
 	public void testElementAt() {
-		Assert.assertEquals("element at", 4.0, a1.elementAt(2));
+		Assert.assertEquals("element at", 4.0, a1.elementAt(2),EPS);
 		try {
-			Assert.assertEquals("element at", 4.0, a1.elementAt(5));
+			Assert.assertEquals("element at", 4.0, a1.elementAt(5),EPS);
 			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			Assert.assertEquals("ArrayIndexOutOfBoundsException", "5", e
@@ -747,7 +747,7 @@ public class RealArrayTest {
 	 */
 	@Test
 	public void testLargestElement() {
-		Assert.assertEquals("largest", 6., a1.largestElement());
+		Assert.assertEquals("largest", 6., a1.largestElement(),EPS);
 	}
 
 	/**
@@ -763,7 +763,7 @@ public class RealArrayTest {
 	 */
 	@Test
 	public void testSmallestElement() {
-		Assert.assertEquals("smallest", 1., a1.smallestElement());
+		Assert.assertEquals("smallest", 1., a1.smallestElement(),EPS);
 	}
 
 	/**

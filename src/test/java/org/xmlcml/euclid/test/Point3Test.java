@@ -479,7 +479,7 @@ public class Point3Test extends GeomTest {
 		Vector3 vv = new Vector3(1., 2., 3.);
 		Line3 ll = new Line3(pp, vv);
 		double d = pp.distanceFromLine(ll);
-		Assert.assertEquals("distance from line", 0.0, d);
+		Assert.assertEquals("distance from line", 0.0, d,EPS);
 		Point3 p0 = new Point3(0., 0., 0.);
 		d = p0.distanceFromLine(ll);
 		Assert.assertEquals("distance", 1.9639610121239313, d, EPS);
