@@ -5,15 +5,36 @@
   <parent>
     <groupId>uk.ac.cam.ch.wwmm</groupId>
     <artifactId>wwmm-parent</artifactId>
-    <version>3</version>
+    <version>4</version>
   </parent>
 
-  <groupId>cml</groupId>
+  <groupId>org.xml-cml</groupId>
   <artifactId>euclid</artifactId>
   <version>1.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  
   <name>CML Euclid</name>
   <description>A Java library for 2D and 3D geometric calculations</description>
-
+  <url>http://bitbucket.org/wwmm/euclid</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://bitbucket.org/wwmm/euclid/src</url>
+    <connection>scm:hg:http://bitbucket.org/wwmm/euclid</connection>
+    <developerConnection>scm:hg:https://bitbucket.org/wwmm/euclid</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <id>pm286</id>
+      <name>Peter Murray-Rust</name>
+    </developer>
+  </developers>
+  
   <inceptionYear>1994</inceptionYear>
   <mailingLists>
     <mailingList>
@@ -31,15 +52,6 @@
     <system>hudson</system>
     <url>https://hudson.ch.cam.ac.uk/job/euclid</url>
   </ciManagement>
-
-  <licenses>
-    <license>
-      <name>Artistic License</name>
-      <url>http://www.opensource.org/licenses/artistic-license-2.0.php
-      </url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
 
   <organization>
     <name>Peter Murray-Rust</name>
@@ -112,7 +124,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.1</version>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -126,25 +138,25 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.0</version>
+      <version>2.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.13</version>
+      <version>1.2.16</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math</artifactId>
-      <version>2.0</version>
+      <version>2.2</version>
     </dependency>
 
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>1.6</version>
+      <version>1.6.2</version>
     </dependency>
 
   </dependencies>
