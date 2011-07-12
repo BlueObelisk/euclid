@@ -10,7 +10,7 @@
 
 	<groupId>org.xml-cml</groupId>
 	<artifactId>euclid</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>CML Euclid</name>
@@ -118,7 +118,8 @@
 			</plugin>
 		</plugins>
 	</build>
-
+<!-- remove <repositories> for releases to central -->
+<!-- 
 	<repositories>
 		<repository>
 			<id>ucc-repo</id>
@@ -126,7 +127,7 @@
 			<url>https://maven.ch.cam.ac.uk/m2repo</url>
 		</repository>
 	</repositories>
-
+ -->
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -136,9 +137,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>cml</groupId>
+			<groupId>org.xml-cml</groupId>
 			<artifactId>euclid-testutil</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>
 		</dependency>
 
