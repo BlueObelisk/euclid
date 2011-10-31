@@ -18,6 +18,7 @@ package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.EPS;
 
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
