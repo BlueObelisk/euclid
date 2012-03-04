@@ -2625,7 +2625,7 @@ public class Util implements EuclidConstants {
 	 */
 	public final static boolean containsString(String[] strings, String s) {
 		boolean b = false;
-		if (s != null) {
+		if (s != null && strings != null) {
 			for (int i = 0; i < strings.length; i++) {
 				if (s.equals(strings[i])) {
 					b = true;
