@@ -18,6 +18,7 @@ package org.xmlcml.euclid;
 import java.text.DecimalFormat;
 
 
+
 import org.apache.log4j.Logger;
 
 /**
