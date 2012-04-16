@@ -21,7 +21,7 @@ package org.xmlcml.euclid;
 * Used with Transform2
 @author (C) P. Murray-Rust, 2001
 */
-public class Window2 {
+public class Window2 extends Object {
 	
 	public final static int X = 0;
 	public final static int Y = 1;
