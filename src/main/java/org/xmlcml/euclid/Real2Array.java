@@ -89,6 +89,26 @@ public class Real2Array implements EuclidConstants {
     }
 
     /**
+     * compares the arrays
+     * @param r2b array to compare to
+     * @param epsilon tolerance in coordinates
+     * @return true if all points agree within epsilon
+     */
+	public boolean isEqualTo(Real2Array r2b, double epsilon) {
+		if (r2b == null || this.size() != r2b.size()) {
+			return false;
+		}
+		for (int i = 0; i < this.size(); i++) {
+			Real2 ra = this.get(i);
+			Real2 rb = r2b.get(i);
+			if (!ra.isEqualTo(rb, epsilon)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+    /**
      * @param r2
      */
     public void add(Real2 r2) {
