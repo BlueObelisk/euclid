@@ -558,6 +558,17 @@ public class Transform2 extends RealSquareMatrix {
         s = s3;
         return s;
     }
+
+    /** remove translations
+     * does to alter this
+     * @return
+     */
+    public Transform2 removeTranslations() {
+    	double[] arr = this.getMatrixAsArray();
+    	arr[2] = 0.0;
+    	arr[5] = 0.0;
+    	return new Transform2(arr);
+    }
     
 	/**
 	 * transform describing the rotation and stretching of a line.

@@ -201,10 +201,21 @@ public class Angle {
      * 
      * @param a
      * @return boolean
+     * @deprecated // use epsilon method
      * 
      */
     public boolean isEqualTo(double a) {
         return Real.isEqual(Angle.normalise(angle), Angle.normalise(a));
+    }
+
+    /** compare anngles allowing for epsilon
+     * 
+     * @param a
+     * @param epsilon tolerance limit for equality
+     * @return
+     */
+    public boolean isEqualTo(double a, double epsilon) {
+        return Real.isEqual(Angle.normalise(angle), Angle.normalise(a), epsilon);
     }
     /**
      * is one angle greater than another (after normalisation)
