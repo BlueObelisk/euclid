@@ -316,5 +316,12 @@ public class Real2Array implements EuclidConstants {
         s.append(S_RBRAK);
         return s.toString();
     }
+	public Real2 getLastElement() {
+		Real2 xy = null;
+		if (nelem > 0) {
+			xy = get(nelem-1);
+		}
+		return xy;
+	}
     
 }
