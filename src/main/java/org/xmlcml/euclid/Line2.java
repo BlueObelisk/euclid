@@ -47,7 +47,7 @@ public class Line2 implements EuclidConstants {
 	public Line2(Real2 from, Real2 to) {
 		vector = new Vector2(to.subtract(from));
 		if (vector.getLength() < Real.EPS) {
-			LOG.warn("line has coincident points: "+from+" ... "+to);
+			LOG.trace("line has coincident points: "+from+" ... "+to);
 		}
 		this.from = new Real2(from);
 		this.to = new Real2(to);
