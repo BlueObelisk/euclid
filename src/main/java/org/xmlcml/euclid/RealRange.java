@@ -318,4 +318,9 @@ public class RealRange implements EuclidConstants {
     public String toString() {
         return (minval > maxval) ? "NULL" : EC.S_LBRAK + minval + EC.S_COMMA + maxval + EC.S_RBRAK;
     }
+	public RealRange format(Integer decimalPlaces) {
+		maxval = Util.format(maxval, decimalPlaces);
+		minval = Util.format(minval, decimalPlaces);
+		return this;
+	}
 }
