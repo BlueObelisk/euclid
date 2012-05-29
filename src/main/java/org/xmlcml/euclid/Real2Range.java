@@ -274,4 +274,13 @@ public class Real2Range implements EuclidConstants {
         String yy = (yrange == null) ? "NULL" : yrange.toString();
         return EC.S_LBRAK + xx + EC.S_COMMA + yy + EC.S_RBRAK;
     }
+    
+	public Real2Range format(Integer decimalPlaces) {
+    	xrange = xrange.format(decimalPlaces);
+    	yrange = yrange.format(decimalPlaces);
+    	return this;
+	}
+	public static boolean isNull(Real2Range r2r) {
+		return r2r == null || (r2r.getXRange() == null && r2r.getYRange() == null);
+	}
 }
