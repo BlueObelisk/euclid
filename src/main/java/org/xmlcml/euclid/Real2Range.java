@@ -73,6 +73,37 @@ public class Real2Range implements EuclidConstants {
             yrange = new RealRange(r.yrange);
         }
     }
+
+    /**
+     * reads in format of toString()
+     * ((a,b)(c,d))
+     * @param s
+     */
+    public static Real2Range createFrom(String s) {
+    	if (s == null) {
+    		return null;
+    	}
+    	if (s.startsWith(S_LBRAK+S_LBRAK) && s.endsWith(S_RBRAK+S_RBRAK)) {
+    		String ss = s.substring(2, s.length()-2);
+    		int i = ss.indexOf(S_RBRAK);
+    		int j = ss.indexOf(S_LBRAK);
+    		if (i == -1 || j == -1 || i+2 != j) {
+    			throw new RuntimeException("Bad Real2Range syntax: "+s);
+    		}
+    		RealRange xr = getRealRange(ss.substring(0, i));
+    		RealRange yr = getRealRange(ss.substring(j+1));
+    		if (xr == null || yr == null) {
+    			throw new RuntimeException("Bad Real2Range syntax: "+s);
+    		}
+    		return new Real2Range(xr, yr);
+    	} else {
+			throw new RuntimeException("Bad Real2Range syntax: "+s);
+    	}
+    }
+	private static RealRange getRealRange(String s) {
+		RealArray xa = new RealArray(s.replaceAll(S_COMMA, S_SPACE));
+		return  (xa.size() == 2)  ? new RealRange(xa.get(0), xa.get(1)) : null;
+	}
     /**
      * a Real2Range is valid if both its constituent ranges are
      * 
