@@ -54,6 +54,19 @@ public class Int2 implements EuclidConstants {
         this.x = r.x;
         this.y = r.y;
     }
+    
+    public boolean equals(Object obj) {
+    	if (obj == null || !(obj instanceof Int2)) {
+    		return false;
+    	}
+    	Int2 i2 = (Int2) obj;
+    	return (x == i2.x && y == i2.y);
+    }
+    
+    public int hashCode() {
+    	return 13*x + 37*y;
+    }
+    
     /**
      * swaps the x and y values
      */
