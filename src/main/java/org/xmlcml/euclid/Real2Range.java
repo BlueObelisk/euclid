@@ -27,7 +27,7 @@ import org.xmlcml.euclid.Axis.Axis2;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Real2Range implements EuclidConstants {
-    /**
+	/**
      * X-range
      */
     RealRange xrange;
@@ -194,6 +194,14 @@ public class Real2Range implements EuclidConstants {
         return yrange;
     }
     
+    public void setXRange(RealRange xrange) {
+		this.xrange = xrange;
+	}
+    
+	public void setYRange(RealRange yrange) {
+		this.yrange = yrange;
+	}
+	
     /**
      * get yrange
      * 
