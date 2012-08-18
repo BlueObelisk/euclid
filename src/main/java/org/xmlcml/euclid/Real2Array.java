@@ -323,5 +323,33 @@ public class Real2Array implements EuclidConstants {
 		}
 		return xy;
 	}
+	/** reverse direction of array MODIFIES THIS
+	 * 
+	 */
+	public void reverse() {
+		xarr.reverse();
+		yarr.reverse();
+	}
+
+	/** create subArray starting at start inclusive
+	 * 
+	 * @param start
+	 * @return
+	 */
+	public Real2Array createSubArray(int start) {
+		return createSubArray(start, xarr.size()-1);
+	}
+	
+	/** create subArray
+	 * 
+	 * @param start inclusive
+	 * @param end inclusive
+	 * @return
+	 */
+	public Real2Array createSubArray(int start, int end) {
+		RealArray xarr = this.xarr.getSubArray(start, end);
+		RealArray yarr = this.yarr.getSubArray(start, end);
+		return new Real2Array(xarr, yarr);
+	}
     
 }
