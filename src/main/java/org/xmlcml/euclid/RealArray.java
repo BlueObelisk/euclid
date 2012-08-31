@@ -1756,4 +1756,34 @@ public class RealArray extends ArrayBase {
 		return couldBeFloatArray;
 	}
 
+	/** creates scaled array so it runs spans new Range.
+	 * e.g.
+	 * array = {1,2,3}
+	 * newRange = {5, 9}
+	 * would create (5, 7, 9}
+	 * 
+	 * allows for x0 > x1
+	 * @param newRange
+	 * @return
+	 */
+	public RealArray createScaledArrayToRange(double x0, double x1) {
+		RealArray newArray = null;
+		if (this.nelem > 1) {
+			double thisX0 = this.get(0);
+			double thisX1 = this.get(nelem - 1);
+			Double scale = null;
+			try {
+				scale = (x0 - x1) / (thisX0 - thisX1); 
+			} catch (Exception e) {
+				//
+			}
+			if (scale != null && !Double.isNaN(scale) && !Double.isInfinite(scale) && nelem > 0) {
+				newArray = new RealArray(this);
+				newArray = newArray.addScalar(-thisX0);
+				newArray = newArray.multiplyBy(scale);
+				newArray = newArray.addScalar(x0);
+			}
+		}
+		return newArray;
+	}
 }

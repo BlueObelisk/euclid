@@ -986,4 +986,35 @@ public class RealArrayTest {
 				5 }, intSet.getIntArray());
 	}
 
+	@Test
+	public void testCreateScaledArray() {
+		RealArray ra = new RealArray(new double[]{1., 2., 3.});
+		RealArray ra1 = ra.createScaledArrayToRange(3., 7.);
+		RealArrayTest.assertEquals("scale",
+				new double[] {3., 5., 7.}, ra1, 0.001);
+	}
+	
+	@Test
+	public void testCreateScaledArray1() {
+		RealArray ra = new RealArray(new double[]{1., 2., 3.});
+		RealArray ra1 = ra.createScaledArrayToRange(-3., -7.);
+		RealArrayTest.assertEquals("scale",
+				new double[] {-3., -5., -7.}, ra1, 0.001);
+	}
+	
+	@Test
+	public void testCreateScaledArray0() {
+		RealArray ra = new RealArray(new double[]{1., 2., 3.});
+		RealArray ra1 = ra.createScaledArrayToRange(3., 3.);
+		RealArrayTest.assertEquals("scale",
+				new double[] {3., 3., 3.}, ra1, 0.001);
+	}
+	
+	@Test
+	public void testCreateScaledArray00() {
+		RealArray ra = new RealArray(new double[]{1., 1., 1.});
+		RealArray ra1 = ra.createScaledArrayToRange(3., 4.);
+		Assert.assertNull(ra1);
+	}
+
 }

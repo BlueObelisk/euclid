@@ -270,9 +270,15 @@ public class RealRange implements EuclidConstants {
      * @param range to scale to
      * @return scale or Double.NaN
      */
-    public double getScaleTo(RealRange range) {
-    	double scale = Double.NaN;
-    	
+    public Double getScaleTo(RealRange range) {
+    	Double scale = null;
+    	if (range != null) {
+    		try {
+    			scale = range.getRange() / this.getRange();
+    		} catch (Exception e) {
+    			// returns null;
+    		}
+    	}
     	return scale;
     }
     
