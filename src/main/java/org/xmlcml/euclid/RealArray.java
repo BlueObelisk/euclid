@@ -1755,6 +1755,41 @@ public class RealArray extends ArrayBase {
 		}
 		return couldBeFloatArray;
 	}
+	
+
+	/** creates scaled array so it runs spans new Range.
+	 * e.g.
+	 * array = {1,2,3}
+	 * thisx0, thisx1 = {0.5, 2.5}
+	 * targetx0, targetx1 = {100, 200}
+	 * would create {125., 175., 225.}
+	 * 
+	 * allows for x0 > x1
+	 * @param thisx0 low map point of this
+	 * @param thisx1 high map point of this
+	 * @param targetx0 low map point of target
+	 * @param targetx1 high map point of target
+	 * @return
+	 */
+	public RealArray createScaledArrayToRange(double thisX0, double thisX1, double targetX0, double targetX1) {
+		RealArray newArray = null;
+		if (this.nelem > 1) {
+			Double scale = null;
+			try {
+				scale = (targetX0 - targetX1) / (thisX0 - thisX1); 
+			} catch (Exception e) {
+				//
+			}
+			if (scale != null && !Double.isNaN(scale) && !Double.isInfinite(scale) && nelem > 0) {
+				newArray = new RealArray(this);
+				newArray = newArray.addScalar(-thisX0);
+				newArray = newArray.multiplyBy(scale);
+				newArray = newArray.addScalar(targetX0);
+			}
+		}
+		return newArray;
+	}
+
 
 	/** creates scaled array so it runs spans new Range.
 	 * e.g.
@@ -1786,4 +1821,30 @@ public class RealArray extends ArrayBase {
 		}
 		return newArray;
 	}
+	/** casts an integer array to RealArray
+	 * 
+	 * @param integers
+	 * @return
+	 */
+	public static RealArray createRealArray(int[] integers) {
+		RealArray realArray = null;
+		if (integers != null) {
+			realArray = new RealArray(integers.length);
+			for (int i = 0; i < integers.length; i++) {
+				realArray.array[i] = (double) integers[i];
+			}
+		}
+		return realArray;
+	}
+	
+	/** casts an integer array to RealArray
+	 * 
+	 * @param integers
+	 * @return
+	 */
+	public static RealArray createRealArray(IntArray intArray) {
+		int[] ints = (intArray == null) ? null : intArray.array;
+		return RealArray.createRealArray(ints);
+	}
+	
 }
