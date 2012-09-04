@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
  */
 public class IntSet implements EuclidConstants {
 
-    final static Logger logger = Logger.getLogger(IntSet.class.getName());
+    final static Logger LOG = Logger.getLogger(IntSet.class);
     private int array[];
     private int nelem = 0;
     private int min = Integer.MIN_VALUE;

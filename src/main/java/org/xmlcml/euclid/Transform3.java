@@ -39,7 +39,7 @@ import org.xmlcml.euclid.Axis.Axis3;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Transform3 extends RealSquareMatrix {
-    final static Logger logger = Logger.getLogger(Transform3.class.getName());
+    final static Logger LOG = Logger.getLogger(Transform3.class);
     /** type */
     public enum Type {
         /** */

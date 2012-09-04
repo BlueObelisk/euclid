@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public class IntMatrix implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(IntMatrix.class.getName());
+    final static Logger LOG = Logger.getLogger(IntMatrix.class);
     /**
      * number of rows
      */

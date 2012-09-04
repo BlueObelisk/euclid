@@ -35,8 +35,7 @@ import org.xmlcml.euclid.IntSquareMatrix;
  */
 public class IntSquareMatrixTest extends MatrixTest {
 
-    static Logger logger = Logger
-            .getLogger(IntSquareMatrixTest.class.getName());
+    static Logger LOG = Logger.getLogger(IntSquareMatrixTest.class);
 
     IntSquareMatrix m0;
 
@@ -52,7 +51,7 @@ public class IntSquareMatrixTest extends MatrixTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        logger.setLevel(Level.WARN);
+        LOG.setLevel(Level.WARN);
         m0 = new IntSquareMatrix();
         m1 = new IntSquareMatrix(3);
         m2 = new IntSquareMatrix(3, new int[] { 11, 12, 13, 21, 22, 23, 31, 32,

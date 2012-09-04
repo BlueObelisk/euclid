@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public abstract class ArrayBase implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(ArrayBase.class.getName());
+    final static Logger LOG = Logger.getLogger(ArrayBase.class);
     /** */
     public enum Trim {
         /** */

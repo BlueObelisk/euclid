@@ -37,12 +37,10 @@ import org.xmlcml.euclid.RealSquareMatrix;
  */
 public class RealSquareMatrixTest extends MatrixTest {
 
-	static Logger logger = Logger.getLogger(RealSquareMatrixTest.class);
+	private final static Logger LOG = Logger.getLogger(RealSquareMatrixTest.class);
 
 	RealSquareMatrix m0;
-
 	RealSquareMatrix m1;
-
 	RealSquareMatrix m2;
 
 	/**
@@ -53,7 +51,7 @@ public class RealSquareMatrixTest extends MatrixTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		logger.setLevel(Level.WARN);
+		LOG.setLevel(Level.WARN);
 		m0 = new RealSquareMatrix();
 		m1 = new RealSquareMatrix(3);
 		m2 = new RealSquareMatrix(3, new double[] { 11., 12., 13., 21., 22.,

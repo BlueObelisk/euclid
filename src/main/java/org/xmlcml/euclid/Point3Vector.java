@@ -41,7 +41,7 @@ import org.xmlcml.euclid.Axis.Axis3;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Point3Vector implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(Point3Vector.class.getName());
+    final static Logger LOG = Logger.getLogger(Point3Vector.class);
     protected List<Point3> vector;
     /**
      * Comment for <code>serialVersionUID</code>

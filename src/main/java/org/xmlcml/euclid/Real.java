@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public abstract class Real implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(Real.class.getName());
+    final static Logger LOG = Logger.getLogger(Real.class);
     /** standard for equality of numbers */
     static double epsx = 0.0000000001;
     /**
@@ -291,9 +291,9 @@ public abstract class Real implements EuclidConstants {
      */
     public static void printArray(double[] a) {
         for (int i = 0; i < a.length; i++) {
-            logger.info(a[i] + S_SPACE);
+            LOG.info(a[i] + S_SPACE);
         }
-        logger.info("");
+        LOG.info("");
     }
     
 }

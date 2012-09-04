@@ -42,7 +42,7 @@ import org.xmlcml.euclid.IntSet;
  */
 public class IntMatrixTest {
 
-	final static Logger logger = Logger.getLogger(IntMatrixTest.class);
+	final static Logger LOG = Logger.getLogger(IntMatrixTest.class);
 
 	IntMatrix m0;
 
@@ -57,7 +57,7 @@ public class IntMatrixTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		logger.setLevel(Level.WARN);
+		LOG.setLevel(Level.WARN);
 		m0 = new IntMatrix();
 		m1 = new IntMatrix(3, 4);
 		m2 = new IntMatrix(3, 4, new int[] { 11, 12, 13, 14, 21, 22, 23, 24,
@@ -689,7 +689,7 @@ public class IntMatrixTest {
 	 */
 	@Test
 	public void testInsertColumnDataIntIntMatrix() {
-		logger.info("+++insertColumnData>>>");
+		LOG.info("+++insertColumnData>>>");
 		IntMatrix insert = new IntMatrix(3, 2, new int[] { 72, 73, 82, 83, 92,
 				93, });
 		m2.insertColumnData(1, insert);
@@ -747,7 +747,7 @@ public class IntMatrixTest {
 	 */
 	@Test
 	public void testReplaceRowDataIntIntMatrix() {
-		logger.info("+++replaceRowData>>>");
+		LOG.info("+++replaceRowData>>>");
 		// FIXME
 		IntMatrix insert = new IntMatrix(new IntMatrix(2, 4, new int[] { 71,
 				72, 73, 74, 81, 82, 83, 84, }));
@@ -833,7 +833,7 @@ public class IntMatrixTest {
 	 */
 	@Test
 	public void testAppendRowDataIntMatrix() {
-		logger.info("+++appendRowData>>>");
+		LOG.info("+++appendRowData>>>");
 		// FIXME
 		IntMatrix rm = new IntMatrix(2, 4, new int[] { 41, 42, 43, 44, 51, 52,
 				53, 54 });
