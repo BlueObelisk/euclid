@@ -63,6 +63,7 @@ import org.apache.log4j.Logger;
  * @author 20 August 2003
  */
 public class Util implements EuclidConstants {
+	final static Logger LOG = Logger.getLogger(Util.class);
 
 	/** messages */
 	public enum Message {
@@ -76,7 +77,6 @@ public class Util implements EuclidConstants {
 		}
 	}
 
-	final static Logger logger = Logger.getLogger(Util.class.getName());
 
 	public final static String[] LOWER_ROMAN_NUMERAL = { "i", "ii", "iii",
 			"iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii",
@@ -808,7 +808,7 @@ public class Util implements EuclidConstants {
 	 * 
 	 */
 	public static void warning(String s) {
-		logger.info("WARNING: " + s);
+		LOG.info("WARNING: " + s);
 	}
 
 	/**
@@ -822,7 +822,7 @@ public class Util implements EuclidConstants {
 	 * 
 	 */
 	public static void message(String s) {
-		logger.info(s);
+		LOG.info(s);
 	}
 
 	// static jumbo.xml.gui.XText errorText;
@@ -841,7 +841,7 @@ public class Util implements EuclidConstants {
 		// errorText = new jumbo.xml.gui.XText();
 		// errorText.displayInFrame();
 		// }
-		logger.info("ERROR: " + s);
+		LOG.info("ERROR: " + s);
 		// errorText.addText(s);
 	}
 
@@ -1845,7 +1845,7 @@ public class Util implements EuclidConstants {
 					}
 				}
 				if (!ok) {
-					logger.error("==Unknown DOS character==" + jj + "//" + s);
+					LOG.error("==Unknown DOS character==" + jj + "//" + s);
 				}
 			}
 		}

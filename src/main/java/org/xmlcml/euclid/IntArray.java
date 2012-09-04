@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public class IntArray extends ArrayBase {
-    final static Logger logger = Logger.getLogger(IntArray.class.getName());
+    final static Logger LOG = Logger.getLogger(IntArray.class);
     /**
      * maximum number of elements (for bound checking)
      * 

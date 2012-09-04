@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public abstract class Int implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(Int.class);
+    final static Logger LOG = Logger.getLogger(Int.class);
     /**
      * set an array to zero
      * 
@@ -57,9 +57,9 @@ public abstract class Int implements EuclidConstants {
      */
     public static void printArray(int[] a) {
         for (int i = 0; i < a.length; i++) {
-            logger.info(a[i] + EC.S_SPACE);
+            LOG.info(a[i] + EC.S_SPACE);
         }
-        logger.info("");
+        LOG.info("");
     }
 	/**
 	 * tests equality of int arrays. arrays must be of same length

@@ -39,9 +39,7 @@ import org.xmlcml.euclid.Transform2.Type;
 public class Transform2Test {
 
 	Transform2 t0;
-
 	Transform2 t1;
-
 	Transform2 t2;
 
 	/**
@@ -356,4 +354,36 @@ public class Transform2Test {
 				1.0, -1.0, 0.0, }, rsm.getMatrixAsArray(), EPS);
 	}
 
+	/**
+	 * rotation may be confused with skew
+	 */
+	@Test
+	public void testGetAngleOfRotation1() {
+		Transform2 t = new Transform2(new double[] { 0., 1., 0., -1., 0.3, 0.,
+				0., 0., 1. });
+		Angle a = t.getAngleOfRotation();
+		Assert.assertEquals("getAngle", Math.PI / 2., a.getRadian(), EPS);
+	}
+	
+	/**
+	 * rotation may be confused with skew
+	 */
+	@Test
+	public void testGetAngleOfRotation2() {
+		Transform2 t = new Transform2(new double[] { 1., 0.3, 0., 0., 1, 0.,
+				0., 0., 1. });
+		Angle a = t.getAngleOfRotation();
+		Assert.assertEquals("getAngle", 0., a.getRadian(), EPS);
+	}
+	/**
+	 * rotation may be confused with skew
+	 */
+	@Test
+	public void testGetAngleOfRotation3() {
+		Transform2 t = new Transform2(new double[] { 10., 3., 0., 0., 10., 0.,
+				0., 0., 1. });
+		Angle a = t.getAngleOfRotation();
+		Assert.assertEquals("getAngle", 0., a.getRadian(), EPS);
+	}
+	
 }

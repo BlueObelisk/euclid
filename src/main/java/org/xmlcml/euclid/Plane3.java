@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  */
 
 public class Plane3 implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(Plane3.class.getName());
+    final static Logger LOG = Logger.getLogger(Plane3.class);
 
     /**
      * vector of plane (normalised)

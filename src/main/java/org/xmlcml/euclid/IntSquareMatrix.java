@@ -54,8 +54,7 @@ public class IntSquareMatrix extends IntMatrix {
             this.i = i;
         }
     }
-    final static Logger logger = Logger.getLogger(IntSquareMatrix.class
-            .getName());
+    final static Logger LOG = Logger.getLogger(IntSquareMatrix.class);
     /**
      * Constructor. This gives a default matrix with cols = rows = 0.
      */

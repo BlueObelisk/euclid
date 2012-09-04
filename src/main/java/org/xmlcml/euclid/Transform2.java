@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  * @author PMR 20 August 2003
  */
 public class Transform2 extends RealSquareMatrix {
-    final static Logger logger = Logger.getLogger(Transform2.class.getName());
+    final static Logger LOG = Logger.getLogger(Transform2.class.getName());
     /** type */
     public enum Type {
         /** */
@@ -491,13 +491,36 @@ public class Transform2 extends RealSquareMatrix {
         return Type.ANY;
     }
     /**
-     * interpret current matrix as rotation about axis NOT YET CHECKED; only
-     * worsk for orthornormal matrices
+     * interpret current matrix as rotation about axis NOT YET CHECKED; 
+     * assume combined rotation and Xskew 
+     * and isotropic scale
+     * (cos -sin)  *  (1  d)    // d is tan(skew angle)
+     * (sin  cos)     (0  1)
+     * 
+     * gives
+     * (cos  d.cos-sin)
+     * (sin  d.sin+cos)
+     * 
      * 
      * @return The angleOfRotation value
      */
     public Angle getAngleOfRotation() {
-        return new Angle(Math.atan2(flmat[0][1], flmat[0][0]));
+    	Angle ang = null;
+    	// antisymmetric, including unit 
+    	if (Real.isEqual(flmat[0][1] + flmat[1][0], 0.0, EPS)) {
+    		// this is the ony generic rotation that can be extracted
+    		ang = new Angle(Math.atan2(flmat[0][1], flmat[0][0]));
+    	} else if (Real.isEqual(flmat[0][0], flmat[1][1], EPS)){
+    		if (Real.isZero(flmat[1][0], EPS)) {
+    			ang = new Angle(0);
+    		} else if (Real.isZero(flmat[0][0], EPS)) {
+    			ang = new Angle(0);
+    		}
+    	} else {
+    		LOG.debug("TRANSFORM "+this.toString());
+    		ang = null;
+    	}
+    	return ang;
     }
     /**
      * get Transformation to mirror ('flip') across an axis NOT YET CHECKED

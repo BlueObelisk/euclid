@@ -44,7 +44,7 @@ import org.xmlcml.euclid.RealRange;
  */
 public class RealMatrixTest{
 
-	static Logger logger = Logger.getLogger(RealMatrixTest.class.getName());
+	private final static Logger LOG = Logger.getLogger(RealMatrixTest.class);
 
 	RealMatrix m0;
 	RealMatrix m1;
@@ -57,7 +57,7 @@ public class RealMatrixTest{
 	 */
 	@Before
 	public void setUp() throws Exception {
-		logger.setLevel(Level.WARN);
+		LOG.setLevel(Level.WARN);
 		m0 = new RealMatrix();
 		m1 = new RealMatrix(3, 4);
 		m2 = new RealMatrix(3, 4, new double[] { 11., 12., 13., 14., 21., 22.,
@@ -772,7 +772,7 @@ public class RealMatrixTest{
 	public void testReplaceColumnDataIntRealMatrix() {
 		RealMatrix m = new RealMatrix(3, 2, new double[] { 72., 73., 82., 83.,
 				92., 93. });
-		logger.info("\n--OK replace-- 1 " + m + "\n----");
+		LOG.info("\n--OK replace-- 1 " + m + "\n----");
 		m2.replaceColumnData(1, m);
 		RealMatrix expect = new RealMatrix(3, 4, new double[] { 11.0, 72.0,
 				73.0, 14.0, 21.0, 82.0, 83.0, 24.0, 31.0, 92.0, 93.0, 34.0, });
@@ -860,7 +860,7 @@ public class RealMatrixTest{
 	 */
 	@Test
 	public void testInsertColumnDataIntRealMatrix() {
-		logger.info("+++insertColumnData>>>");
+		LOG.info("+++insertColumnData>>>");
 		RealMatrix insert = new RealMatrix(3, 2, new double[] { 72., 73., 82.,
 				83., 92., 93., });
 		m2.insertColumnData(1, insert);
@@ -928,7 +928,7 @@ public class RealMatrixTest{
 	 */
 	@Test
 	public void testReplaceRowDataIntRealMatrix() {
-		logger.info("+++replaceRowData>>>");
+		LOG.info("+++replaceRowData>>>");
 		// FIXME
 		RealMatrix insert = new RealMatrix(new RealMatrix(2, 4, new double[] {
 				71.0, 72.0, 73.0, 74.0, 81.0, 82.0, 83.0, 84.0, }));
@@ -1061,7 +1061,7 @@ public class RealMatrixTest{
 	 */
 	@Test
 	public void testAppendRowDataRealMatrix() {
-		logger.info("+++appendRowData>>>");
+		LOG.info("+++appendRowData>>>");
 		// FIXME
 		RealMatrix rm = new RealMatrix(2, 4, new double[] { 41., 42., 43., 44.,
 				51., 52., 53., 54. });

@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  * @author (C) P. Murray-Rust, 1996
  */
 public class RealMatrix implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(RealMatrix.class.getName());
+    final static Logger LOG = Logger.getLogger(RealMatrix.class);
     /**
      * number of rows
      */

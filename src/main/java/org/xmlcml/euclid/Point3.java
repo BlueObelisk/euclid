@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  */
 
 public class Point3 implements EuclidConstants {
-    final static Logger logger = Logger.getLogger(Point3.class.getName());
+    final static Logger LOG = Logger.getLogger(Point3.class);
 
     /**
      * tolerance between crystal fractional coordinates. allows for 1/3 being

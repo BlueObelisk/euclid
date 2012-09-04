@@ -39,7 +39,7 @@ import org.xmlcml.euclid.RealMatrix;
  */
 public class MatrixTest {
 
-	static Logger logger = Logger.getLogger(MatrixTest.class.getName());
+	private final static Logger LOG = Logger.getLogger(MatrixTest.class);
 
 	/**
 	 * setup.
@@ -48,7 +48,7 @@ public class MatrixTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		logger.setLevel(Level.WARN);
+		LOG.setLevel(Level.WARN);
 	}
 
 	/**
