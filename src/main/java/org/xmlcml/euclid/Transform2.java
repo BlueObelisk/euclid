@@ -517,7 +517,7 @@ public class Transform2 extends RealSquareMatrix {
     			ang = new Angle(0);
     		}
     	} else {
-    		LOG.debug("TRANSFORM "+this.toString());
+    		LOG.trace("TRANSFORM "+this.toString());
     		ang = null;
     	}
     	return ang;
