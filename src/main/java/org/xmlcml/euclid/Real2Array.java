@@ -16,6 +16,9 @@
 
 package org.xmlcml.euclid;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.log4j.Logger;
 
 
@@ -350,6 +353,33 @@ public class Real2Array implements EuclidConstants {
 		RealArray xarr = this.xarr.getSubArray(start, end);
 		RealArray yarr = this.yarr.getSubArray(start, end);
 		return new Real2Array(xarr, yarr);
+	}
+	
+	public static Real2Array createFromCoords(String coords) {
+		Real2Array real2Array = null;
+		if (coords != null) {
+			coords = coords.trim();
+			if (coords.startsWith(EuclidConstants.S_LBRAK) && coords.endsWith(EuclidConstants.S_RBRAK)) {
+				real2Array = new Real2Array();
+				coords = coords.substring(1, coords.length()-1);
+				Pattern COORD_PATTERN = Pattern.compile("\\(([0-9\\.\\-\\+]+)\\,([0-9\\.\\-\\+]+)\\)");
+				Matcher matcher = COORD_PATTERN.matcher(coords);
+				while (matcher.find()) {
+					try {
+						double dd[] = new double[2];
+						dd[0] = Util.parseFlexibleDouble(matcher.group(1));
+						dd[1] = Util.parseFlexibleDouble(matcher.group(2));
+						Real2 coord = new Real2(dd);
+						real2Array.add(coord);
+					} catch (Exception e) {
+						System.out.println(e);
+						real2Array = null;
+						break;
+					}
+				}
+			}
+		}
+		return real2Array;
 	}
     
 }
