@@ -133,5 +133,15 @@ public class Real2ArrayTest {
 		Assert.assertEquals("elementAt", 5., real2.getX(), EPS);
 		Assert.assertEquals("elementAt", 15., real2.getY(), EPS);
 	}
-
+	@Test
+	public void testCreateFromCoords() {
+		String coords = "((112.559,238.695)(121.217,238.695)(129.215,238.695)(139.877,238.695)(146.543,238.695)(149.543,238.695)(153.533,238.695)(160.295,238.695)(167.621,238.695)(176.279,238.695)(182.876,238.695)(186.836,238.695)(197.498,238.695)(204.164,238.695)(208.154,238.695)(211.199,238.695)(219.863,238.695)(223.199,238.695)(227.879,238.695)(230.879,238.695)(236.189,238.695)(241.499,238.695)(244.817,238.695)(250.127,238.695)(256.109,238.695)(259.091,238.695)(262.091,238.695)(266.069,238.695)(272.051,238.695)(276.029,238.695)(279.029,238.695))"	;
+		Real2Array real2Array = Real2Array.createFromCoords(coords);
+		Assert.assertNotNull("coords", real2Array);
+		Assert.assertEquals("coords", 31, real2Array.size());
+		
+		Assert.assertTrue("coords 0, found: "+real2Array.get(0), new Real2(112.559,238.695).isEqualTo(real2Array.get(0), 0.001));
+		
+				
+	}
 }
