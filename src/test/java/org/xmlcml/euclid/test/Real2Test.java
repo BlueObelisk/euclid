@@ -458,5 +458,14 @@ public class Real2Test {
 		d[8] = 0.0;
 		RealMatrixTest.assertEquals("distance matrix", 3, 3, d, m, EPS);
 	}
+	
+	@Test
+	public void testFromString() {
+		Real2 real2 = new Real2(1.2, 2.3);
+		String s = real2.toString();
+		Real2 newReal2 = Real2.createFromString(s);
+		Assert.assertNotNull(newReal2);
+		Real2Test.assertEquals("string", real2, newReal2, 0.001);
+	}
 
 }
