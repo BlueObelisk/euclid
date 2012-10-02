@@ -87,6 +87,21 @@ public class Real2 implements EuclidConstants {
         this.x = x[0];
         this.y = x[1];
     }
+    /** reads outut foemat from toString()
+     * "(x,y)"
+     * @param s
+     * @return
+     */
+    public static Real2 createFromString(String s) {
+    	Real2 real2 = null;
+    	if (s != null) {
+    		s = s.trim();
+    		if (s.startsWith(S_LBRAK) && s.endsWith(S_RBRAK)) {
+    			real2 = new Real2(s.substring(1, s.length()-1), S_COMMA);
+    		}
+    	}
+    	return real2;
+    }
     /**
      * copy constructor
      * 
