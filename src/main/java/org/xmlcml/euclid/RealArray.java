@@ -1123,6 +1123,22 @@ public class RealArray extends ArrayBase {
         return array[indexOfSmallestElement()];
     }
     /**
+     * calculates mean as sum of all elements divided by number of elements
+     * @return null if zero-length array.
+     */
+    public Double getMean() {
+    	Double mean = null;
+    	if (nelem > 0) {
+    		mean = 0.0;
+    		for (int i = 0; i < nelem; i++) {
+    			mean += array[i];
+    		}
+    		mean /= (double) nelem;
+    	}
+    	return mean;
+    }
+    
+    /**
      * range of array.
      * 
      * @throws ArrayIndexOutOfBoundsException
