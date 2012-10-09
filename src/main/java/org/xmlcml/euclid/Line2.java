@@ -310,6 +310,37 @@ public class Line2 implements EuclidConstants {
 	public Vector2 getVector() {
 		return vector;
 	}
+
+	/** creates point at (signed) distance dist from "from" point
+	 * 
+	 * newPoint = from + (dist / line.length) * vector
+	 * @param length
+	 * @return new Point
+	 */
+	public Real2 createPointOnLine(Double dist) {
+		double length = this.getLength();
+		double multiplier = dist / length;
+		Real2 newVector = vector.multiplyBy(multiplier);
+		Real2 newPoint = new Real2(from);
+		newPoint.plusEquals(newVector);
+		return newPoint;
+	}
+	
+	/** gets serial number of point in line specification
+	 * if point is within EPS of "from" returns 0
+	 * if point is within EPS of "to" returns 1
+	 * else returns -1
+	 */
+	public int getSerial(Real2 point, double eps) {
+		if (from.getDistance(point) < eps) {
+			return 0;
+		}
+		if (to != null && to.getDistance(point) < eps) {
+			return 1;
+		}
+		return -1;
+	}
+	
 	/**
 	 * @return string
 	 */

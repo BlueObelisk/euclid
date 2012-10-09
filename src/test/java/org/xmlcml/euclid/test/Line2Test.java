@@ -197,5 +197,38 @@ public class Line2Test {
 		Real2Test.assertEquals("mid point", new Real2(1.5, 2), l1112
 				.getMidPoint(), Real.EPS);
 	}
+		
+	@Test
+	public void testCreatePointOnLine() {
+		Line2 line = new Line2(new Real2(0.,0.), new Vector2(1., 0.));
+		Real2 newPoint = line.createPointOnLine(3.0);
+		Real2Test.assertEquals("extend", new Real2(3.0, 0.), newPoint, 0.01);
+	}
+
+	@Test
+	public void testCreatePointOnLine1() {
+		Line2 line = new Line2(new Real2(1., 2.), new Real2(4., -2.));
+		Real2 newPoint = line.createPointOnLine(10.0);
+		Real2Test.assertEquals("extend", new Real2(7., -6.), newPoint, 0.01);
+	}
+	
+	@Test
+	public void testGetSerial() {
+		double eps = 0.01;
+		Line2 line = new Line2(new Real2(1., 1.), new Real2(2., 2.));
+		Assert.assertEquals("from", 0, line.getSerial(new Real2(1.001, 1.001), eps));
+		Assert.assertEquals("to", 1, line.getSerial(new Real2(2.001, 2.001), eps));
+		Assert.assertEquals("none", -1, line.getSerial(new Real2(3.001, 3.001), eps));
+	}
+
+	@Test
+	public void testGetSerial1() {
+		double eps = 0.01;
+		Line2 line = new Line2(new Real2(1., 1.), new Vector2(1., 1.));
+		Real2Test.assertEquals("check to", new Real2(2.001, 2.002), line.getXY(1), eps);
+		Assert.assertEquals("from", 0, line.getSerial(new Real2(1.001, 1.001), eps));
+		Assert.assertEquals("to", 1, line.getSerial(new Real2(2.001, 2.001), eps));
+		Assert.assertEquals("to", -1, line.getSerial(new Real2(3.001, 3.001), eps));
+	}
 
 }
