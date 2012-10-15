@@ -316,6 +316,7 @@ public class Line2 implements EuclidConstants {
 	 * newPoint = from + (dist / line.length) * vector
 	 * @param length
 	 * @return new Point
+	 * 
 	 */
 	public Real2 createPointOnLine(Double dist) {
 		double length = this.getLength();
@@ -323,6 +324,24 @@ public class Line2 implements EuclidConstants {
 		Real2 newVector = vector.multiplyBy(multiplier);
 		Real2 newPoint = new Real2(from);
 		newPoint.plusEquals(newVector);
+		return newPoint;
+	}
+	
+	/** creates point at (signed) distance dist from index point
+	 * 
+	 * vector = xy(1-index) <- xy(index)
+	 * newPoint = xy(index) + (dist / line.length) * vector
+	 * @param length
+	 * @return new Point
+	 */
+	public Real2 createPointOnLine(Double dist, int index) {
+		double length = this.getLength();
+		double multiplier = dist / length;
+		Real2 newVector = vector.multiplyBy(multiplier);
+		if (index == 1){
+			newVector.negative();
+		}
+		Real2 newPoint = getXY(index).plus(newVector);
 		return newPoint;
 	}
 	

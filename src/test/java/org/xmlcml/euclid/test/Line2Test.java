@@ -231,4 +231,14 @@ public class Line2Test {
 		Assert.assertEquals("to", -1, line.getSerial(new Real2(3.001, 3.001), eps));
 	}
 
+	@Test
+	public void testCreatePointOnLineIndex() {
+		Line2 line = new Line2(new Real2(0.0, 0.0), new Real2(3., 4.));
+		double dist = 10;
+		Real2 point0 = line.createPointOnLine(dist, 0);
+		Real2Test.assertEquals("point0 ", new Real2(6., 8.), point0, 0.01);
+		Real2 point1 = line.createPointOnLine(dist, 1);
+		Real2Test.assertEquals("point1 ", new Real2(-3., -4.), point1, 0.01);
+	}
+
 }
