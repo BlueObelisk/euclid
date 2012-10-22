@@ -16,6 +16,8 @@
 
 package org.xmlcml.euclid;
 
+import java.awt.geom.AffineTransform;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -107,6 +109,19 @@ public class Transform2 extends RealSquareMatrix {
         flmat[0][2] = v.x;
         flmat[1][2] = v.y;
     }
+    
+    public Transform2(AffineTransform at) {
+    	this();
+    	double[] dd = new double[6];
+    	at.getMatrix(dd);
+    	flmat[0][0] = dd[0];
+    	flmat[0][1] = dd[2];
+    	flmat[0][2] = dd[4];
+    	flmat[1][0] = dd[1];
+    	flmat[1][1] = dd[3];
+    	flmat[1][2] = dd[5];
+    }
+    
     /** clockwise rotation about z- axis
      * 
      * @param zrot radians clockwise rotation
