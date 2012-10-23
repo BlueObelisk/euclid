@@ -381,5 +381,44 @@ public class Real2Array implements EuclidConstants {
 		}
 		return real2Array;
 	}
+	
+	public Real2 getPointWithMinimumX() {
+		int idx = getIndexOfPointWithMinimumX();
+		return idx == -1 ? null : get(idx);
+	}
+	
+	private int getIndexOfPointWithMinimumX() {
+		RealArray xArray = getXArray();
+		return (xArray == null || xArray.size() == 0) ? -1 : xArray.indexOfSmallestElement();
+	}
     
+	public Real2 getPointWithMaximumX() {
+		int idx = getIndexOfPointWithMaximumX();
+		return idx == -1 ? null : get(idx);
+	}
+	
+	private int getIndexOfPointWithMaximumX() {
+		RealArray xArray = getXArray();
+		return (xArray == null || xArray.size() == 0) ? -1 : xArray.indexOfSmallestElement();
+	}
+    
+	public Real2 getPointWithMinimumY() {
+		int idx = getIndexOfPointWithMinimumY();
+		return idx == -1 ? null : get(idx);
+	}
+	
+	private int getIndexOfPointWithMinimumY() {
+		RealArray yArray = getYArray();
+		return (yArray == null || yArray.size() == 0) ? -1 : yArray.indexOfSmallestElement();
+	}
+    
+	public Real2 getPointWithMaximumY() {
+		int idx = getIndexOfPointWithMaximumY();
+		return idx == -1 ? null : get(idx);
+	}
+	
+	private int getIndexOfPointWithMaximumY() {
+		RealArray yArray = getYArray();
+		return (yArray == null || yArray.size() == 0) ? -1 : yArray.indexOfSmallestElement();
+	}
 }
