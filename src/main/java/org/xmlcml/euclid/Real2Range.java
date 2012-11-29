@@ -315,8 +315,10 @@ public class Real2Range implements EuclidConstants {
     }
     
 	public Real2Range format(Integer decimalPlaces) {
-    	xrange = xrange.format(decimalPlaces);
-    	yrange = yrange.format(decimalPlaces);
+		if (xrange != null && yrange != null) {
+	    	xrange = xrange.format(decimalPlaces);
+	    	yrange = yrange.format(decimalPlaces);
+		}
     	return this;
 	}
 	public static boolean isNull(Real2Range r2r) {
