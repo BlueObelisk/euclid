@@ -37,6 +37,7 @@ public class Real2Range implements EuclidConstants {
     RealRange yrange;
     /**
      * constructor.
+     * Creates INVALID range
      */
     public Real2Range() {
     }
@@ -143,7 +144,10 @@ public class Real2Range implements EuclidConstants {
     }
     /**
      * merge two ranges and take the maximum extents
-     * 
+     * not sure the logic is right
+     * if this is INVALID then replace with r2
+     * if this is VALID and r2 is INVALID return this
+     * else return union of the two
      * @param r2
      * @return range
      */
