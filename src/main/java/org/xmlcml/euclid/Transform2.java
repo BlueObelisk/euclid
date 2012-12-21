@@ -578,12 +578,13 @@ public class Transform2 extends RealSquareMatrix {
      * 
      * @return The scales value
      */
-    RealArray getScales() {
+    public RealArray getScales() {
         RealArray scales;
         RealSquareMatrix s3 = new RealSquareMatrix(extractSubMatrixData(0, 1, 0, 1));
         scales = s3.euclideanColumnLengths();
         return scales;
     }
+    
     /**
      * get Unitary matrix (that is eliminate scales and translation)
      * 
