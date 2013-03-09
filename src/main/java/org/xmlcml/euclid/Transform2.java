@@ -537,6 +537,49 @@ public class Transform2 extends RealSquareMatrix {
     	}
     	return ang;
     }
+    
+    /**
+     * interpret current matrix as rotation about axis NOT YET CHECKED; 
+     * assume combined rotation and Xskew 
+     * and isotropic scale
+     * (cos -sin)  *  (1  tand)    // d is tan(skew angle)
+     * (sin  cos)     (0  1)
+     * 
+     * gives
+     * (cos  tand.cos-sin)
+     * (sin  tand.sin+cos)
+     * 
+     * 
+     * @return The angleOfRotation value
+     */
+    public Angle getAngleOfRotationNew() {
+    	Angle ang = new Angle(Math.atan2(flmat[0][1], flmat[0][0]));
+    	return ang;
+    }
+    
+    /**
+     * interpret current matrix as rotation about axis NOT YET CHECKED; 
+     * assume combined rotation and Xskew 
+     * and isotropic scale
+     * (cos -sin)  *  (1  tand)    // d is tan(skew angle)
+     * (sin  cos)     (0  1)
+     * 
+     * gives
+     * (cos  tand.cos-sin)
+     * (sin  tand.sin+cos)
+     * 
+     * 
+     * @return The angleOfRotation value
+     */
+    public Angle getAngleOfSkew(double eps) {
+    	double tandcos = flmat[0][1] + flmat[1][0];
+    	double tandsin = flmat[1][1] - flmat[0][0];
+    	Angle d = new Angle(0);
+    	if (!Real.isZero(tandcos, eps) && !Real.isZero(tandsin, eps)) {
+			d = new Angle(Math.atan2(tandsin, tandcos));
+    	}
+    	return d;
+    }
     /**
      * get Transformation to mirror ('flip') across an axis NOT YET CHECKED
      * 
