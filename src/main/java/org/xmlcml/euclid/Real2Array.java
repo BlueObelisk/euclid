@@ -372,7 +372,7 @@ public class Real2Array implements EuclidConstants {
 						Real2 coord = new Real2(dd);
 						real2Array.add(coord);
 					} catch (Exception e) {
-						System.out.println(e);
+						LOG.trace("bad coord "+e);
 						real2Array = null;
 						break;
 					}

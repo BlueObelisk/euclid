@@ -191,7 +191,7 @@ public class Angle {
         while (angle < 0.0) {
             angle += 2 * Math.PI;
         }
-        System.out.println(angle);
+//        LOG.trace(angle);
         return angle;
     }
     /**
