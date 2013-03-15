@@ -376,7 +376,7 @@ public class Real2 implements EuclidConstants {
     }
     /**
      * transforms the point by a rot-trans matrix MODIFIES 'this' Note the next
-     * routinie is often better
+     * routine is often better
      * 
      * @param t
      * 
