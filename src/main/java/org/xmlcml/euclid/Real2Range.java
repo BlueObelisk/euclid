@@ -53,7 +53,11 @@ public class Real2Range implements EuclidConstants {
             yrange = yr;
         }
     }
-    
+    /** create from min corner of box and max corner
+     * 
+     * @param r2a
+     * @param r2b
+     */
     public Real2Range(Real2 r2a, Real2 r2b) {
     	double x0 = r2a.getX();
     	double x1 = r2b.getX();
@@ -307,6 +311,20 @@ public class Real2Range implements EuclidConstants {
     	return r2;
     }
 
+    /** transform range (as copy)
+     * 
+     * @param t2
+     * @return new Range
+     */
+    public Real2Range getTranformedRange(Transform2 t2) {
+    	RealRange xRange = this.getXRange();
+    	RealRange yRange = this.getYRange();
+    	Real2 xyMin = new Real2(xRange.getMin(), yRange.getMin());
+    	xyMin.transformBy(t2);
+    	Real2 xyMax = new Real2(xRange.getMax(), yRange.getMax());
+    	xyMax.transformBy(t2);
+    	return new Real2Range(xyMin, xyMax);
+    }
     /**
      * to string.
      * 
