@@ -223,9 +223,12 @@ public class Real2Range implements EuclidConstants {
      * @return minx,miny ... maxx, maxy
      */
     public Real2[] getCorners() {
-    	Real2[] rr = new Real2[2];
-    	rr[0] = new Real2(xrange.getMin(), yrange.getMin());
-    	rr[1] = new Real2(xrange.getMax(), yrange.getMax());
+    	Real2[] rr = null;
+    	if (xrange != null && yrange != null) {
+    		rr = new Real2[2];
+	    	rr[0] = new Real2(xrange.getMin(), yrange.getMin());
+	    	rr[1] = new Real2(xrange.getMax(), yrange.getMax());
+    	}
     	return rr;
     }
     
