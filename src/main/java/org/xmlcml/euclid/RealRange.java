@@ -162,6 +162,14 @@ public class RealRange implements EuclidConstants {
         		Math.min(minval, r2.minval), Math.max(maxval, r2.maxval));
         return temp;
     }
+    
+    public RealRange plusEquals(RealRange r2) {
+    	if (r2 != null) {
+    		minval = Math.min(minval, r2.minval);
+    		maxval = Math.min(maxval, r2.maxval);
+    	} 
+    	return this;
+    }
     /**
      * intersect two ranges and take the range common to both;
      * return null if no overlap
