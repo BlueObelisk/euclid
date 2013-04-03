@@ -115,8 +115,7 @@ public class Real2Range implements EuclidConstants {
      * @return valid
      */
     public boolean isValid() {
-        return (xrange != null && yrange != null && xrange.isValid() && yrange
-                .isValid());
+        return (xrange != null && yrange != null && xrange.isValid() && yrange.isValid());
     }
     /**
      * is equals to.
@@ -168,6 +167,15 @@ public class Real2Range implements EuclidConstants {
         }
         return new Real2Range(xrange.plus(r2.xrange), yrange.plus(r2.yrange));
     }
+    
+    public Real2Range plusEquals(Real2Range r2) {
+    	if (r2 != null) {
+    		xrange = (xrange == null) ? r2.xrange : xrange.plus(r2.xrange);
+    		yrange = (yrange == null) ? r2.yrange : yrange.plus(r2.yrange);
+    	}
+    	return this;
+    }
+    
     /**
      * intersect two ranges and take the range common to both; return invalid
      * range if no overlap or either is null/invalid
