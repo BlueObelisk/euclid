@@ -26,9 +26,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -63,6 +66,8 @@ import org.apache.log4j.Logger;
  * @author 20 August 2003
  */
 public class Util implements EuclidConstants {
+	private static final PrintStream SYSOUT = System.out;
+
 	final static Logger LOG = Logger.getLogger(Util.class);
 
 	/** messages */
@@ -2908,7 +2913,7 @@ public class Util implements EuclidConstants {
 	 * @param s
 	 */
 	public static void print(String s) {
-		System.out.print(s);
+		SYSOUT.print(s);
 	}
 	
 	/** outputs to sysout.
@@ -2917,7 +2922,7 @@ public class Util implements EuclidConstants {
 	 * @param s
 	 */
 	public static void println(String s) {
-		System.out.println(s);
+		SYSOUT.println(s);
 	}
 	
 	/** outputs to sysout.
@@ -2926,7 +2931,7 @@ public class Util implements EuclidConstants {
 	 * @param s
 	 */
 	public static void println() {
-		System.out.println();
+		SYSOUT.println();
 	}
 
 	public static List<String> getRESTQueryAsLines(String s, String u,
@@ -3146,5 +3151,27 @@ class StringIntegerComparator implements Comparator<Object> {
 		}
 		return new Integer(ss);
 	}
-	
+
+	/** reverses lines in file.
+	 * 
+	 * line(0) and line(n-1) are swapped, etc.
+	 * 
+	 * @param inFilename
+	 * @param outFilename
+	 * @throws Exception
+	 */
+	public static void reverseLinesInFile(String inFilename, String outFilename) throws Exception {
+		List<String> lines = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(inFilename));
+		while (true) {
+			String line = br.readLine();
+			if (line == null) break;
+			lines.add(line);
+		}
+		File file1 = new File(outFilename);
+		FileWriter fw = new FileWriter(file1);
+		for (int i = lines.size() - 1; i >= 0; i--) {
+			fw.write(lines.get(i)+"\n");
+		}
+	}
  }

@@ -16,18 +16,21 @@
 
 package org.xmlcml.euclid.test;
 
-import static org.xmlcml.euclid.EC.S_EMPTY;
-import static org.xmlcml.euclid.EC.S_RBRAK;
+import static org.xmlcml.euclid.EuclidConstants.S_EMPTY;
+
+import static org.xmlcml.euclid.EuclidConstants.S_RBRAK;
+
+import java.util.Iterator;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.xmlcml.euclid.ArrayBase.Trim;
 import org.xmlcml.euclid.EuclidRuntimeException;
 import org.xmlcml.euclid.Int;
 import org.xmlcml.euclid.IntArray;
 import org.xmlcml.euclid.IntRange;
 import org.xmlcml.euclid.IntSet;
-import org.xmlcml.euclid.ArrayBase.Trim;
 
 /**
  * test IntArray
@@ -714,4 +717,36 @@ public class IntArrayTest {
 				5 }, intSet.getIntArray());
 	}
 
+	@Test
+	public void testIterator() {
+		IntArray intArray = new IntArray(new int[]{0,1,2});
+		Iterator<Integer> intIterator = intArray.iterator();
+		Assert.assertTrue("start", intIterator.hasNext());
+		Assert.assertTrue("start", intIterator.hasNext());
+		Assert.assertTrue("start", intIterator.hasNext());
+		Assert.assertTrue("start", intIterator.hasNext());
+		Assert.assertEquals("start", 0, (int) intIterator.next());
+		Assert.assertEquals("start", 1, (int) intIterator.next());
+		Assert.assertTrue("after 1", intIterator.hasNext());
+		Assert.assertEquals("after 1", 2, (int) intIterator.next());
+		Assert.assertFalse("end", intIterator.hasNext());
+		Assert.assertNull("after 2", intIterator.next());
+	}
+	
+
+	@Test
+	public void testIterators() {
+		IntArray intArray = new IntArray(new int[]{0,1,2});
+		Iterator<Integer> intIterator00 = intArray.iterator();
+		Iterator<Integer> intIterator01 = intArray.iterator();
+		Assert.assertTrue("start", intIterator00.hasNext());
+		Assert.assertEquals("start", 0, (int) intIterator00.next());
+		Assert.assertEquals("start", 1, (int) intIterator00.next());
+		Assert.assertEquals("start", 0, (int) intIterator01.next());
+		Assert.assertEquals("end0", 2, (int) intIterator00.next());
+		Assert.assertFalse("end0", intIterator00.hasNext());
+		Assert.assertTrue("middle1", intIterator01.hasNext());
+		Assert.assertNull("endo", intIterator00.next());
+		Assert.assertEquals("start", 1, (int) intIterator01.next());
+	}
 }

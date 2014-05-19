@@ -45,13 +45,17 @@ public class Line2 implements EuclidConstants {
 	 * @param to
 	 */
 	public Line2(Real2 from, Real2 to) {
+		this.from = new Real2(from);
+		this.to = new Real2(to);
+		createVector();
+		init();
+	}
+
+	private void createVector() {
 		vector = new Vector2(to.subtract(from));
 		if (vector.getLength() < Real.EPS) {
 			LOG.trace("line has coincident points: "+from+" ... "+to);
 		}
-		this.from = new Real2(from);
-		this.to = new Real2(to);
-		init();
 	}
 	
 	private void init() {
@@ -189,30 +193,149 @@ public class Line2 implements EuclidConstants {
 		}
 		return unitVector;
 	}
-	/** perpendiculat distance from point to infinite line.
+	/** signed perpendicular distance from point to infinite line.
 	 * @param point
 	 * @return distance
+	 * @deprecated use new name (unsignedDistanceFromPoint)
 	 */
 	public double getDistanceFromPoint(Real2 point) {
+		//FIXME for lines parallel to axis
 		getUnitVector();
-//		LOG.debug(unitVector);
+		LOG.trace(unitVector);
 		Vector2 w = new Vector2(point.subtract(from));
-//		LOG.debug(w);
+		LOG.trace(w);
 		return unitVector.getPerpProduct(w);
 	}
 
-	/** perpendiculat distance from point to infinite line.
+
+	/** signed perpendicular distance from point to infinite line.
+	 * 
+	 * will depend on direction of line.
+	 * 
+	 * @param point
+	 * @return distance
+	 */
+	public double getSignedDistanceFromPoint(Real2 point) {
+		getUnitVector();
+		LOG.trace(unitVector);
+		Vector2 w = new Vector2(point.subtract(from));
+		LOG.trace(w);
+		return unitVector.getPerpProduct(w);
+	}
+
+
+	
+	/** perpendicular distance from point to infinite line.
+	 * @param point
+	 * @return distance
+	 */
+	public double getUnsignedDistanceFromPoint(Real2 point) {
+		Real2 pb = getNearestPointOnLine(point);
+		return pb.getDistance(point);
+	}
+
+	/** may be redundant...
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public Real2 getNearestPointNew(Real2 point) {
+/**		dist_Point_to_Line( Point P, Line L)
+		{
+		     Vector v = L.P1 - L.P0;
+		     Vector w = P - L.P0;
+
+		     double c1 = dot(w,v);
+		     double c2 = dot(v,v);
+		     double b = c1 / c2;
+
+		     Point Pb = L.P0 + b * v;
+		     return d(P, Pb);
+		}
+*/
+		Vector2 v = new Vector2(this.getXY(1).subtract(this.getXY(0)));
+		Vector2 w = new Vector2(point.subtract(this.getXY(0)));
+		double c1 = w.dotProduct(v);
+		double c2 = v.dotProduct(v);
+		double b = c1 / c2;
+		Real2 pb = this.getXY(0).plus(v.multiplyBy(b));
+		return pb;
+	}
+
+	/** get nearest point on infinite line.
 	 * @param point
 	 * @return distance
 	 */
 	public Real2 getNearestPointOnLine(Real2 point) {
 		getUnitVector();
 		Vector2 lp = new Vector2(point.subtract(this.from));
-//		Vector2 ulp = new Vector2(lp.getUnitVector());
 		double lambda = unitVector.dotProduct(lp);
 		Real2 vv = unitVector.multiplyBy(lambda);
 		return from.plus(vv);
 	}
+
+	/** are two lines parallel within tolerance.
+	 * 
+	 * @param line
+	 * @param eps maximum allowed angle between lines
+	 * @return null if any arguments null
+	 */
+	public Boolean isParallelTo(Line2 line, Angle eps) {
+		Boolean parallel = null;
+		if (line != null && eps != null) {
+			Angle angle = this.getAngleMadeWith(line);
+			parallel = Math.abs(angle.getRadian()) < Math.abs(eps.getRadian());
+		}
+		return parallel;
+	}
+
+	/**
+	 * @param line
+	 * @param eps maximum allowed angle between unsigned lines (i.e. << Math.PI/2)
+	 * @return null if any arguments null
+	 */
+	public boolean isAntiParallelTo(Line2 line, Angle eps) {
+		Boolean antiParallel = null;
+		if (line != null && eps != null) {
+			Angle angle = this.getAngleMadeWith(line);
+			antiParallel = Math.abs(Math.abs(angle.getRadian()) - Math.PI) < Math.abs(eps.getRadian());
+		}
+		return antiParallel;
+	}
+	
+	/** are unsigned lines parallel.
+	 * 
+	 * @param line
+	 * @param eps
+	 * @return isParallel() or isAntiParallel; null if line or eps is null
+	 */
+	public Boolean isParallelOrAntiParallelTo(Line2 line, Angle eps) {
+		Boolean para = null;
+		if (line != null && eps != null) {
+			para = this.isParallelTo(line, eps) || this.isAntiParallelTo(line, eps);
+		}
+		return para;
+	}
+	
+	/** calculated unsigned distance between parallel lines.
+	 * 
+	 * <p>uses distance from this.getXY(0) to nearest point on line.</p>
+	 * 
+	 * <p>if lines are not exactly parallel the result has no absolute meaning but is heuristically useful.</p>
+	 * 
+	 * @param line
+	 * @param eps
+	 * @return null if args are null or lines are not parallel
+	 */
+	public Double calculateUnsignedDistanceBetweenLines(Line2 line, Angle eps) {
+		Double d = null;
+		if (this.isParallelOrAntiParallelTo(line, eps)) {
+			Real2 p = line.getNearestPointOnLine(this.getXY(0));
+			d = this.getXY(0).getDistance(p);
+		}
+		return d;
+	}
+
 	
 	/** convenience method.
 	 * gets angle formed between lines using 
@@ -226,6 +349,12 @@ public class Line2 implements EuclidConstants {
 			angle = this.getVector().getAngleMadeWith(line.getVector());
 		}
 		return angle;
+	}
+	
+	public Boolean isPerpendicularTo(Line2 line, Angle angleEps) {
+		if (line == null || angleEps == null) return null;
+		Angle angle = this.getAngleMadeWith(line);
+		return Math.abs(Math.abs(angle.getRadian()) - Math.PI * 0.5) < angleEps.getRadian();
 	}
 	
 	/** gets multiplier of point from "from"
@@ -302,6 +431,7 @@ public class Line2 implements EuclidConstants {
 		} else {
 			throw new EuclidRuntimeException("Bad point in Line2 "+i);
 		}
+		createVector();
 	}
 
 	/**

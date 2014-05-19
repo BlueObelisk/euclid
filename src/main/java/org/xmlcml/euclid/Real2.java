@@ -15,6 +15,7 @@
  */
 
 package org.xmlcml.euclid;
+import java.awt.Dimension;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -49,6 +50,26 @@ public class Real2 implements EuclidConstants {
     public Real2(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+    
+    /**
+     * constructor.
+     * 
+     * @param x
+     * @param y
+     */
+    public Real2(int x, int y) {
+        this((double) x, (double) y);
+    }
+    
+    /**
+     * constructor.
+     * 
+     * @param x
+     * @param y
+     */
+    public Real2(Int2 int2) {
+    	this(int2.getX(), int2.getY());
     }
     
     /**
@@ -319,7 +340,7 @@ public class Real2 implements EuclidConstants {
      * @return midpoint
      */
     public Real2 getMidPoint(Real2 p) {
-        return new Real2((this.x + p.x) / 2.0, (this.y + p.y) / 2.0);
+        return (p == null) ? null : new Real2((this.x + p.x) / 2.0, (this.y + p.y) / 2.0);
     }
     /**
      * get unit vector

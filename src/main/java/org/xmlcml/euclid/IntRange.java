@@ -26,7 +26,7 @@ package org.xmlcml.euclid;
  * 
  * @author (C) P. Murray-Rust, 1996
  */
-public class IntRange implements EuclidConstants {
+public class IntRange implements EuclidConstants, Comparable<IntRange> {
     /**
      * maximum of range
      */
@@ -66,6 +66,15 @@ public class IntRange implements EuclidConstants {
         minval = r.minval;
         maxval = r.maxval;
     }
+    
+    /**
+     * 
+     * @param r
+     */
+    public IntRange(RealRange r) {
+        minval = (int) Math.round(r.minval);
+        maxval = (int) Math.round(r.maxval);
+    }
     /**
      * a Range is only valid if its maxval is not less than its minval; this
      * tests for uninitialised ranges
@@ -85,6 +94,23 @@ public class IntRange implements EuclidConstants {
     public boolean isEqualTo(IntRange r) {
         return (r != null && minval == r.minval && maxval == r.maxval && minval <= maxval);
     }
+    
+    
+    @Override
+    public boolean equals(Object o) {
+    	boolean equals = false;
+    	if (o != null && o instanceof IntRange) {
+    		IntRange ir =(IntRange) o;
+    		equals = this.minval == ir.minval && this.maxval == ir.maxval;
+    	}
+    	return equals;
+    }
+    
+    @Override
+    public int hashCode() {
+    	return 17*minval + 31*maxval;
+    }
+    
     /**
      * combine two ranges if both valid; takes greatest limits of both, else
      * returns InValid
@@ -103,6 +129,11 @@ public class IntRange implements EuclidConstants {
         temp = new IntRange(Math.min(minval, r2.minval), Math.max(maxval,
                 r2.maxval));
         return temp;
+    }
+    
+    public boolean intersectsWith(IntRange r2) {
+    	IntRange r = this.intersectionWith(r2);
+    	return r != null && r.isValid();
     }
     /**
      * intersect two ranges and take the range common to both; return invalid
@@ -191,4 +222,43 @@ public class IntRange implements EuclidConstants {
     public String toString() {
         return (minval > maxval) ? "NULL" : S_LBRAK + minval + S_COMMA + maxval + S_RBRAK;
     }
+
+    /** comparees on min values
+     * 
+     * @param intRange
+     * @return
+     */
+	public int compareTo(IntRange intRange) {
+		if (intRange == null) {
+			return -1;
+		} else if (this.minval < intRange.minval) {
+			return -1;
+		} else if (this.minval > intRange.minval) {
+			return 1;
+		} else {
+			if (this.maxval < intRange.maxval) {
+				return -1;
+			} else if (this.maxval > intRange.maxval) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	
+	/** makes new IntRange extended by deltaMin and deltaMax.
+	 * 
+	 * the effect is for positive numbers to increase the range.
+	 * if extensions are negative they are applied, but may result
+	 * in invalid range (this is not checked at this stage).
+	 * <p>
+	 * Does not alter this.
+	 * </p>
+	 * 
+	 * @param minExtend subtracted from min
+	 * @param maxExtend  added to max
+	 */
+	public IntRange getRangeExtendedBy(int minExtend, int maxExtend) {
+		return  new IntRange(minval - minExtend, maxval + maxExtend);
+	}
+
 }

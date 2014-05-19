@@ -277,6 +277,14 @@ public class Transform2 extends RealSquareMatrix {
         return temp;
     }
     
+	public static Transform2 getTranslationTransform(Real2 translation) {
+		Transform2 transform = null;
+		if (translation != null) {
+			transform = new Transform2(new Vector2(translation));
+		}
+		return transform;
+	}
+
     /**
      * Carries out graphics transform
      *
@@ -378,8 +386,25 @@ public class Transform2 extends RealSquareMatrix {
      * @param scaleX
      * @param scaleY
      * @return transform
+     * @deprecated use createScaleTransform
      */
     public static Transform2 applyScales(double scaleX, double scaleY) {
+    	return new Transform2(
+    		new double[] {
+				scaleX, 0.0, 0.0,
+				0.0, scaleY, 0.0,
+				0.0, 0.0, 1.0
+		});
+    }
+    
+    /**
+     * create diagonal scale matrix.
+     * 
+     * @param scaleX
+     * @param scaleY
+     * @return transform
+     */
+    public static Transform2 createScaleTransform(double scaleX, double scaleY) {
     	return new Transform2(
     		new double[] {
 				scaleX, 0.0, 0.0,
@@ -694,5 +719,29 @@ public class Transform2 extends RealSquareMatrix {
         }
         s += EC.S_RBRAK;
         return s;
+    }
+
+    /**
+    	at.getMatrix(dd);
+    	flmat[0][0] = dd[0];
+    	flmat[0][1] = dd[2];
+    	flmat[0][2] = dd[4];
+    	flmat[1][0] = dd[1];
+    	flmat[1][1] = dd[3];
+    	flmat[1][2] = dd[5];
+     */
+    public AffineTransform getAffineTransform() {
+    	AffineTransform affineTransform = null;
+    	double[] dd = new double[6];
+    	if (flmat != null) {
+    		dd[0] = flmat[0][0];
+    		dd[2] = flmat[0][1];
+    		dd[4] = flmat[0][2];
+    		dd[1] = flmat[1][0];
+    		dd[3] = flmat[1][1];
+    		dd[5] = flmat[1][2];
+    		affineTransform = new AffineTransform(dd[0],dd[1],dd[2],dd[3],dd[4],dd[5]);
+    	}
+    	return affineTransform;
     }
 }

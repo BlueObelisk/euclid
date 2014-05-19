@@ -28,7 +28,7 @@ package org.xmlcml.euclid;
  * etc.) are missing. The emphasis is on algebrra and geometry.
  * 
  * In some CML routines (e.g. atom.geXYZ() a Point3 is returned, but in others
- * the wrapped type (e.g. CMLArray) is used. Please let us know if this design
+ * the wrapped type (e.g. STMLArray) is used. Please let us know if this design
  * works satisfactorily.
  * 
  * @author pmr 2005

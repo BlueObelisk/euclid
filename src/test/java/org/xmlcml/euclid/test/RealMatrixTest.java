@@ -18,6 +18,7 @@ package org.xmlcml.euclid.test;
 
 
 import java.io.IOException;
+
 import java.io.StringWriter;
 
 import org.apache.log4j.Level;
@@ -45,6 +46,10 @@ import org.xmlcml.euclid.RealRange;
 public class RealMatrixTest{
 
 	private final static Logger LOG = Logger.getLogger(RealMatrixTest.class);
+	
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
 
 	RealMatrix m0;
 	RealMatrix m1;
@@ -1194,5 +1199,56 @@ public class RealMatrixTest{
 						"<matrix rows='3' columns='4'>11.0 12.0 13.0 14.0 21.0 22.0 23.0 24.0 31.0 32.0 33.0 34.0</matrix>",
 						w.toString());
 	}
+
+	@Test
+	public void testShiftOrigin() {
+		RealMatrix matrix = new RealMatrix(4, 5, new double[]
+			{
+				2., 5., 40., 6., 1.,
+				6., 25., 70., 12., 3.,
+				18., 40., 100., 16., 4.,
+				10., 24., 60., 10., 2.,
+			}
+		);
+		RealMatrix matrix0 = new RealMatrix(matrix);
+		LOG.debug(">>>"+matrix0);
+		RealMatrix newMatrix = matrix0.createMatrixWithOriginShifted(0.1, 0.2);
+		DoubleTestBase.assertEquals("shifted", new double[]{
+			3.42,12.7,42.12,6.62,1.4,
+			10.36,32.8,69.68,11.84,3.2,
+			18.44,42.32,84.28,13.68,3.6,
+			11.4,27.6,55.0,9.2,2.0
+		}, newMatrix.getMatrixAsArray(), 0.1);
+		LOG.debug(">>>>>"+newMatrix);
+		
+	}
+
+	/** NOT CHECKED
+	 * 
+	 */
+	@Test
+	public void testScaleAndInterpolate() {
+		RealMatrix matrix = new RealMatrix(4, 5, new double[]
+			{
+				2., 5., 40., 6., 1.,
+				6., 25., 70., 12., 3.,
+				18., 40., 100., 16., 4.,
+				10., 24., 60., 10., 2.,
+			}
+		);
+		RealMatrix matrix0 = new RealMatrix(matrix);
+		LOG.debug(">>>"+matrix0);
+		RealMatrix newMatrix = matrix0.scaleAndInterpolate(5, 7);
+		LOG.debug(">>>"+newMatrix);
+		DoubleTestBase.assertEquals("shifted", new double[]{
+				2.0,3.8,12.0,40.0,12.8,4.0,1.0,
+				5.0,14.0,28.5,62.5,20.9,7.3,2.5,
+				12.0,24.3,43.0,85.0,28.2,9.8,3.5,
+				16.0,28.0,46.8,90.0,29.6,10.1,3.5,
+				10.0,18.4,31.2,60.0,20.0,6.8,2.0,		}, newMatrix.getMatrixAsArray(), 0.1);
+		LOG.debug(">>>>>"+newMatrix);
+		
+	}
+
 
 }

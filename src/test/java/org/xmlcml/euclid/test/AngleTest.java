@@ -330,5 +330,20 @@ public class AngleTest {
 				EPS);
 		Assert.assertEquals("radians", 10., a.getRadian(), EPS);
 	}
+	
+	@Test
+	public void testRightAngle() {
+		Angle EPS = new Angle(0.01);
+		Angle ang = new Angle(Math.PI / 2.);
+		Assert.assertEquals("rt1", 1, (int) new Angle(Math.PI / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt1", -1, (int) new Angle(-Math.PI / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt0", 0, (int) new Angle(0.).getRightAngle(EPS));
+		Assert.assertEquals("rtPI", 0, (int) new Angle(Math.PI).getRightAngle(EPS));
+		Assert.assertEquals("rt1", 1, (int) new Angle(Math.PI / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt1", 1, (int) new Angle(Math.PI * 1.001 / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt1", 0, (int) new Angle(Math.PI * 1.1 / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt1", -1, (int) new Angle(-Math.PI * 1.001 / 2.).getRightAngle(EPS));
+		Assert.assertEquals("rt1", 0, (int) new Angle(-Math.PI * 1.1 / 2.).getRightAngle(EPS));
+	}
 
 }

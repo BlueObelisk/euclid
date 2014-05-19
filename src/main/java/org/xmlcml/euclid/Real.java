@@ -72,8 +72,8 @@ public abstract class Real implements EuclidConstants {
      * @return true if a equals b within epsilon
      * 
      */
-    public static boolean isEqual(double a, double b) {
-        return Math.abs(a - b) < epsx;
+    public static boolean isEqual(Double a, Double b) {
+        return a != null && b != null && Math.abs(a - b) < epsx;
     }
     
     /**
@@ -85,8 +85,8 @@ public abstract class Real implements EuclidConstants {
      * 
      * @deprecated use epsilon method
      */
-    public static boolean isZero(double a) {
-        return Real.isZero(a, epsx);
+    public static boolean isZero(Double a) {
+        return a != null && Real.isZero(a, epsx);
     }
     
     /**
@@ -106,6 +106,7 @@ public abstract class Real implements EuclidConstants {
      * @deprecated omit n
      */
     public static boolean isEqual(int n, double[] a, double[] b, double epsilon) {
+    	if (a == null || b == null ) return false;
         if (a.length != b.length) {
             return false;
         }
@@ -160,8 +161,8 @@ public abstract class Real implements EuclidConstants {
      *            difference
      * @return true if a equals b within epsilon
      */
-    public static boolean isEqual(double a, double b, double epsilon) {
-        return Math.abs(a - b) < epsilon;
+    public static boolean isEqual(Double a, Double b, double epsilon) {
+        return a != null && b != null && Math.abs(a - b) < epsilon;
     }
     /**
      * is a number zero within epsilon

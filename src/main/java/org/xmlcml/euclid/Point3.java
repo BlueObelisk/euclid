@@ -154,6 +154,7 @@ public class Point3 implements EuclidConstants {
      * @return equal if coordinates are equal within CRYSTALFRACTEPSILON
      */
     public boolean equalsCrystallographically(Point3 p) {
+    	if (p.flarray == null) return false;
         Point3 crystal = new Point3(this);
         crystal.normaliseCrystallographically();
         Point3 crystalP = new Point3(p);

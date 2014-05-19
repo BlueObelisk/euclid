@@ -163,6 +163,36 @@ public class IntMatrix implements EuclidConstants {
             System.arraycopy(m.flmat[i], 0, flmat[i], 0, cols);
         }
     }
+    
+    /** create from list of rowvalues
+     * 
+     * @param intListList
+     * @return
+     */
+    public static IntMatrix createByRows(List<List<Integer>> intListList) {
+    	IntMatrix intMatrix = null;
+    	if (intListList != null) {
+    		int rows = intListList.size();
+    		if (rows > 0) {
+    			List<Integer> row0 =intListList.get(0);
+    			int cols = row0.size();
+    			if (cols > 0) {
+	        		intMatrix = new IntMatrix(rows, cols);
+	        		for (int i = 0; i < rows; i++) {
+	        			List<Integer> rowi =intListList.get(i);
+	        			if (rowi.size() == 0) {
+	        				// skip
+	        			} else if (rowi.size() == cols) {
+		            		for (int j = 0; j < cols; j++) {
+		            			intMatrix.flmat[i][j] = rowi.get(j);
+		            		}
+	        			}
+	        		}
+    			}
+    		}
+    	}
+    	return intMatrix;
+    }
     /**
      * shallow copy constructor. copies references (uses same internal array)
      * 
@@ -211,7 +241,19 @@ public class IntMatrix implements EuclidConstants {
             }
         }
     }
-    /**
+    /** casts doubles to int.
+     * 
+     * @param realMatrix
+     */
+    public IntMatrix(RealMatrix realMatrix) {
+        this(realMatrix.getRows(), realMatrix.getCols());
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                flmat[i][j] = (int) realMatrix.flmat[i][j];
+            }
+        }
+	}
+	/**
      * set output format.
      * 
      * @param f

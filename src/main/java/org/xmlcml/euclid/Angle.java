@@ -15,6 +15,9 @@
  */
 
 package org.xmlcml.euclid;
+
+import org.apache.log4j.Logger;
+
 /**
  * Angle object
  * 
@@ -37,6 +40,8 @@ package org.xmlcml.euclid;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Angle {
+	private final static Logger LOG = Logger.getLogger(Angle.class);
+	
     /** units */
     public enum Units {
         /** */
@@ -191,9 +196,38 @@ public class Angle {
         while (angle < 0.0) {
             angle += 2 * Math.PI;
         }
-//        LOG.trace(angle);
+        LOG.trace(angle);
         return angle;
     }
+
+    /** normalizes angle to be in range - Math.PI -> Math.PI.
+     * 
+     */
+    public void normalizeToPlusMinusPI() {
+    	angle = Angle.normalise(angle);
+    	if (angle > Math.PI) {
+    		angle -= 2 * Math.PI;
+    	}
+    }
+
+    /** tests whether this is a right angle;
+     * 
+     * @param eps tolerance
+     * @return 1 for PI/2, -1 for -PI/2 else 0
+     */
+    public Integer getRightAngle(Angle eps) {
+    	if (eps == null) return null;
+    	double absEps = Math.abs(eps.getRadian());
+    	normalizeToPlusMinusPI();
+    	Integer rt = 0;
+    	if (Math.abs(Math.PI / 2. - this.getRadian()) < absEps) {
+    		rt = 1;
+    	} else if (Math.abs(-Math.PI / 2. - this.getRadian()) < absEps) {
+    		rt = -1;
+    	}
+    	return rt;
+    }
+    
     /**
      * relational operators normalise the angles internally before comparison
      */

@@ -15,6 +15,7 @@
  */
 
 package org.xmlcml.euclid;
+import java.io.PrintStream;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
@@ -39,7 +40,8 @@ import org.xmlcml.euclid.Axis.Axis3;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Transform3 extends RealSquareMatrix {
-    final static Logger LOG = Logger.getLogger(Transform3.class);
+    private static final PrintStream SYSOUT = System.out;
+	final static Logger LOG = Logger.getLogger(Transform3.class);
     /** type */
     public enum Type {
         /** */
@@ -466,53 +468,63 @@ public class Transform3 extends RealSquareMatrix {
      * 
      * @param opString
      *            for example 1/2-x,1/2+y,-z
+     *            extended to 0.5+x, y-0.25, z  // etc
      * @throws EuclidRuntimeException
      *             corrupt/invalid string
      */
     public Transform3(String opString) throws EuclidRuntimeException {
         super(4);
-        StringTokenizer st = new StringTokenizer(opString, EuclidConstants.S_COMMA);
-        if (st.countTokens() != 3) {
+        String[] ss = opString.split("\\s*,\\s*");
+//        StringTokenizer st = new StringTokenizer(opString, EuclidConstants.S_COMMA);
+        if (ss.length != 3) {
             throw new EuclidRuntimeException("Must have 3 operators");
         }
-        for (int i = 0; i < 3; i++) {
-            String s = st.nextToken();
-            s = s.trim();
-            StringTokenizer sst = new StringTokenizer(s, "+-", true);
-            int ntok = sst.countTokens();
-            double sign = 1;
-            for (int j = 0; j < ntok; j++) {
-                String ss = sst.nextToken().trim();
-                int idx = ss.indexOf(S_SLASH);
-                if (idx != -1) {
-                    final String numerator = ss.substring(0, idx).trim();
-                    final String denominator = ss.substring(idx + 1).trim();
-                    flmat[i][3] = sign * (double) Integer.parseInt(numerator)
-                            / (double) Integer.parseInt(denominator);
-                } else if (ss.equalsIgnoreCase("x")) {
-                    flmat[i][0] = sign;
-                } else if (ss.equalsIgnoreCase("y")) {
-                    flmat[i][1] = sign;
-                } else if (ss.equalsIgnoreCase("z")) {
-                    flmat[i][2] = sign;
-                } else if (ss.equals(S_MINUS)) {
-                    sign = -1;
-                } else if (ss.equals(S_PLUS)) {
-                    sign = 1;
-                } else if (ss.trim().equals("")) {
-                    // unusual, but some people put "y+1"
-                } else {
-                    try {
-                        flmat[i][3] = sign * (double) Integer.parseInt(ss);
-                    } catch (NumberFormatException nfe) {
-                        System.out.flush();
-                        throw new EuclidRuntimeException("Bad string in symmetry: "
-                                + ss + " in " + opString);
-                    }
-                }
-            }
+        try {
+        	ParsedSymop.createTransform(ss);
+        } catch (RuntimeException e) {
+	        for (int i = 0; i < 3; i++) {
+	            String s = ss[i];
+	            s = s.trim();
+	        	analyzeOperator(opString, i, s);
+	        }
         }
     }
+
+	private void analyzeOperator(String opString, int i, String s) {
+		StringTokenizer sst = new StringTokenizer(s, "+-", true);
+		int ntok = sst.countTokens();
+		double sign = 1;
+		for (int j = 0; j < ntok; j++) {
+		    String ss = sst.nextToken().trim();
+		    int idx = ss.indexOf(S_SLASH);
+		    if (idx != -1) {
+		        final String numerator = ss.substring(0, idx).trim();
+		        final String denominator = ss.substring(idx + 1).trim();
+		        flmat[i][3] = sign * (double) Integer.parseInt(numerator)
+		                / (double) Integer.parseInt(denominator);
+		    } else if (ss.equalsIgnoreCase("x")) {
+		        flmat[i][0] = sign;
+		    } else if (ss.equalsIgnoreCase("y")) {
+		        flmat[i][1] = sign;
+		    } else if (ss.equalsIgnoreCase("z")) {
+		        flmat[i][2] = sign;
+		    } else if (ss.equals(S_MINUS)) {
+		        sign = -1;
+		    } else if (ss.equals(S_PLUS)) {
+		        sign = 1;
+		    } else if (ss.trim().equals("")) {
+		        // unusual, but some people put "y+1"
+		    } else {
+		        try {
+		            flmat[i][3] = sign * (double) Integer.parseInt(ss);
+		        } catch (NumberFormatException nfe) {
+		            SYSOUT.flush();
+		            throw new EuclidRuntimeException("Bad string in symmetry: "
+		                    + ss + " in " + opString);
+		        }
+		    }
+		}
+	}
     /**
      * clone.
      * 

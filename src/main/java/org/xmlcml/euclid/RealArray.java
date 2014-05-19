@@ -16,8 +16,7 @@
 
 package org.xmlcml.euclid;
 import java.text.DecimalFormat;
-
-
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +43,8 @@ import org.apache.log4j.Logger;
  * 
  * @author (C) P. Murray-Rust, 1996
  */
-public class RealArray extends ArrayBase {
+public class RealArray extends ArrayBase implements Iterable<Double> {
+	
     final static Logger LOG = Logger.getLogger(RealArray.class);
     /** filter */
     public enum Filter {
@@ -80,6 +80,7 @@ public class RealArray extends ArrayBase {
     private double[] array;
     private int bufsize = 5;
     private DecimalFormat format = null;
+    
     /**
      * create default Array. default is an array of zero points
      */
@@ -872,6 +873,23 @@ public class RealArray extends ArrayBase {
         }
         return sum;
     }
+    
+    /**
+     * sum all product of elements.
+     * 
+     * @return sigma(this(i)*y(i)
+     */
+    public double sumProductOfAllElements(RealArray yarr) {
+    	if (yarr == null || yarr.size() != nelem) {
+    		throw new RuntimeException("arrays must be of equal length");
+    	}
+        double sum = 0.0;
+        for (int i = 0; i < nelem; i++) {
+            sum += array[i]*yarr.elementAt(i);
+        }
+        return sum;
+    }
+    
     /**
      * sum of all absolute element values.
      * 
@@ -1614,6 +1632,23 @@ public class RealArray extends ArrayBase {
             j--;
         }
     }
+
+    /** create new reordered array.
+     * 
+     * @param intSet
+     * @return
+     */
+    public RealArray createReorderedArray(IntSet intSet) {
+    	RealArray ra = null;
+    	if (intSet.size() == this.size()) {
+    		ra = new RealArray(intSet.size());
+    		for (int i = 0; i < intSet.size(); i++) {
+    			ra.setElementAt(i, this.get(intSet.elementAt(i)));
+    		}
+    	}
+    	return ra;
+    }
+    
     private static final int XXCUTOFF = 16;
     /**
      * get indexes of ascending sorted array. this array NOT MODIFIED
@@ -1638,7 +1673,7 @@ public class RealArray extends ArrayBase {
     /**
      * get indexes of descending sorted array. this array NOT MODIFIED
      * 
-     * @return indexes idx so that element(idx(0)) is lowest
+     * @return indexes idx so that element(idx(0)) is highest
      */
     public IntSet indexSortDescending() {
         IntSet idx;
@@ -1862,5 +1897,267 @@ public class RealArray extends ArrayBase {
 		int[] ints = (intArray == null) ? null : intArray.array;
 		return RealArray.createRealArray(ints);
 	}
+
+	/** calculate differences between elements i and i+1
+	 * 
+	 * @return array of n-1 differences elem[i+1] - elem[i].
+	 */
+	
+	public RealArray calculateDifferences() {
+		RealArray differenceArray = new RealArray(nelem - 1);
+		for (int i = 0; i < nelem - 1; i++) {
+			double diff = array[i + 1] - array[i];
+			differenceArray.setElementAt(i, diff);
+		}
+		return differenceArray;
+	}
+	
+	/** converts RealArray into IntArray.
+	 * 
+	 * casts to (int).
+	 * 
+	 * @return new IntArray
+	 */
+	public IntArray createIntArray() {
+		IntArray intArray = new IntArray(nelem);
+		for (int i = 0; i < nelem; i++) {
+			intArray.array[i] = (int) array[i];
+		}
+		return intArray;
+	}
+	public Iterator<Double> iterator() {
+		return (array == null || array.length < nelem) ? null : new DoubleIterator(array, nelem);
+	}
+	
+	/** assumes all elements are equally spaced with "x" separation of 1.0.
+	 * 
+	 * a linear interpolation approach. calculates new values of cells. x may be gt or lt 0 and may
+	 * have integer arts (e.g. 1.23)
+	 * 
+	 * // FIXME not yet working for large negative shifts
+	 * 
+	 * @param delta distance to shift by
+	 * @return shifted array
+	 */
+	public RealArray shiftOriginToRight(double delta) {
+		RealArray newArray = new RealArray(nelem);
+		int offset = 0;
+		//shift d to 0,1 interval and compute integer offset
+		while (delta < 0.0) {
+			offset++;
+			delta++;
+		}
+		while (delta >= 1.0) {
+			offset--;
+			delta--;
+		}
+		LOG.trace(offset+" "+delta);
+		for (int i = 0; i < nelem; i++) {
+			int index0 = i - offset +1;
+			int index1 = index0 - 1;
+			double previousValue = getValueCorrectedForEnds(index1);
+			double thisValue = getValueCorrectedForEnds(index0);
+			LOG.trace(i+" "+previousValue+" "+thisValue);
+			double newValue = previousValue * (1.0-delta) + thisValue * delta;
+			newArray.setElementAt(i, newValue);
+		}
+		LOG.trace("newArray: "+newArray.format(2)+"\n");
+		
+		return newArray;
+	}
+	
+	/** interpolate array into new array of different length.
+	 * 
+	 * 
+	 * @param newElem new array length
+	 * @return inerpolated array
+	 * 
+	 * 
+	 */
+	@Deprecated // not yet tested and better to use imgscalr for images
+	public RealArray scaleAndInterpolate(int newNelem) {
+		if (newNelem == nelem) {
+			return new RealArray(this);
+		}
+		RealArray newArray = new RealArray(newNelem);
+		double old2NewScale = (double) nelem / (double) newNelem;
+		double pixelScale = 1.0;
+//		double old2NewScale = 1.0;
+		for (int iold = 0; iold < nelem; iold++) {
+			LOG.trace("===="+iold+"====");
+			double value = this.elementAt(iold) * pixelScale;
+			// partial chunk at LH end
+			if (old2NewScale < 1) {
+				scaleFewToMany(newArray, old2NewScale, iold, value);
+			} else {
+				scaleManyToFew(newNelem, newArray, old2NewScale, iold, value);
+			}
+		}
+		LOG.trace("newArray: "+newArray.format(2)+"\n");
+		
+		return newArray;
+	}
+	private void scaleManyToFew(int newNelem, RealArray newArray,
+			double old2NewScale, int iold, double value) {
+		double lowerNew = (double) iold / old2NewScale;
+		double upperNew = (double) (iold + 1) / old2NewScale;
+		int intLowerNew = (int) lowerNew;
+		int intUpperNew = (int) upperNew;
+		if (intUpperNew == intLowerNew) intUpperNew++;
+		lowerNew = intLowerNew * old2NewScale;
+		upperNew = intUpperNew * old2NewScale;
+		LOG.trace(lowerNew+" "+upperNew);
+		if (lowerNew <= iold && upperNew >= iold+1) {
+			newArray.array[intLowerNew] += value;
+			LOG.trace("complete "+intLowerNew+" "+value);
+		} else {
+			double delta = 0;
+			int index = -1;
+			if (lowerNew > iold) {
+				delta = lowerNew - iold;
+				index = intLowerNew;
+			} else {
+				delta = upperNew - iold;
+				index = intUpperNew;
+			}
+			newArray.array[index] += value * delta;
+			if (index < newNelem -1) newArray.array[index + 1] += value * (1.0 - delta);
+			LOG.trace("split "+index+" "+delta+" "+value);
+		}
+	}
+	private void scaleFewToMany(RealArray newArray, double old2NewScale, int iold,
+			double value) {
+		double lowerNew = ((double) iold) / old2NewScale;
+		double upperNew = ((double) (iold + 1)) / old2NewScale;
+		int intLowerNew = (int) lowerNew;
+		int intUpperNew = (int) upperNew;
+		if (intLowerNew + 1 < upperNew) {
+			double delta = value * (intLowerNew + 1 - lowerNew);
+			LOG.trace("deltalow: "+Util.format(delta, 2));
+			newArray.array[intLowerNew] += delta;
+		}
+// these are complete chunks of value
+		for (int middle = intLowerNew + 1; middle < intUpperNew; middle++) {
+			LOG.trace("deltamid: "+Util.format(value, 2));
+			newArray.array[middle] += value;
+		}
+		if (intUpperNew < upperNew) {
+			double delta = value * (upperNew - intUpperNew);
+			LOG.trace("deltahi: "+Util.format(delta, 2));
+			newArray.array[intUpperNew] += delta;
+		}
+	}
+	private double getValueCorrectedForEnds(int index) {
+		double value = 0.0;
+		if (index < 0) {
+			value = this.elementAt(0);
+		} else if (index >= nelem) {
+			value = this.elementAt(nelem - 1);
+		} else {
+			value = this.elementAt(index);
+		}
+		return value;
+	}
+	
+	
+	/** assumes all elements are equally spaced with "x" separation of 1.0.
+	 * 
+	 * a linear interpolation approach. calculates new values of cells. x may be gt or lt 0 and may
+	 * have integer arts (e.g. 1.23)
+	 * 
+	 * Not fully tested for all cases.
+	 * 
+	 * @param delta distance to shift by
+	 * @return shifted array
+	 */
+	public RealArray shiftOriginToRightOld(double delta) {
+		RealArray array0 = new RealArray(this);
+		RealArray array1 = new RealArray(this);
+		int offset = 0;
+		//shift d to 0,1 interval and compute integer offset
+		while (delta < 0) {
+			offset++;
+			delta++;
+		}
+		while (delta >= 1) {
+			offset--;
+			delta--;
+		}
+		double scale = Math.abs(delta);
+		LOG.debug("this: "+this+" "+offset+" "+Util.format(delta, 2));
+		array0.shiftArrayRight(offset);
+		array1.shiftArrayRight(offset);
+		array0 = array0.multiplyBy(scale);
+		array1 = array1.multiplyBy(1.0 - scale);
+		if (delta >= 0) {
+			array0.shiftArrayRight(-1);
+		} else if (delta < 0) {
+			array1.shiftArrayRight(1);
+		}
+		LOG.debug("array0: "+array0.format(2));
+		LOG.debug("array1: "+array1.format(2));
+		RealArray newArray = array0.plus(array1);
+//		if (delta <= 0) {
+//			newArray.shiftArrayRight(offset);
+//		} else {
+//			newArray.shiftArrayRight(offset);
+//		}
+		LOG.debug("newArray: "+newArray.format(2)+"\n");
+		
+		return newArray;
+	}
+	
+	/** shift array and fill with end elements.
+	 * 
+	 * @param nplaces if positive sift right; if negative shift left
+	 */
+	public void shiftArrayRight(int nplaces) {
+		if (nplaces >= 0) {
+			for (int i = 0; i < nplaces; i++) {
+				this.insertElementAt(0, this.get(0));
+				this.deleteElement(nelem - 1);
+			}
+		} else {
+			nplaces = 0 - nplaces;
+			for (int i = 0; i < nplaces; i++) {
+				this.insertElementAt(nelem, this.get(nelem - 1));
+				this.deleteElement(0);
+			}
+			
+		}
+	}
+	
+	/** gets last element in array
+	 * @return element ; Double.NaN for zero length array
+	 */
+	public double getLast() {
+		return nelem == 0 ? Double.NaN : this.get(nelem - 1);
+	}
+}
+class DoubleIterator implements Iterator<Double> {
+
+	private int counter;
+	private double[] array;
+	private double nelem;
+	
+	public DoubleIterator(double[] array, double nelem) {
+		this.array = array;
+		this.nelem = nelem;
+		counter = -1;
+	}
+	
+	public boolean hasNext() {
+		return counter < nelem - 1;
+	}
+
+	public Double next() {
+		if (!hasNext()) return null;
+		return (Double) array[++counter];
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
 	
 }
+

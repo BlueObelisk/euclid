@@ -28,7 +28,13 @@ package org.xmlcml.euclid;
  * 
  * @author (C) P. Murray-Rust, 1996
  */
-public class RealRange implements EuclidConstants {
+public class RealRange implements EuclidConstants, Comparable<RealRange>  {
+	 
+	public enum Direction {
+		HORIZONTAL,
+		VERTICAL
+	};
+	
     /**
      * maximum of range
      */
@@ -112,6 +118,25 @@ public class RealRange implements EuclidConstants {
 		return rr;
 	}
 
+	/** use with care as uses ==
+	 * 
+	 */
+    
+    @Override
+    public boolean equals(Object o) {
+    	boolean equals = false;
+    	if (o != null && o instanceof RealRange) {
+    		RealRange ir =(RealRange) o;
+    		equals = this.minval == ir.minval && this.maxval == ir.maxval;
+    	}
+    	return equals;
+    }
+    
+    @Override
+    public int hashCode() {
+    	return 17*(int)Math.round(minval) + 31*(int)Math.round(maxval);
+    }
+    
     /**
      * a Range is only valid if its maxval is not less than its minval; this
      * tests for uninitialised ranges
@@ -152,6 +177,9 @@ public class RealRange implements EuclidConstants {
      * @return range
      */
     public RealRange plus(RealRange r2) {
+    	if (r2 == null) {
+    		return this;
+    	}
         if (!this.isValid()) {
             if (r2 == null || !r2.isValid()) {
                 return new RealRange();
@@ -169,6 +197,11 @@ public class RealRange implements EuclidConstants {
     		maxval = Math.min(maxval, r2.maxval);
     	} 
     	return this;
+    }
+    
+    public boolean intersectsWith(RealRange r2) {
+    	RealRange r = this.intersectionWith(r2);
+    	return r != null && r.isValid();
     }
     /**
      * intersect two ranges and take the range common to both;
@@ -336,5 +369,90 @@ public class RealRange implements EuclidConstants {
 		maxval = Util.format(maxval, decimalPlaces);
 		minval = Util.format(minval, decimalPlaces);
 		return this;
+	}
+	
+    /** comparees on min values
+     * 
+     * @param realRange
+     * @return
+     */
+	public int compareTo(RealRange realRange) {
+		if (realRange == null) {
+			return -1;
+		} else if (this.minval < realRange.minval) {
+			return -1;
+		} else if (this.minval > realRange.minval) {
+			return 1;
+		} else {
+			if (this.maxval < realRange.maxval) {
+				return -1;
+			} else if (this.maxval > realRange.maxval) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * subtracts tolerance from min and adds to max
+	 * if tolerance is negative adds and subtracts
+	 * if this would result in maxval < minval sets them to mean
+	 * @param tolerance
+	 */
+	public void extendBothEndsBy(double tolerance) {
+		this.minval -= tolerance;
+		this.maxval += tolerance;
+
+		if (tolerance < 0.0) {
+			if (minval > maxval) {
+				double middle = (minval + maxval) /2.0;
+				minval = middle;
+				maxval = middle;
+			}
+		}
+	}
+	
+	/** extend minval
+	 * 
+	 * @param tolerance if negative cannot get larger than maxval
+	 */
+	public void extendLowerEndBy(double tolerance) {
+		this.minval -= tolerance;
+
+		if (tolerance < 0.0) {
+			if (minval > maxval) {
+				minval = maxval;
+			}
+		}
+	}
+	
+	/** extend maxval
+	 * 
+	 * @param tolerance if negative cannot get lower than minval
+	 */
+	public void extendUpperEndBy(double tolerance) {
+		this.maxval += tolerance;
+
+		if (tolerance < 0.0) {
+			if (minval > maxval) {
+				maxval = minval;
+			}
+		}
+	}
+	
+	/** makes new RealRange extended by deltaMin and deltaMax.
+	 * 
+	 * the effect is for positive numbers to increase the range.
+	 * if extensions are negative they are applied, but may result
+	 * in invalid range (this is not checked at this stage).
+	 * <p>
+	 * Does not alter this.
+	 * </p>
+	 * 
+	 * @param minExtend subtracted from min
+	 * @param maxExtend  added to max
+	 */
+	public RealRange getRangeExtendedBy(double minExtend, double maxExtend) {
+		return  new RealRange(minval - minExtend, maxval + maxExtend);
 	}
 }
