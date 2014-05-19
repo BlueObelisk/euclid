@@ -1568,6 +1568,21 @@ public class RealMatrix implements EuclidConstants {
         }
         return m;
     }
+    
+    /** round to decimal places.
+     * 
+     * @param places
+     * @return this
+     */
+    public RealMatrix format(int places) {
+        for (int irow = 0; irow < rows; irow++) {
+            for (int jcol = 0; jcol < cols; jcol++) {
+            	flmat[irow][jcol] = Util.format(flmat[irow][jcol], places);
+            }
+    	}
+    	return this;
+    }
+ 	
     /**
      * output matrix - very crude
      * 
@@ -1629,4 +1644,43 @@ public class RealMatrix implements EuclidConstants {
         sb.append("</matrix>");
         w.write(sb.toString());
     }
+    
+	public RealMatrix createMatrixWithOriginShifted(double deltax, double deltay) {
+		RealMatrix newMatrix = new RealMatrix(this.rows, this.cols, 0.0);
+		LOG.trace(this.rows+"/"+this.cols);
+		for (int irow = 0; irow < rows; irow++) {
+			RealArray rowData = extractRowData(irow);
+			LOG.trace(rowData);
+			rowData = rowData.shiftOriginToRight(deltax);
+			newMatrix.replaceRowData(irow, rowData);
+		}
+		LOG.trace(">> "+newMatrix);
+		for (int jcol = 0; jcol < cols; jcol++) {
+			RealArray columnData = newMatrix.extractColumnData(jcol);
+			columnData = columnData.shiftOriginToRight(deltay);
+			newMatrix.replaceColumnData(jcol, columnData);
+		}
+		LOG.trace(newMatrix.format(2));
+		return newMatrix;
+	}
+	
+	public RealMatrix scaleAndInterpolate(int newRows, int newCols) {
+		RealMatrix midMatrix = new RealMatrix(this.rows, newCols, 0.0);
+		LOG.trace(this.rows+"/"+this.cols);
+		for (int irow = 0; irow < rows; irow++) {
+			RealArray rowData = extractRowData(irow);
+			LOG.trace(rowData);
+			rowData = rowData.scaleAndInterpolate(newCols);
+			midMatrix.replaceRowData(irow, rowData);
+		}
+		LOG.trace(">> "+midMatrix);
+		RealMatrix newMatrix = new RealMatrix(newRows, newCols, 0.0);
+		for (int jcol = 0; jcol < newCols; jcol++) {
+			RealArray columnData = midMatrix.extractColumnData(jcol);
+			columnData = columnData.scaleAndInterpolate(newRows);
+			newMatrix.replaceColumnData(jcol, columnData);
+		}
+		LOG.trace(newMatrix.format(2));
+		return newMatrix;
+	}
 }

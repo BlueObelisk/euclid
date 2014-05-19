@@ -16,6 +16,9 @@
 
 package org.xmlcml.euclid;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +40,7 @@ import org.apache.log4j.Logger;
  * 
  * @author P.Murray-Rust, Copyright 1997
  */
-public class Real2Array implements EuclidConstants {
+public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
 	@SuppressWarnings("unused")
 	private static Logger LOG = Logger.getLogger(Real2Array.class);
 	
@@ -91,7 +94,24 @@ public class Real2Array implements EuclidConstants {
         yarr = (RealArray) y.clone();
     }
 
-    /**
+    /** create with RealArrays of pre-allocated size.
+     * 
+     * @param i
+     */
+    public Real2Array(int size) {
+    	this(new RealArray(size), new RealArray(size));
+	}
+    
+    /** create from list of points.
+     * 
+     * @param points
+     */
+	public Real2Array(List<Real2> points) {
+		for (Real2 point : points) {
+			this.add(point);
+		}
+	}
+	/**
      * compares the arrays
      * @param r2b array to compare to
      * @param epsilon tolerance in coordinates
@@ -334,6 +354,36 @@ public class Real2Array implements EuclidConstants {
 		yarr.reverse();
 	}
 
+	/**
+	 * sorts so that x0y0 has lowest x (0) or y (1)
+	 * @param xy = 0 sort on x; xy = 1 sort on y 
+	 */
+	public void sortAscending(int xy) {
+		IntSet is = null;
+		if (xy == 0) {
+			is = xarr.indexSortAscending();
+		} else if (xy == 1) {
+			is = yarr.indexSortAscending();
+		}
+		xarr = xarr.createReorderedArray(is);
+		yarr = yarr.createReorderedArray(is);
+	}
+
+	/**
+	 * sorts so that x0y0 has highest x (0) or y (1)
+	 * @param xy = 0 sort on x; xy = 1 sort on y 
+	 */
+	public void sortDescending(int xy) {
+		IntSet is = null;
+		if (xy == 0) {
+			is = xarr.indexSortDescending();
+		} else if (xy == 1) {
+			is = yarr.indexSortDescending();
+		}
+		xarr = xarr.createReorderedArray(is);
+		yarr = yarr.createReorderedArray(is);
+	}
+
 	/** create subArray starting at start inclusive
 	 * 
 	 * @param start
@@ -421,4 +471,77 @@ public class Real2Array implements EuclidConstants {
 		RealArray yArray = getYArray();
 		return (yArray == null || yArray.size() == 0) ? -1 : yArray.indexOfSmallestElement();
 	}
+
+	/** gets average of two Real2Arrays.
+	 * 
+	 * @param real2Array
+	 * @return null if arrays are null or of different sizes
+	 */
+	public Real2Array getMidPointArray(Real2Array real2Array) {
+		Real2Array new2Array = null;
+		if (real2Array != null && this.nelem == real2Array.nelem) {
+			RealArray newXArray = (this.xarr.plus(real2Array.xarr)).multiplyBy(0.5);
+			RealArray newYArray = (this.yarr.plus(real2Array.yarr)).multiplyBy(0.5);
+			new2Array = new Real2Array(newXArray, newYArray);
+		}
+		return new2Array;
+	}
+	
+	/** gets unweighted mean of points.
+	 * 
+	 * @return null if no points
+	 */
+	public Real2 getMean() {
+		Real2 mean = null;
+		if (xarr != null && nelem > 0) {
+			double xMean = xarr.getMean();
+			double yMean = yarr.getMean();
+			mean = new Real2(xMean, yMean);
+		}
+		return mean;
+	}
+	public Iterator<Real2> iterator() {
+		Real2Iterator iterator = (xarr == null || yarr == null || xarr.size() != yarr.size()) ? null : new Real2Iterator(this);
+		return iterator;
+	}
+	public Double sumProductOfAllElements() {
+		return (xarr == null || yarr == null) ? null : xarr.sumProductOfAllElements(yarr);
+	}
+	public Real2 getLastPoint() {
+		return nelem == 0 ? null : new Real2(xarr.elementAt(nelem-1), yarr.elementAt(nelem-1));
+	}
+	
+	public List<Real2> getList() {
+		List<Real2> points = new ArrayList<Real2>();
+		for (int i = 0; i < nelem; i++) {
+			points.add(new Real2(xarr.elementAt(i), yarr.elementAt(i)));
+		}
+		return points;
+	}
+	
+}
+class Real2Iterator implements Iterator<Real2> {
+
+	private Iterator<Double> xIterator;
+	private Iterator<Double> yIterator;
+	
+	public Real2Iterator(Real2Array real2Array) {
+		this.xIterator = real2Array.xarr.iterator();
+		this.yIterator = real2Array.yarr.iterator();
+	}
+	
+	public boolean hasNext() {
+		return xIterator.hasNext() && yIterator.hasNext();
+	}
+
+	public Real2 next() {
+		Double x = xIterator.next();
+		Double y = yIterator.next();
+		return (x == null || y == null) ? null : new Real2(x, y);
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

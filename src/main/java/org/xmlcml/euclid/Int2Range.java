@@ -71,6 +71,16 @@ public class Int2Range implements EuclidConstants {
             yrange = new IntRange(r.yrange);
         }
     }
+    
+    /**
+     * copy constructor
+     * 
+     * @param r
+     */
+    public Int2Range(Real2Range r) {
+        xrange = new IntRange(r.xrange);
+        yrange = new IntRange(r.yrange);
+    }
     /**
      * a Int2Range is valid if both its constituent ranges are
      * 
@@ -93,6 +103,23 @@ public class Int2Range implements EuclidConstants {
             return false;
         }
     }
+    
+    @Override
+    public boolean equals(Object o) {
+    	boolean equals = false;
+    	if (o != null && o instanceof Int2Range) {
+    		Int2Range i2r =(Int2Range) o;
+    		equals = this.getXRange().equals(i2r.getXRange()) && 
+    				 this.getYRange().equals(i2r.getYRange());
+    	}
+    	return equals;
+    }
+    
+    @Override
+    public int hashCode() {
+    	return 17*xrange.hashCode() + 31*yrange.hashCode();
+    }
+    
     /**
      * merge two ranges and take the maximum extents
      * 
@@ -144,6 +171,35 @@ public class Int2Range implements EuclidConstants {
     public IntRange getYRange() {
         return yrange;
     }
+	/** extends XRange.
+	 * 
+	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
+	 * 
+	 * @param leftSide 
+	 * @param rightSide
+	 */
+	public Int2Range  getInt2RangeExtendedInX(int leftSide, int rightSide) {
+		Int2Range i2r = new Int2Range(this);
+		if (i2r.xrange != null) {
+			i2r.xrange = i2r.xrange.getRangeExtendedBy(leftSide, rightSide);
+		}
+		return i2r;
+	}
+	/** extends XRange.
+	 * 
+	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
+	 * 
+	 * @param topSide
+	 * @param bottomSide
+	 */
+	public Int2Range getInt2RangeExtendedInY(int topExtend, int bottomExtend) {
+		Int2Range i2r = new Int2Range(this);
+		if (i2r.yrange != null) {
+			i2r.yrange = i2r.yrange.getRangeExtendedBy(topExtend, bottomExtend);
+		}
+		return i2r;
+	}
+
     /**
      * is an Int2 within a Int2Range
      * 

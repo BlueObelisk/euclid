@@ -15,7 +15,12 @@
  */
 
 package org.xmlcml.euclid;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xmlcml.euclid.Axis.Axis2;
+import org.xmlcml.euclid.RealRange.Direction;
 /**
  * 2-D double limits Contains two RealRanges. Can therefore be used to describe
  * 2-dimensional limits (for example axes of graphs, rectangles in graphics,
@@ -357,4 +362,110 @@ public class Real2Range implements EuclidConstants {
 	public static boolean isNull(Real2Range r2r) {
 		return r2r == null || (r2r.getXRange() == null && r2r.getYRange() == null);
 	}
+	
+	public boolean isHorizontal() {
+		return xrange != null && yrange != null && xrange.getRange() > yrange.getRange();
+	}
+	
+	public boolean isVertical() {
+		return xrange != null && yrange != null && xrange.getRange() < yrange.getRange();
+	}
+
+	/** aspect ratio
+	 * 
+	 * @return xrange / yrange
+	 */
+	public Double getHorizontalVerticalRatio() {
+		Double ratio = null;
+		if (xrange != null && yrange != null) {
+			ratio = xrange.getRange() / yrange.getRange();
+		}
+		return ratio;
+	}
+	public RealRange getRealRange(Direction direction) {
+		RealRange range = null;
+		if (Direction.HORIZONTAL.equals(direction)) {
+			range = getXRange();
+		} else if (Direction.VERTICAL.equals(direction)) {
+			range = getYRange();
+		}
+		return range;
+	}
+
+	/** iterates through all boxes and return true r2r is contained in any range
+	 * 
+	 * @param ranges
+	 * @param r2r
+	 * @return
+	 */
+	public boolean isContainedInAnyRange(List<Real2Range> r2rList) {
+		if (r2rList != null) {
+			for (Real2Range r2r : r2rList) {
+				if (r2r.includes(this)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+    
+    public Dimension getDimension() {
+    	return new Dimension((int) getXRange().getRange(), (int) getYRange().getRange());
+    }
+    
+	public Double getXMin() {
+		return xrange == null ? null : xrange.getMin();
+	}
+    
+	public Double getXMax() {
+		return xrange == null ? null : xrange.getMax();
+	}
+    
+	public Double getYMin() {
+		return yrange == null ? null : yrange.getMin();
+	}
+    
+	public Double getYMax() {
+		return yrange == null ? null : yrange.getMax();
+	}
+
+	/** extends XRange.
+	 * 
+	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
+	 * 
+	 * @param leftSide 
+	 * @param rightSide
+	 */
+	public Real2Range  getReal2RangeExtendedInX(double leftSide, double rightSide) {
+		Real2Range r2r = new Real2Range(this);
+		if (r2r.xrange != null) {
+			r2r.xrange = r2r.xrange.getRangeExtendedBy(leftSide, rightSide);
+		}
+		return r2r;
+	}
+	/** extends XRange.
+	 * 
+	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
+	 * 
+	 * @param topSide
+	 * @param bottomSide
+	 */
+	public Real2Range getReal2RangeExtendedInY(double topExtend, double bottomExtend) {
+		Real2Range r2r = new Real2Range(this);
+		if (r2r.yrange != null) {
+			r2r.yrange = r2r.yrange.getRangeExtendedBy(topExtend, bottomExtend);
+		}
+		return r2r;
+	}
+	public static void format(List<Real2Range> boxList, int nplaces) {
+		for (Real2Range box : boxList) {
+			box.format(nplaces);
+		}
+	}
+	
+	public Double calculateArea() {
+		return (xrange == null || yrange == null) ? null : xrange.getRange() * yrange.getRange();
+	}
+
 }

@@ -19,6 +19,8 @@ package org.xmlcml.euclid.test;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.xmlcml.euclid.Angle;
+import org.xmlcml.euclid.Angle.Units;
 import org.xmlcml.euclid.Line2;
 import org.xmlcml.euclid.Real;
 import org.xmlcml.euclid.Real2;
@@ -239,6 +241,44 @@ public class Line2Test {
 		Real2Test.assertEquals("point0 ", new Real2(6., 8.), point0, 0.01);
 		Real2 point1 = line.createPointOnLine(dist, 1);
 		Real2Test.assertEquals("point1 ", new Real2(-3., -4.), point1, 0.01);
+	}
+	
+	@Test
+	public void testParallelLinesAndDistances() {
+		Angle epsAngle = new Angle(0.015, Angle.Units.RADIANS);
+		// these lines are not quite parallel - quite a large deviation
+		Line2 line0 = new Line2(new Real2(172.14,512.58), new Real2(172.14,504.3)); //v((0.0,-8.28))
+		Line2 line1 = new Line2(new Real2(172.5,504.06), new Real2 (172.62,512.58)); //v((0.12,8.52))	
+		Double d0 = line0.getUnsignedDistanceFromPoint(new Real2(0., 0.));
+		Assert.assertEquals(172.14,  d0, 0.01);
+		Double d1 = line1.getUnsignedDistanceFromPoint(new Real2(0., 0.));
+		Assert.assertEquals(165.38,  d1, 0.01);
+		Assert.assertTrue(line0.isAntiParallelTo(line1, epsAngle));
+		Assert.assertFalse(line0.isParallelTo(line1, epsAngle));
+		Assert.assertTrue(line0.isParallelOrAntiParallelTo(line1, epsAngle));
+		Double dist01 = line0.calculateUnsignedDistanceBetweenLines(line1, epsAngle);
+		Double dist10 = line1.calculateUnsignedDistanceBetweenLines(line0, epsAngle);
+		// note how distances are not equal - the lines diverge slightly
+		Assert.assertEquals(0.48, dist01, 0.001);
+		Assert.assertEquals(0.36, dist10, 0.001);
+		// smaller tolerance means lines are not parallel
+		Assert.assertFalse(line0.isAntiParallelTo(line1, epsAngle.multiplyBy(0.1)));
+		Assert.assertFalse(line0.isParallelTo(line1, epsAngle.multiplyBy(0.1)));
+		Assert.assertFalse(line0.isParallelOrAntiParallelTo(line1, epsAngle.multiplyBy(0.1)));
+
+	}
+	
+	@Test
+	public void testIsPerpendicularTo() {
+		Angle angleEps = new Angle(0.01, Units.RADIANS);
+		Line2 line10 = new Line2(new Real2(0., 0.), new Real2(1.0, 0.0));
+		Line2 line01 = new Line2(new Real2(0., 0.), new Real2(0.0, 0.1));
+		Assert.assertTrue("perp", line01.isPerpendicularTo(line10, angleEps));
+		Line2 line10d = new Line2(new Real2(0., 0.), new Real2(1.0, 0.001));
+		Line2 line01d = new Line2(new Real2(0., 0.), new Real2(0.001, 1.0));
+		Assert.assertTrue("perp", line01d.isPerpendicularTo(line10d, angleEps));
+		// lower the tolerance
+		Assert.assertFalse("perp", line01d.isPerpendicularTo(line10d, angleEps.multiplyBy(0.01)));
 	}
 
 }

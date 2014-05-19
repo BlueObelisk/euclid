@@ -16,6 +16,9 @@
 
 package org.xmlcml.euclid;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -33,7 +36,7 @@ import org.apache.log4j.Logger;
  * 
  * @author (C) P. Murray-Rust, 1996
  */
-public class IntArray extends ArrayBase {
+public class IntArray extends ArrayBase implements Iterable<Integer> {
     final static Logger LOG = Logger.getLogger(IntArray.class);
     /**
      * maximum number of elements (for bound checking)
@@ -165,11 +168,24 @@ public class IntArray extends ArrayBase {
      *            array to read from
      */
     public IntArray(int[] arr) {
-        nelem = arr.length;
+        addArray(arr);
+    }
+    
+	private void addArray(int[] arr) {
+		nelem = arr.length;
         array = new int[nelem];
         bufsize = nelem;
         System.arraycopy(arr, 0, array, 0, nelem);
+	}
+    
+    public IntArray(List<Integer> intList) {
+    	int[] arr = new int[intList.size()];
+    	for (int i = 0; i < arr.length; i++) {
+    		arr[i] = intList.get(i);
+    	}
+    	addArray(arr);
     }
+    
     /**
      * create from subarray of another Array.
      * 
@@ -1286,4 +1302,74 @@ public class IntArray extends ArrayBase {
 		return couldBeIntArray;
 	}
 
+	/** returns true if array is of form: i, i+delta, i+2*delta ...
+	 * 
+	 * @param delta
+	 * @return
+	 */
+	public boolean isArithmeticProgression(int delta) {
+		for (int i = 1; i < nelem; i++) {
+			if (array[i] -array[i-1] != delta) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	/** if all values are equal returns value else null
+	 * 
+	 * @param delta
+	 * @return null if no values or unequal else value
+	 */
+	public Integer getConstant() {
+		if (nelem == 0) return null;
+		for (int i = 1; i < nelem; i++) {
+			if (array[i] != array[0]) {
+				return null;
+			}
+		}
+		return array[0];
+	}
+	
+	public void decrementElementAt(int i) {
+		if (i >= 0 && i < nelem) {
+			array[i]--;
+		}
+	}
+	
+	public void incrementElementAt(int i) {
+		if (i >= 0 && i < nelem) {
+			array[i]++;
+		}
+	}
+	public Iterator<Integer> iterator() {
+		return (array == null || array.length < nelem) ? null : new IntegerIterator(array, nelem);
+	}
+}
+class IntegerIterator implements Iterator<Integer> {
+
+	private int counter;
+	private int[] array;
+	private int nelem;
+	
+	public IntegerIterator(int[] array, int nelem) {
+		this.array = array;
+		this.nelem = nelem;
+		counter = -1;
+	}
+	
+	public boolean hasNext() {
+		return counter < nelem - 1;
+	}
+
+	public Integer next() {
+		if (!hasNext()) return null;
+		return array[++counter];
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

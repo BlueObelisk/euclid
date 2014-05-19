@@ -211,6 +211,15 @@ public class Int2 implements EuclidConstants {
     public String toString() {
         return EC.S_LBRAK + x + EC.S_COMMA + y + EC.S_RBRAK;
     }
+    
+	public double getEuclideanDistance(Int2 int2) {
+		return new Real2(this).getDistance(new Real2(int2));
+	}
+	
+	public double getManhattanDistance(Int2 int2) {
+		return Math.abs(this.x - int2.x) + Math.abs(this.y - int2.y);
+	}
+	
 }
 /**
  * Int2Array is NOT a Vector of Int2s, but a container for a 2-D array with a

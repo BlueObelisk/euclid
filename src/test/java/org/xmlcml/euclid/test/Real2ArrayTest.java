@@ -16,10 +16,13 @@
 
 package org.xmlcml.euclid.test;
 
-import static org.xmlcml.euclid.EC.EPS;
-import static org.xmlcml.euclid.EC.S_PIPE;
-import static org.xmlcml.euclid.EC.S_SPACE;
+import static org.xmlcml.euclid.EuclidConstants.EPS;
+import static org.xmlcml.euclid.EuclidConstants.S_PIPE;
+import static org.xmlcml.euclid.EuclidConstants.S_SPACE;
 
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +41,9 @@ import org.xmlcml.euclid.RealRange;
  */
 public class Real2ArrayTest {
 
+	private final static Logger LOG = Logger.getLogger(Real2ArrayTest.class);
+	
 	Real2Array ra0;
-
 	Real2Array ra1;
 
 	/**
@@ -111,6 +115,12 @@ public class Real2ArrayTest {
 		Assert.assertEquals("size", 6, ra1.size());
 	}
 
+
+	@Test
+	public void testSumProductOfAllElements() {
+		Assert.assertEquals("sum", 301., ra1.sumProductOfAllElements(), 0.001);
+	}
+
 	@Test
 	public void testCreateFromPairs() {
 		String s = "1,2 3,4 5,6 7,8";
@@ -141,7 +151,74 @@ public class Real2ArrayTest {
 		Assert.assertEquals("coords", 31, real2Array.size());
 		
 		Assert.assertTrue("coords 0, found: "+real2Array.get(0), new Real2(112.559,238.695).isEqualTo(real2Array.get(0), 0.001));
-		
-				
+	}
+	
+	@Test
+	public void testGetMidPointArray() {
+		Real2Array r2array0 = new Real2Array(
+				new RealArray(new double[]{1., 2., 3., 4.}),
+				new RealArray(new double[]{21., 22., 23., 24.})
+				);
+		Real2Array r2array1 = new Real2Array(
+				new RealArray(new double[]{21., 22., 23., 24.}),
+				new RealArray(new double[]{41., 42., 43., 44.})
+				);
+		Real2Array midArray = r2array0.getMidPointArray(r2array1);
+		LOG.trace("mid "+midArray);
+		Assert.assertEquals("mid", "((11.0,31.0)(12.0,32.0)(13.0,33.0)(14.0,34.0))", midArray.toString());
+	}
+	
+	@Test
+	public void testIterator() {
+		RealArray xArray = new RealArray(new double[]{0.,1.,2.});
+		RealArray yArray = new RealArray(new double[]{10.,11.,12.});
+		Real2Array real2Array = new Real2Array(xArray, yArray);
+		Iterator<Real2> realIterator = real2Array.iterator();
+		Assert.assertTrue("start", realIterator.hasNext());
+		Assert.assertTrue("start", realIterator.hasNext());
+		Assert.assertTrue("start", realIterator.hasNext());
+		Assert.assertTrue("start", realIterator.hasNext());
+		Assert.assertTrue("start", new Real2(0., 10.).isEqualTo(realIterator.next(), 0.001));
+		Assert.assertTrue("start", new Real2(1., 11.).isEqualTo(realIterator.next(), 0.001));
+		Assert.assertTrue("after 1", realIterator.hasNext());
+		Assert.assertTrue("after 1", new Real2(2., 12.).isEqualTo(realIterator.next(), 0.001));
+		Assert.assertFalse("end", realIterator.hasNext());
+		Assert.assertNull("after 2", realIterator.next());
+	}
+	
+
+	@Test
+	public void testIterators() {
+		RealArray realArray = new RealArray(new double[]{0,1,2});
+		Iterator<Double> realIterator00 = realArray.iterator();
+		Iterator<Double> realIterator01 = realArray.iterator();
+		Assert.assertTrue("start", realIterator00.hasNext());
+		Assert.assertEquals("start", 0., (double) realIterator00.next(), 0.001);
+		Assert.assertEquals("start", 1., (double) realIterator00.next(), 0.001);
+		Assert.assertEquals("start", 0., (double) realIterator01.next(), 0.001);
+		Assert.assertEquals("end0", 2., (double) realIterator00.next(), 0.001);
+		Assert.assertFalse("end0", realIterator00.hasNext());
+		Assert.assertTrue("middle1", realIterator01.hasNext());
+		Assert.assertNull("endo", realIterator00.next());
+		Assert.assertEquals("start", 1., (double) realIterator01.next(), 0.001);
+	}
+	
+	@Test
+	public void testSort() {
+		Real2Array r2a = new Real2Array();
+		r2a.add(new Real2(1.0, 9.0));
+		r2a.add(new Real2(7.0, 3.0));
+		r2a.add(new Real2(2.0, 8.0));
+		r2a.add(new Real2(5.0, 1.0));
+		r2a.add(new Real2(4.0, 7.0));
+		r2a.add(new Real2(8.0, 6.0));
+		r2a.sortAscending(0);
+		Assert.assertEquals("xa", "((1.0,9.0)(2.0,8.0)(4.0,7.0)(5.0,1.0)(7.0,3.0)(8.0,6.0))", r2a.toString());
+		r2a.sortAscending(1);
+		Assert.assertEquals("xa", "((5.0,1.0)(7.0,3.0)(8.0,6.0)(4.0,7.0)(2.0,8.0)(1.0,9.0))", r2a.toString());
+		r2a.sortDescending(0);
+		Assert.assertEquals("xa", "((8.0,6.0)(7.0,3.0)(5.0,1.0)(4.0,7.0)(2.0,8.0)(1.0,9.0))", r2a.toString());
+		r2a.sortDescending(1);
+		Assert.assertEquals("xa", "((1.0,9.0)(2.0,8.0)(4.0,7.0)(8.0,6.0)(7.0,3.0)(5.0,1.0))", r2a.toString());
 	}
 }

@@ -16,8 +16,12 @@
 
 package org.xmlcml.euclid.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.euclid.Real2;
 import org.xmlcml.euclid.Real2Range;
@@ -203,4 +207,51 @@ public class Real2RangeTest {
 		Assert.assertEquals("plus", "((0.0,8.0),(7.0,15.0))", ii.toString());
 	}
 
+	@Test
+	public void testIsHorizontal() {
+		Real2Range r2r = new Real2Range(new RealRange(0., 200.), new RealRange(0., 0.5));
+		Assert.assertTrue("horizontal", r2r.isHorizontal());
+		Assert.assertFalse("vertical", r2r.isVertical());
+	}
+
+	@Test
+	public void testIsHorizontal1() {
+		Real2Range r2r = new Real2Range(new RealRange(0., 200.), new RealRange(0., 200.));
+		Assert.assertFalse("horizontal", r2r.isHorizontal());
+		Assert.assertFalse("vertical", r2r.isVertical());
+	}
+
+	@Test
+	public void testHorizontalVerticalRatio() {
+		Real2Range r2r = new Real2Range(new RealRange(0., 100.), new RealRange(0., 1.));
+		Assert.assertTrue("horizontal", r2r.isHorizontal());
+		Assert.assertEquals("aspect ratio", 100., r2r.getHorizontalVerticalRatio(), 0.001);
+	}
+	
+	@Test
+	public void testIsContainedIn() {
+		List<Real2Range> r2rList = new ArrayList<Real2Range>();
+		Real2Range box = new Real2Range(new RealRange(50, 60),new RealRange(70, 80));
+		r2rList.add(new Real2Range(new RealRange(0, 30),new RealRange(0, 100)));
+		Assert.assertFalse(box.isContainedInAnyRange(r2rList));
+		r2rList.add(new Real2Range(new RealRange(0, 100),new RealRange(0, 30)));
+		Assert.assertFalse(box.isContainedInAnyRange(r2rList));
+		r2rList.add(new Real2Range(new RealRange(40, 80),new RealRange(40, 80)));
+		Assert.assertTrue(box.isContainedInAnyRange(r2rList));
+	}
+	
+	@Test
+	public void testArea() {
+		Real2Range r2r = new Real2Range(new RealRange(1.0, 4.0), new RealRange(
+				11.0, 24.0));
+		Assert.assertEquals("area", 39.0, (double) r2r.calculateArea(), 0.01);
+	}
+	
+	@Test
+	@Ignore //null in constructor fails
+	public void testAreaNull() {
+		Real2Range r2r = new Real2Range(null, new RealRange(
+				11.0, 24.0));
+		Assert.assertNull("area", r2r.calculateArea());
+	}
 }
