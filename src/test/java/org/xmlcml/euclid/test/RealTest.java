@@ -18,6 +18,7 @@ package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EC.EPS;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.xmlcml.euclid.Real;
 
@@ -50,6 +51,11 @@ public class RealTest {
 		Real.initArray(5, rr, 3.0);
 		DoubleTestBase.assertEquals("double[] ", new double[] { 3.0, 3.0, 3.0,
 				3.0, 3.0 }, rr, EPS);
+	}
+	
+	@Test
+	public void testIsRealDDD() {
+		Assert.assertTrue(Real.isEqual(2.0, 1.99, 0.1));
 	}
 
 }
