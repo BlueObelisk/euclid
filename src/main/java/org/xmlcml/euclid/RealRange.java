@@ -194,7 +194,7 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
     public RealRange plusEquals(RealRange r2) {
     	if (r2 != null) {
     		minval = Math.min(minval, r2.minval);
-    		maxval = Math.min(maxval, r2.maxval);
+    		maxval = Math.max(maxval, r2.maxval);
     	} 
     	return this;
     }
