@@ -19,6 +19,11 @@ public class IntRangeArray implements Iterable<IntRange> {
 	public IntRangeArray() {
 		init();
 	}
+	
+	public IntRangeArray(List<IntRange> ranges) {
+		init();
+		rangeList.addAll(ranges);
+	}
 
 	/** deep copy
 	 * 
@@ -164,5 +169,16 @@ public class IntRangeArray implements Iterable<IntRange> {
 
 	public Iterator<IntRange> iterator() {
 		return rangeList.iterator();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for (IntRange range : rangeList) {
+			sb.append(range.toString());
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }
