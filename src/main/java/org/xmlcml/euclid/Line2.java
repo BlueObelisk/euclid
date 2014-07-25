@@ -500,7 +500,7 @@ public class Line2 implements EuclidConstants {
 		return "line: from("+from+") to("+to+") v("+vector+")";
 	}
 
-	public boolean isHorizontalal(Angle eps) {
+	public boolean isHorizontal(Angle eps) {
 		return this.isParallelOrAntiParallelTo(XAXIS, eps);
 	}
 
