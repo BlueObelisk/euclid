@@ -281,4 +281,21 @@ public class Line2Test {
 		Assert.assertFalse("perp", line01d.isPerpendicularTo(line10d, angleEps.multiplyBy(0.01)));
 	}
 
+	@Test
+	public void testIsVerticalHorizontal() {
+		Angle angleEps = new Angle(0.01, Units.RADIANS);
+		Line2 line10 = new Line2(new Real2(0., 0.), new Real2(1.0, 0.0));
+		Line2 line01 = new Line2(new Real2(0., 0.), new Real2(0.0, 0.1));
+		Assert.assertTrue("hor", line10.isHorizontal(angleEps));
+		Assert.assertTrue("vert", line01.isVertical(angleEps));
+		Assert.assertFalse("hor", line01.isHorizontal(angleEps));
+		Assert.assertFalse("vert", line10.isVertical(angleEps));
+		Line2 line10d = new Line2(new Real2(0., 0.), new Real2(1.0, 0.001));
+		Line2 line01d = new Line2(new Real2(0., 0.), new Real2(0.001, 1.0));
+		Assert.assertTrue("hor", line10d.isHorizontal(angleEps));
+		Assert.assertTrue("vert", line01d.isVertical(angleEps));
+		// lower the tolerance
+		Assert.assertFalse("hor", line10d.isHorizontal(angleEps.multiplyBy(0.01)));
+		Assert.assertFalse("vert", line01d.isVertical(angleEps.multiplyBy(0.01)));
+	}
 }
