@@ -59,10 +59,10 @@ import org.xmlcml.euclid.Util;
  * 
  */
 public abstract class XMLUtil implements XMLConstants {
-	private static final String DUMMY = "dummy";
-
 	private static Logger LOG = Logger.getLogger(XMLUtil.class);
-	
+
+	private static final String DUMMY = "dummy";
+	private static final String DOCTYPE = "\\<\\!DOCTYPE[^\\>]*\\>";
 	public final static String DTD = ".dtd\">";
 
 
@@ -1186,6 +1186,7 @@ public abstract class XMLUtil implements XMLConstants {
 	 * @return
 	 * @throws IOException
 	 */
+	@Deprecated // relies on string .dtd" and this could be apostrophe. 
 	public static Document stripDTDAndOtherProblematicXMLHeadings(String s) throws IOException {
 		
 		if (s == null || s.length() == 0) {
@@ -1219,6 +1220,51 @@ public abstract class XMLUtil implements XMLConstants {
 		}
 		return document;
 	}
+	
+	/**
+	 * Removes DOCTYPE 
+	 * 
+	 * DOCTYPE can cause problems by requiring to load DTD from URL which can
+	 * take many seconds or, if offline, can cause failure to parse.
+	 * 
+	 * This is dangerous but so is the DOCTYPE
+	 * 
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
+          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+	 * @param s
+	 * @return
+	 * @throws IOException
+	 */
+	public static String stripDTD(String s) {
+		if (s != null) {
+			s = s.replaceAll(DOCTYPE, "");
+		}
+		return s;
+	}
+
+	/**
+	 * Removes DOCTYPE and then parses
+	 * 
+	 * DOCTYPE can cause problems by requiring to load DTD from URL which can
+	 * take many seconds or, if offline, can cause failure to parse.
+	 * 
+	 * This is dangerous but so is the DOCTYPE
+	 * 
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
+          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+	 * @param s
+	 * @return
+	 * @throws IOException
+	 */
+	public static Element stripDTDAndParse(String s) {
+		Element root = null;
+		if (s != null) {
+			s = stripDTD(s);
+			root = XMLUtil.parseXML(s);
+		}
+		return root;
+	}
+
 
 	private static String removeScripts(String baosS) {
 		return removeTags("script", baosS);
