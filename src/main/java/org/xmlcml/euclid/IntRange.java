@@ -260,5 +260,18 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 	public IntRange getRangeExtendedBy(int minExtend, int maxExtend) {
 		return  new IntRange(minval - minExtend, maxval + maxExtend);
 	}
+	
+	/** do ranges touch but not overlap?
+	 * 
+	 * range from [a,b] inclusive touches [c,a-1] or [b+1,c]
+	 * 
+	 * ([a,b] overlaps with [b,c])
+	 * @param range
+	 * @return
+	 */
+	public boolean touches(IntRange range) {
+		return range != null && 
+			(this.maxval + 1 == range.minval || range.maxval + 1 == this.minval); 
+	}
 
 }

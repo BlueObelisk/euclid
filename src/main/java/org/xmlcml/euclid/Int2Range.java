@@ -243,4 +243,18 @@ public class Int2Range implements EuclidConstants {
     public String toString() {
         return EC.S_LBRAK + xrange.toString() + EC.S_COMMA + yrange.toString() + EC.S_RBRAK;
     }
+    
+    /** do two boxes touch?
+     * 
+     * if box a extends to x and box b extends from x+1 they are touching.
+     * uses IntRange.touches()
+     * 
+     * Note that if box a and b share an integer coordinate then they *intersect*, not touch
+     * 
+     * @param bbox
+     * @return
+     */
+	public boolean touches(Int2Range bbox) {
+		return this.xrange.touches(bbox.xrange) || this.yrange.touches(bbox.yrange);
+	}
 }
