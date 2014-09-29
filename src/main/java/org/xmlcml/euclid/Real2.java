@@ -80,7 +80,10 @@ public class Real2 implements EuclidConstants {
      */
     
     /**
-     * two integers separated by whitespace
+     * two reals separated by whitespace
+     * OR
+     * (real, real)
+     * 
      * @param s
      */
     public Real2(String s) {
@@ -108,7 +111,8 @@ public class Real2 implements EuclidConstants {
         this.x = x[0];
         this.y = x[1];
     }
-    /** reads outut foemat from toString()
+    
+    /** reads output format from toString()
      * "(x,y)"
      * @param s
      * @return

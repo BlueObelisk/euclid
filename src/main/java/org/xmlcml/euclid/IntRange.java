@@ -274,4 +274,12 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 			(this.maxval + 1 == range.minval || range.maxval + 1 == this.minval); 
 	}
 
+	/** mid point of range.
+	 * 
+	 * @return
+	 */
+	public int getMidPoint() {
+		return (minval + maxval)/2;
+	}
+
 }
