@@ -204,5 +204,15 @@ public class IntRangeTest {
 		i2.add(9);
 		Assert.assertEquals("ii", "(0,9)", i2.toString());
 	}
+	
+	/** midpoint
+	 * 
+	 */
+	@Test
+	public void testMidPoint() {
+		Assert.assertEquals("mid", 0, i0.getMidPoint());
+		Assert.assertEquals("mid", 1, i1.getMidPoint());
+		Assert.assertEquals("mid", 2, i2.getMidPoint());
+	}
 
 }
