@@ -210,7 +210,15 @@ public class Angle {
     	}
     }
 
-    /** tests whether this is a right angle;
+    /** 
+     * Normalises angle to be in range 0 -&gt; Math.PI * 2.
+     */
+    public void normalizeTo2Pi() {
+    	angle = Angle.normalise(angle);
+    }
+
+    /** 
+     * Tests whether this is a right angle.
      * 
      * @param eps tolerance
      * @return 1 for PI/2, -1 for -PI/2 else 0
