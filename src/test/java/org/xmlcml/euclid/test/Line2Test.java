@@ -34,20 +34,25 @@ import org.xmlcml.euclid.Vector2;
  */
 public class Line2Test {
 
-	static double sqrt2 = Math.sqrt(2.);
-	static double sqrt5 = Math.sqrt(5.);
-	Real2 p00 = new Real2(0., 0.);
-	Real2 p02 = new Real2(0., 2.);
-	Real2 p20 = new Real2(2., 0.);
-	Real2 p12 = new Real2(1., 2.);
-	Real2 p21 = new Real2(2., 1.);
-	Real2 p11 = new Real2(1., 1.);
-	Vector2 v12 = new Vector2(1., 2.);
+	static double sqrt2 = Math.sqrt(2);
+	static double sqrt5 = Math.sqrt(5);
+	Real2 p00 = new Real2(0, 0);
+	Real2 p02 = new Real2(0, 2);
+	Real2 p20 = new Real2(2, 0);
+	Real2 p12 = new Real2(1, 2);
+	Real2 p21 = new Real2(2, 1);
+	Real2 p11 = new Real2(1, 1);
+	Real2 p0100 = new Real2(0, 100);
+	Real2 p1100 = new Real2(1, 100);
+	Vector2 v12 = new Vector2(1, 2);
 	Line2 l0002;
 	Line2 l0200;
 	Line2 l0020;
 	Line2 l1221;
 	Line2 l1112;
+	Line2 l000100;
+	Line2 l001100;
+	Line2 l110000;
 
 	/**
 	 * @throws Exception
@@ -59,6 +64,40 @@ public class Line2Test {
 		l0020 = new Line2(p00, p20);
 		l1221 = new Line2(p12, p21);
 		l1112 = new Line2(p11, v12);
+		l000100 = new Line2(p00, p0100);
+		l001100 = new Line2(p00, p1100);
+		l110000 = new Line2(p1100, p00);
+	}
+	
+	@Test
+	public void testParallelAndAntiparallel() {
+		Assert.assertTrue("Line and itself", l0002.isParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("Line and itself", l0002.isAntiParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("Line and reversed version", l0002.isAntiParallelTo(l0200, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("Line and reversed version", l0002.isParallelTo(l0200, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 parallel lines", l0002.isParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 parallel lines", l0002.isAntiParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 almost parallel lines", l000100.isParallelTo(l001100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 almost parallel lines", l000100.isAntiParallelTo(l001100, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 antiparallel lines", l0200.isAntiParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 antiparallel lines", l0200.isParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 almost antiparallel lines", l000100.isAntiParallelTo(l110000, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 almost antiparallel lines", l000100.isParallelTo(l110000, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 right-angle lines", l0002.isParallelTo(l0020, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 right-angle lines", l0002.isAntiParallelTo(l0020, new Angle(1, Units.DEGREES)));
+		
+		Assert.assertTrue("Line and reversed version", l0200.isAntiParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("Line and reversed version", l0200.isParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 parallel lines", l000100.isParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 parallel lines", l000100.isAntiParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 almost parallel lines", l001100.isParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 almost parallel lines", l001100.isAntiParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 antiparallel lines", l000100.isAntiParallelTo(l0200, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 antiparallel lines", l000100.isParallelTo(l0200, new Angle(1, Units.DEGREES)));
+		Assert.assertTrue("2 almost antiparallel lines", l110000.isAntiParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 almost antiparallel lines", l110000.isParallelTo(l000100, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 right-angle lines", l0020.isParallelTo(l0002, new Angle(1, Units.DEGREES)));
+		Assert.assertFalse("2 right-angle lines", l0020.isAntiParallelTo(l0002, new Angle(1, Units.DEGREES)));
 	}
 
 	/** dewisott */
