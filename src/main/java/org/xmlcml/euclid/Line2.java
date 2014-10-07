@@ -286,7 +286,8 @@ public class Line2 implements EuclidConstants {
 	public Boolean isParallelTo(Line2 line, Angle eps) {
 		Boolean parallel = null;
 		if (line != null && eps != null) {
-			Angle angle = this.getAngleMadeWith(line);
+			Angle angle = getAngleMadeWith(line);
+			angle.normalizeToPlusMinusPi();
 			parallel = Math.abs(angle.getRadian()) < Math.abs(eps.getRadian());
 		}
 		return parallel;
@@ -300,7 +301,8 @@ public class Line2 implements EuclidConstants {
 	public boolean isAntiParallelTo(Line2 line, Angle eps) {
 		Boolean antiParallel = null;
 		if (line != null && eps != null) {
-			Angle angle = this.getAngleMadeWith(line);
+			Angle angle = getAngleMadeWith(line);
+			angle.normalizeTo2Pi();
 			antiParallel = Math.abs(Math.abs(angle.getRadian()) - Math.PI) < Math.abs(eps.getRadian());
 		}
 		return antiParallel;
