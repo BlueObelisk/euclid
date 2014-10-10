@@ -287,7 +287,7 @@ public class Line2 implements EuclidConstants {
 		Boolean parallel = null;
 		if (line != null && eps != null) {
 			Angle angle = getAngleMadeWith(line);
-			angle.normalizeToPlusMinusPi();
+			angle.normalizeToPlusMinusPI();
 			parallel = Math.abs(angle.getRadian()) < Math.abs(eps.getRadian());
 		}
 		return parallel;
