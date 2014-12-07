@@ -220,6 +220,42 @@ public class Int2 implements EuclidConstants {
 		return Math.abs(this.x - int2.x) + Math.abs(this.y - int2.y);
 	}
 	
+	/** adds 1 to x value.
+	 * 
+	 * changes this
+	 */
+	public Int2 incrementX() {
+		this.x++;
+		return this;
+	}
+	
+	/** subtracts 1 from x value.
+	 * 
+	 * changes this
+	 */
+	public Int2 decrementX() {
+		this.x--;
+		return this;
+	}
+	
+	/** adds 1 to y value.
+	 * 
+	 * changes this
+	 */
+	public Int2 incrementY() {
+		this.y++;
+		return this;
+	}
+	
+	/** subtracts 1 from y value.
+	 * 
+	 * changes this
+	 */
+	public Int2 decrementY() {
+		this.y--;
+		return this;
+	}
+	
 }
 /**
  * Int2Array is NOT a Vector of Int2s, but a container for a 2-D array with a
