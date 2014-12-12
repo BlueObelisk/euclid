@@ -556,8 +556,12 @@ public abstract class XMLUtil implements XMLConstants {
 	/**
 	 * copies atributes of 'from' to 'to'
 	 * @param element
+	 * @throws IllegalArgumentException null arguments
 	 */
-	public static void copyAttributes(Element from, Element to) {
+	public static void copyAttributes(Element from, Element to) throws IllegalArgumentException {
+		if (to == null || from == null) {
+			throw new IllegalArgumentException("cannot copy null elements");
+		}
 		int natt = from.getAttributeCount();
         for (int i = 0; i < natt; i++) {
             Attribute newAtt = new Attribute(from.getAttribute(i));
@@ -571,7 +575,10 @@ public abstract class XMLUtil implements XMLConstants {
 	 * @param node
 	 * @return the string
 	 */
-	public static String getCanonicalString(Node node) {
+	public static String getCanonicalString(Node node) throws IllegalArgumentException{
+		if (node == null) {
+			throw new IllegalArgumentException("null node");
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Canonicalizer canon = new Canonicalizer(baos);
 		try {
