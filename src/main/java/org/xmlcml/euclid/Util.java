@@ -82,6 +82,7 @@ public class Util implements EuclidConstants {
 		}
 	}
 
+	private static final String PM286 = "pm286";
 
 	public final static String[] LOWER_ROMAN_NUMERAL = { "i", "ii", "iii",
 			"iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii",
@@ -3125,6 +3126,24 @@ public class Util implements EuclidConstants {
         return relative.toString();
     }
 
+	/** checks that this is local to PMR.
+	 * 
+	 * Stops certain tests being run outside PMR implementation,
+	 * especially ones which use directories outside the maven project
+	 * 
+	 * uses System.user.name
+	 * 
+	 * @return
+	 */
+	public static boolean checkPMR() {
+		boolean check = false;
+		if (PM286.equals(System.getProperty("user.name"))) {
+			check = true;
+		} else {
+			LOG.debug("Skipping PMR-only test");
+		}
+		return check;
+	}
 
 
 }
@@ -3174,4 +3193,5 @@ class StringIntegerComparator implements Comparator<Object> {
 			fw.write(lines.get(i)+"\n");
 		}
 	}
+	
  }
