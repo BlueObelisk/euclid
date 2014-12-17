@@ -1,6 +1,6 @@
 package org.xmlcml.euclid;
 
-public class LineAndPointCalculator {
+public class Line2AndReal2Calculator {
 
 	public double distanceOfProjectionFromEnd1;
 	public double distanceOfProjectionFromEnd2;
@@ -8,7 +8,7 @@ public class LineAndPointCalculator {
 	public boolean offEnd1;
 	public boolean offEnd2;
 	
-	public LineAndPointCalculator(Line2 line, Real2 point) {
+	public Line2AndReal2Calculator(Line2 line, Real2 point) {
 		Real2 point1 = line.getXY(0);
 		Real2 point2 = line.getXY(1);
 		Real2 proj = line.getNearestPointOnLine(point);
