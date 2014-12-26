@@ -903,9 +903,9 @@ public abstract class XMLUtil implements XMLConstants {
     	if (file == null) {
     		message = "null ref file";
     	} else if (!file.exists()) {
-    		message = "non-existent ref file ";
+    		message = "non-existent ref file "+file;
     	} else if (file.isDirectory()) {
-    		message = "ref file is directory";
+    		message = "ref file is directory "+file;
     	}
 		return message;
 	}
