@@ -851,7 +851,7 @@ public abstract class XMLUtil implements XMLConstants {
 		return message;
 	}
 
-	/** compares two XML files for equality.
+	/** compares two XML files for equality using recursive descent.
 	 * 
 	 * @param refFile
 	 * @param testFile
@@ -865,6 +865,26 @@ public abstract class XMLUtil implements XMLConstants {
     		try {
 	    	    Element refElement = XMLUtil.parseQuietlyToDocument(refFile).getRootElement();
 	    	    Element testElement = XMLUtil.parseQuietlyToDocument(testFile).getRootElement();
+	    	    message = XMLUtil.equalsCanonically(refElement, testElement, stripWhite);
+    		} catch (Exception e) {
+    			message = e.getMessage();
+    		}
+    	}
+	    return message;
+	}
+
+	/** compares XML element against reference file for equality using recursive descent.
+	 * 
+	 * @param refFile
+	 * @param testElement
+	 * @param stripWhite
+	 * @return null if identical; else a message about errors in files, XML, etc.
+	 */
+    public static String equalsCanonically(File refFile, Element testElement, boolean stripWhite) {
+  		String message = isXMLFile(refFile);
+    	if (message == null) {
+    		try {
+	    	    Element refElement = XMLUtil.parseQuietlyToDocument(refFile).getRootElement();
 	    	    message = XMLUtil.equalsCanonically(refElement, testElement, stripWhite);
     		} catch (Exception e) {
     			message = e.getMessage();
