@@ -73,7 +73,7 @@ public interface EuclidConstants {
     char C_SHRIEK = '!';
 
     /** constant */
-    char C_POUND = '£';
+    char C_POUND = '\u00A3';
 
     /** constant */
     char C_DOLLAR = '$';
@@ -203,7 +203,7 @@ public interface EuclidConstants {
     String S_SHRIEK = "!";
 
     /** constant */
-    String S_POUND = "£";
+    String S_POUND = String.valueOf('\u00A3');
 
     /** constant */
     String S_DOLLAR = "$";

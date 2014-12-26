@@ -17,6 +17,7 @@
 package org.xmlcml.xml;
 
 import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -849,7 +850,46 @@ public abstract class XMLUtil implements XMLConstants {
 		}
 		return message;
 	}
-	
+
+	/** compares two XML files for equality.
+	 * 
+	 * @param refFile
+	 * @param testFile
+	 * @param stripWhite
+	 * @return null if identical; else a message about errors in files, XML, etc.
+	 */
+    public static String equalsCanonically(File refFile, File testFile, boolean stripWhite) {
+  		String message = isXMLFile(refFile);
+  		message = (message != null) ? message : isXMLFile(testFile);
+    	if (message == null) {
+    		try {
+	    	    Element refElement = XMLUtil.parseQuietlyToDocument(refFile).getRootElement();
+	    	    Element testElement = XMLUtil.parseQuietlyToDocument(testFile).getRootElement();
+	    	    message = XMLUtil.equalsCanonically(refElement, testElement, stripWhite);
+    		} catch (Exception e) {
+    			message = e.getMessage();
+    		}
+    	}
+	    return message;
+	}
+
+    /** check file is existing file, not null or directory,
+     * 
+     * @param file to check
+     * @return null if no problems else message
+     */
+	public static String isXMLFile(File file) {
+		String message = null;
+    	if (file == null) {
+    		message = "null ref file";
+    	} else if (!file.exists()) {
+    		message = "non-existent ref file ";
+    	} else if (file.isDirectory()) {
+    		message = "ref file is directory";
+    	}
+		return message;
+	}
+ 
     public static String getCommonLeadingString(String s1, String s2) {
         int l = Math.min(s1.length(), s2.length());
         int i;
