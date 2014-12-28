@@ -933,8 +933,8 @@ public abstract class XMLUtil implements XMLConstants {
 		List<String> testNamespaceURIList = getNamespaceURIList(testNode);
 		if (refNamespaceURIList.size() != testNamespaceURIList.size()) {
 				message = "unequal namespace count;" +
-				" ref "+refNamespaceURIList.size()+";" +
-				" testCount "+testNamespaceURIList.size();
+				" ref "+refNamespaceURIList.size()+"; " +refNamespaceURIList+";"+
+				" testCount "+testNamespaceURIList.size()+"; "+testNamespaceURIList;
 		} else {
 			for (String refNamespaceURI : refNamespaceURIList) {
 				if (!testNamespaceURIList.contains(refNamespaceURI)) {
