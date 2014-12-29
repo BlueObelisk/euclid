@@ -827,8 +827,9 @@ public abstract class XMLUtil implements XMLConstants {
 	}
 
 	private static String equalsCanonically(Element refElement, Element testElement, String xpath) {
-		String message;
-		message = XMLUtil.compareNamespacesCanonically(refElement, testElement, xpath);
+		String message = null;
+		// remove this as namespaces may be different in different serializations
+//		message = XMLUtil.compareNamespacesCanonically(refElement, testElement, xpath);
 		if (message != null) {
 			return message;
 		}
