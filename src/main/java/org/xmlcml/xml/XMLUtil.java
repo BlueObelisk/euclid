@@ -830,9 +830,9 @@ public abstract class XMLUtil implements XMLConstants {
 		String message = null;
 		// remove this as namespaces may be different in different serializations
 //		message = XMLUtil.compareNamespacesCanonically(refElement, testElement, xpath);
-		if (message != null) {
-			return message;
-		}
+//		if (message != null) {
+//			return message;
+//		}
 		String refName = refElement.getLocalName();
 		String testName = testElement.getLocalName();
 		if (message == null && !refName.equals(testName)) {
