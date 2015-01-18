@@ -46,6 +46,7 @@ public class ArgumentOption {
 	private Double  doubleValue;
 	private Boolean booleanValue;
 	private String args;
+	private List<StringPair> stringPairValues;
 	
 	public ArgumentOption() {
 	}
@@ -171,6 +172,15 @@ public class ArgumentOption {
 			for (String input : inputs) {
 				integerValues.add(new Integer(input));
 			}
+		} else if (type.equals(StringPair.class)) {
+			stringPairValues = new ArrayList<StringPair>();
+			for (String input : inputs) {
+				String[] fields = input.trim().split(",");
+				if (fields.length != 2) {
+					throw new RuntimeException("Cannot parse "+input+" as comma-separated pair (foo,bar)");
+				}
+				stringPairValues.add(new StringPair(fields[0], fields[1]));
+			}
 		} else {
 			LOG.error("currently cannot support type: "+type);
 		}
@@ -255,12 +265,37 @@ public class ArgumentOption {
 		return (brief.equals(arg) || lng.equals(arg));
 	}
 	
-	public String getString() {
-		return stringValue;
+	public List<Double> getDoubleValues() {
+		return doubleValues;
 	}
-	
+
+	public List<Integer> getIntegerValues() {
+		return integerValues;
+	}
+
 	public List<String> getStringValues() {
 		return stringValues;
 	}
+	
+	public String getStringValue() {
+		return stringValue;
+	}
+
+	public Integer getIntegerValue() {
+		return integerValue;
+	}
+
+	public Double getDoubleValue() {
+		return doubleValue;
+	}
+
+	public Boolean getBooleanValue() {
+		return booleanValue;
+	}
+
+	public List<StringPair> getStringPairValues() {
+		return stringPairValues;
+	}
+
 	
 }
