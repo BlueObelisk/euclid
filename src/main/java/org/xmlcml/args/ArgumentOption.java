@@ -153,18 +153,20 @@ public class ArgumentOption {
 		doubleValues = defaultDoubles;
 		if (inputs.size() < minCount) {
 			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
-		} else if (inputs.size() > minCount) {
+		} else if (inputs.size() > maxCount) {
 			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
 		} else if (type == null) {
 			LOG.error("null type translates to String");
 			stringValues = inputs;
 		} else if (type.equals(String.class)) {
 			stringValues = inputs;
+			stringValue = (inputs.size() == 0) ? defaultString : inputs.get(0);
 		} else if (type.equals(Double.class)) {
 			doubleValues = new ArrayList<Double>();
 			for (String input : inputs) {
 				doubleValues.add(new Double(input));
 			}
+			doubleValue = (doubleValues.size() == 0) ? defaultDouble : doubleValues.get(0);
 		} else if (type.equals(Boolean.class)) {
 			booleanValue = inputs.size() == 1 ? new Boolean(inputs.get(0)) : defaultBoolean;
 		} else if (type.equals(Integer.class)) {
@@ -172,6 +174,7 @@ public class ArgumentOption {
 			for (String input : inputs) {
 				integerValues.add(new Integer(input));
 			}
+			integerValue = (integerValues.size() == 0) ? defaultInteger : integerValues.get(0);
 		} else if (type.equals(StringPair.class)) {
 			stringPairValues = new ArrayList<StringPair>();
 			for (String input : inputs) {
@@ -181,6 +184,8 @@ public class ArgumentOption {
 				}
 				stringPairValues.add(new StringPair(fields[0], fields[1]));
 			}
+			// NYI
+//			stringPairValueValue = (stringPairValues.size() == 0) ? defaultStringPairValue : stringPairValues.get(0);
 		} else {
 			LOG.error("currently cannot support type: "+type);
 		}
