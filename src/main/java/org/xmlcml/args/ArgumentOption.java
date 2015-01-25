@@ -1,7 +1,10 @@
 package org.xmlcml.args;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import nu.xom.Element;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -12,21 +15,28 @@ import org.apache.log4j.Logger;
  *
  */
 public class ArgumentOption {
+	private static final String BRIEF = "brief";
+	private static final String LONG = "long";
+	private static final String HELP = "help";
+	private static final String ARGS = "args";
+	private static final String CLASS = "class";
+	private static final String DEFAULT = "default";
+	private static final String MIN = "min";
+	private static final String MAX = "max";
+	private static final String METHOD_NAME = "methodName";
 
-	
 	private static final Logger LOG = Logger.getLogger(ArgumentOption.class);
 	static {
 		LOG.setLevel(Level.DEBUG);
 	}
 	
-	
 	private String brief;
 	private String lng;
 	private String help;
-	private Class<?> type;
+	private Class<?> classType;
 	private Object defalt;
-	private int minCount;
-	private int maxCount;
+	private Integer minCount;
+	private Integer maxCount;
 	
 	private List<String> defaultStrings;
 	private List<Integer> defaultIntegers;
@@ -48,27 +58,114 @@ public class ArgumentOption {
 	private String args;
 	private List<StringPair> stringPairValues;
 	
-	public ArgumentOption() {
+	private String methodName;
+	private Class<? extends DefaultArgProcessor> argProcessorClass;
+	
+	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
+		this.argProcessorClass = argProcessorClass;
 	}
 	
-	public ArgumentOption(
+	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass,
 			String brief, 
 			String lng, 
 			String args,
 			String help,
-			Class<?> type,
+			Class<?> classType,
 			Object defalt,
 			int minCount,
-			int maxCount
+			int maxCount,
+			String methodName
 			) {
+		this(argProcessorClass);
 		setBrief(brief);
 		setLong(lng);
 		setHelp(help);
 		setArgs(args);
-		setType(type);
+		setClassType(classType);
 		setDefault(defalt);
 		setMinCount(minCount);
 		setMaxCount(maxCount);
+		setMethodName(methodName);
+	}
+
+	public static ArgumentOption createOption(Class<? extends DefaultArgProcessor> argProcessor, Element element) {
+		ArgumentOption argumentOption = new ArgumentOption(argProcessor);
+		argumentOption.addBrief(element);
+		argumentOption.addLong(element);
+		argumentOption.addHelp(element);
+		argumentOption.addArgs(element);
+		argumentOption.addType(element);
+		argumentOption.addDefault(element);
+		argumentOption.addMinCount(element);
+		argumentOption.addMaxCount(element);
+		argumentOption.addMethodName(element);
+		return argumentOption;
+	}
+	
+	private void addMethodName(Element element) {
+		setMethodName(element.getAttributeValue(METHOD_NAME));
+	}
+
+	private void addMaxCount(Element element) {
+		setMaxCount(createInteger(element.getAttributeValue(MAX)));
+	}
+
+	private Integer createInteger(String ss) {
+		Integer ii = null;
+		if (ss == null) {
+		} else if (ss.equals("Integer.MAX_VALUE")) {
+			ii = Integer.MAX_VALUE;
+		} else if (ss.equals("Integer.MIN_VALUE")) {
+			ii = Integer.MIN_VALUE;
+		} else {
+			try {
+				ii = new Integer(ss);
+			} catch (Exception e) {
+				LOG.error("Bad integer: "+ss);
+			}
+		}
+		LOG.trace("integer "+ii);
+		return ii;
+	}
+
+	private void addMinCount(Element element) {
+		setMinCount(createInteger(element.getAttributeValue(MIN)));
+	}
+
+	private void addDefault(Element element) {
+		setDefault(element.getAttributeValue(DEFAULT));
+	}
+
+	private void addType(Element element) {
+		setClassType(element.getAttributeValue(CLASS));
+	}
+
+	private void setClassType(String className) {
+		LOG.debug(">> "+className);
+		if (className != null) {
+			Class<?> classType = null;
+			try {
+				classType = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Cannot create class for: "+className);
+			}
+		}
+	}
+
+	private void addArgs(Element element) {
+		setArgs(element.getAttributeValue(ARGS));
+	}
+
+	private void addHelp(Element element) {
+		setHelp(element.getAttributeValue(HELP));
+	}
+
+	private void addLong(Element element) {
+		setLong(element.getAttributeValue(LONG));
+	}
+
+	private void addBrief(Element element) {
+		setBrief(element.getAttributeValue(BRIEF));
 	}
 
 	public String getBrief() {
@@ -111,12 +208,12 @@ public class ArgumentOption {
 		this.help = help;
 	}
 
-	public Class<?> getType() {
-		return type;
+	public Class<?> getClassType() {
+		return classType;
 	}
 
-	public void setType(Class<?> type) {
-		this.type = type;
+	public void setClassType(Class<?> classType) {
+		this.classType = classType;
 	}
 
 	public Object getDefault() {
@@ -127,20 +224,35 @@ public class ArgumentOption {
 		this.defalt = defalt;
 	}
 
-	public int getMinCount() {
+	public Integer getMinCount() {
 		return minCount;
 	}
 
-	public void setMinCount(int minCount) {
+	public void setMinCount(Integer minCount) {
 		this.minCount = minCount;
 	}
 
-	public int getMaxCount() {
+	public Integer getMaxCount() {
 		return maxCount;
 	}
 
-	public void setMaxCount(int maxCount) {
+	public void setMaxCount(Integer maxCount) {
 		this.maxCount = maxCount;
+	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public void setMethodName(String methodName) {
+		if (methodName != null) {
+			try {
+				Method method = argProcessorClass.getMethod(methodName, ArgumentOption.class, ArgIterator.class);
+				this.methodName = methodName;
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Non-existent method - please mail", e);
+			}
+		}
 	}
 
 	public ArgumentOption processArgs(List<String> inputs) {
@@ -155,27 +267,27 @@ public class ArgumentOption {
 			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
 		} else if (inputs.size() > maxCount) {
 			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
-		} else if (type == null) {
+		} else if (classType == null) {
 			LOG.error("null type translates to String");
 			stringValues = inputs;
-		} else if (type.equals(String.class)) {
+		} else if (classType.equals(String.class)) {
 			stringValues = inputs;
 			stringValue = (inputs.size() == 0) ? defaultString : inputs.get(0);
-		} else if (type.equals(Double.class)) {
+		} else if (classType.equals(Double.class)) {
 			doubleValues = new ArrayList<Double>();
 			for (String input : inputs) {
 				doubleValues.add(new Double(input));
 			}
 			doubleValue = (doubleValues.size() == 0) ? defaultDouble : doubleValues.get(0);
-		} else if (type.equals(Boolean.class)) {
+		} else if (classType.equals(Boolean.class)) {
 			booleanValue = inputs.size() == 1 ? new Boolean(inputs.get(0)) : defaultBoolean;
-		} else if (type.equals(Integer.class)) {
+		} else if (classType.equals(Integer.class)) {
 			integerValues = new ArrayList<Integer>();
 			for (String input : inputs) {
 				integerValues.add(new Integer(input));
 			}
 			integerValue = (integerValues.size() == 0) ? defaultInteger : integerValues.get(0);
-		} else if (type.equals(StringPair.class)) {
+		} else if (classType.equals(StringPair.class)) {
 			stringPairValues = new ArrayList<StringPair>();
 			for (String input : inputs) {
 				String[] fields = input.trim().split(",");
@@ -187,23 +299,23 @@ public class ArgumentOption {
 			// NYI
 //			stringPairValueValue = (stringPairValues.size() == 0) ? defaultStringPairValue : stringPairValues.get(0);
 		} else {
-			LOG.error("currently cannot support type: "+type);
+			LOG.error("currently cannot support type: "+classType);
 		}
 		return this;
 	}
 
 	public ArgumentOption ensureDefaults() {
-		if (type == null) {
+		if (classType == null) {
 			// no defaults
 		} else if (defalt == null) {
 			// no defaults
-		} else if (type.equals(String.class) && defalt instanceof String) {
+		} else if (classType.equals(String.class) && defalt instanceof String) {
 			defaultStrings = new ArrayList<String>();
 			defaultStrings.add((String)defalt);
 			if (minCount == 1 && maxCount == 1) {
 				defaultString = (String)defalt;
 			}
-		} else if (type.equals(Integer.class) && defalt instanceof Integer) {
+		} else if (classType.equals(Integer.class) && defalt instanceof Integer) {
 			Integer defaultInteger = null;
 			try {
 				defaultInteger = (Integer)defalt;
@@ -214,7 +326,7 @@ public class ArgumentOption {
 				defaultIntegers = new ArrayList<Integer>();
 				defaultIntegers.add(defaultInteger);
 			}
-		} else if (type.equals(Double.class) && defalt instanceof Double) {
+		} else if (classType.equals(Double.class) && defalt instanceof Double) {
 			Double defaultDouble = null;
 			try {
 				defaultDouble = (Double)defalt;
@@ -225,7 +337,7 @@ public class ArgumentOption {
 				defaultDoubles = new ArrayList<Double>();
 				defaultDoubles.add(defaultDouble);
 			}
-		} else if (type.equals(Boolean.class) && defalt instanceof Boolean) {
+		} else if (classType.equals(Boolean.class) && defalt instanceof Boolean) {
 			defaultBoolean = false;
 			try {
 				defaultBoolean = (Boolean) defalt;
@@ -233,7 +345,7 @@ public class ArgumentOption {
 				throw new RuntimeException("default should be of type Boolean");
 			}
 		} else {
-			LOG.error("Incompatible type and default: "+type+"; "+defalt.getClass());
+			LOG.error("Incompatible type and default: "+classType+"; "+defalt.getClass());
 		}
 		return this;
 	}
@@ -302,5 +414,9 @@ public class ArgumentOption {
 		return stringPairValues;
 	}
 
-	
+	@Override 
+	public String toString() {
+		return brief+" or "+lng;
+	}
+
 }

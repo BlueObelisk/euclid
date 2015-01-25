@@ -1,14 +1,19 @@
 package org.xmlcml.args;
 
+import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nu.xom.Builder;
+import nu.xom.Element;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.xml.XMLUtil;
 
 public class DefaultArgProcessor {
 
@@ -25,6 +30,7 @@ public class DefaultArgProcessor {
 	public final static String HELP = "--help";
 
 	public final static ArgumentOption INPUT_OPTION = new ArgumentOption(
+			DefaultArgProcessor.class,
 			"-i",
 			"--input",
 			"file(s)_and/or_url(s)",
@@ -47,11 +53,13 @@ public class DefaultArgProcessor {
 					+"",
 					String.class,
 					(String) null,
-			1, Integer.MAX_VALUE
+			1, Integer.MAX_VALUE,
+			"processInput"
 			);
 
 			
 	public final static ArgumentOption OUTPUT_OPTION = new ArgumentOption(
+			DefaultArgProcessor.class,
 			"-o",
 			"--output",
 			"file_or_directory",
@@ -61,10 +69,12 @@ public class DefaultArgProcessor {
 			+ "See also --recursive and --extensions",
 			String.class,
 			(String) null,
-			0, 1
+			0, 1,
+			"processOutput"
 			);
 	
 	public final static ArgumentOption RECURSIVE_OPTION = new ArgumentOption(
+			DefaultArgProcessor.class,
 			"-r",
 			"--recursive",
 			"",
@@ -74,22 +84,50 @@ public class DefaultArgProcessor {
 			+ "See also --extensions",
 			Boolean.class,
 			(Boolean)false,
-			0, 0
+			0, 0,
+			"processRecursive"
 			);
 	
 	public final static ArgumentOption EXTENSION_OPTION = new ArgumentOption(
-		"-e",
-		"--extensions",
-		"ext1 [ext2...]",
-		"\nEXTENSIONS \n "
-			+ "When a directory or directories are searched then all files are input by default\n"
-			+ "It is possible to limit the search by using only certain extensions(which "
-			+ "See also --recursive",
-		String.class,
-		(String) null,
-		1, Integer.MAX_VALUE
-		);
+			DefaultArgProcessor.class,
+			"-e",
+			"--extensions",
+			"ext1 [ext2...]",
+			"\nEXTENSIONS \n "
+				+ "When a directory or directories are searched then all files are input by default\n"
+				+ "It is possible to limit the search by using only certain extensions(which "
+				+ "See also --recursive",
+			String.class,
+			(String) null,
+			1, Integer.MAX_VALUE,
+			"processExtensions"
+			);
 
+	public final static ArgumentOption HELP_OPTION = new ArgumentOption(
+			DefaultArgProcessor.class,
+			"-h",
+			"--help",
+			"",
+			"\nHELP \n "
+				+ "outputs help for all options, including superclass DefaultArgProcessor",
+			String.class,
+			(String) null,
+			0, 0,
+			"processHelp"
+			);
+
+	public final static List<ArgumentOption> DEFAULT_OPTION_LIST = Arrays.asList(
+			new ArgumentOption[] {
+				INPUT_OPTION,
+				OUTPUT_OPTION,
+				RECURSIVE_OPTION,
+				EXTENSION_OPTION,
+				HELP_OPTION
+			}
+	);
+	
+	private static String RESOURCE_NAME_TOP = "/org/xmlcml/args";
+	private static String ARGS_RESOURCE = RESOURCE_NAME_TOP+"/"+"args.xml";
 	
 	private static final Pattern INTEGER_RANGE_PATTERN = Pattern.compile("(\\d+):(\\d+)");
 	public static Pattern GENERAL_PATTERN = Pattern.compile("\\{([^\\}]*)\\}");
@@ -100,9 +138,26 @@ public class DefaultArgProcessor {
 	protected List<String> inputList;
 	
 	public DefaultArgProcessor() {
-		
+		readArgDefintions();
 	}
 
+	
+	private void readArgDefintions() {
+		try {
+			InputStream is = this.getClass().getResourceAsStream(ARGS_RESOURCE);
+			if (is == null) {
+				throw new RuntimeException("Cannot read: "+ARGS_RESOURCE);
+			}
+			Element argElement = new Builder().build(is).getRootElement();
+			List<Element> elementList = XMLUtil.getQueryElements(argElement, "/*/*[local-name()='arg']");
+			for (Element element : elementList) {
+				ArgumentOption argOption = ArgumentOption.createOption(this.getClass(), element);
+				LOG.debug(">>>"+argOption);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Cannot read args file "+ARGS_RESOURCE, e);
+		}
+	}
 	
 	public void expandWildcardsExhaustively() {
 		while (expandWildcardsOnce());
@@ -170,34 +225,14 @@ public class DefaultArgProcessor {
 		return newStringList;
 	}
 
-	/** read tokens until next - sign.
-	 * 
-	 * leave iterator ready to read next minus
-	 * 
-	 * @param listIterator
-	 * @return
-	 */
-	protected static List<String> createTokenListUpToNextMinus(ListIterator<String> listIterator) {
-		List<String> list = new ArrayList<String>();
-		while (listIterator.hasNext()) {
-			String next = listIterator.next();
-			if (next.startsWith(MINUS)) {
-				listIterator.previous();
-				break;
-			}
-			list.add(next);
-		}
-		return list;
-	}
-
-	protected void checkHasNext(ListIterator<String> listIterator) {
-		if (!listIterator.hasNext()) {
+	protected void checkHasNext(ArgIterator argIterator) {
+		if (!argIterator.hasNext()) {
 			throw new RuntimeException("ran off end; expected more arguments");
 		}
 	}
 
-	protected void processInput(ListIterator<String> listIterator) {
-		List<String> inputs = createTokenListUpToNextMinus(listIterator);
+	public void processInput(ArgumentOption divOption, ArgIterator argIterator) {
+		List<String> inputs = argIterator.createTokenListUpToNextMinus();
 		if (inputs.size() == 0) {
 			inputList = new ArrayList<String>();
 			LOG.error("Must give at least one input");
@@ -206,19 +241,35 @@ public class DefaultArgProcessor {
 		}
 	}
 
-	protected void processOutput(ListIterator<String> listIterator) {
-		checkHasNext(listIterator);
-		output = listIterator.next();
+	private void checkCanAssign(Object obj, Method method) {
+	    if (!method.getDeclaringClass().isAssignableFrom(obj.getClass())) {
+	        throw new IllegalArgumentException(
+	            "Cannot call method '" + method + "' of class '" + method.getDeclaringClass().getName()
+	            + "' using object '" + obj + "' of class '" + obj.getClass().getName() + "' because"
+	            + " object '" + obj + "' is not an instance of '" + method.getDeclaringClass().getName() + "'");
+	    }
 	}
 
-	protected void processRecursive(ListIterator<String> listIterator) {
+	// ============ METHODS ===============
+
+	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
+		checkHasNext(argIterator);
+		output = argIterator.next();
+	}
+
+	public void processRecursive(ArgumentOption divOption, ArgIterator argIterator) {
 		recursive = true;
 	}
 
-	protected void processExtensions(ListIterator<String> listIterator) {
-		setExtensions(createTokenListUpToNextMinus(listIterator));
+	public void processExtensions(ArgumentOption divOption, ArgIterator argIterator) {
+		setExtensions(argIterator.createTokenListUpToNextMinus());
 	}
 
+	public void processHelp(ArgumentOption divOption, ArgIterator argIterator) {
+		processHelp();
+	}
+
+	// =====================================
 	public void setExtensions(List<String> extensions) {
 		this.extensions = extensions;
 	}
@@ -243,54 +294,76 @@ public class DefaultArgProcessor {
 		return recursive;
 	}
 
-	public boolean parseArgs(String[] args) {
-		boolean parsed = true;
-		ListIterator<String> listIterator = Arrays.asList(args).listIterator();
-		while (listIterator.hasNext()) {
-			parsed &= parseArgs(listIterator);
-		}
-		return parsed;
+	// --------------------------------
+	
+	public boolean parseArgs(String[] commandLineArgs) {
+		ArgIterator argIterator = new ArgIterator(commandLineArgs);
+		return parseArgs(argIterator);
 	}
 	
-	protected boolean parseArgs(ListIterator<String> listIterator) {
+	protected boolean parseArgs(ArgIterator argIterator) {
+		return parseArgs(getOptionList(), argIterator);
+	}
+
+	protected List<ArgumentOption> getOptionList() {
+		return DEFAULT_OPTION_LIST;
+	}
+
+
+	protected boolean parseArgs(List<ArgumentOption> optionList, ArgIterator argIterator) {
 		boolean processed = false;
-		if (listIterator.hasNext()) {
-			processed = true;
-			String arg = listIterator.next();
-			LOG.trace("def:"+arg);
-			if (!arg.startsWith(MINUS)) {
-				LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
-			} else if (EXTENSION_OPTION.matches(arg)) {
-				processExtensions(listIterator);
-			} else if (INPUT_OPTION.matches(arg)) {
-				processInput(listIterator); 
-			} else if (OUTPUT_OPTION.matches(arg)) {
-				processOutput(listIterator); 
-			} else if (RECURSIVE_OPTION.matches(arg)) {
-				processRecursive(listIterator); 
-			} else if (H.equals(arg) || HELP.equals(arg)) {
-				processHelp();
-			} else {
-				listIterator.previous();
-				processed = false;
+		while (argIterator.hasNext()) {
+			String arg = argIterator.next();
+			try {
+				processed = runReflectedMethod(this.getClass(), optionList, argIterator, arg);
+			} catch (Exception e) {
+				throw new RuntimeException("cannot process argument", e);
 			}
 		}
 		return processed;
 	}
 	
-	protected void processHelp() {
-		System.out.println("\n"
-		+ "====general options====\n");
-		System.out.println(INPUT_OPTION.getHelp());
-		System.out.println(OUTPUT_OPTION.getHelp());
-		System.out.println(RECURSIVE_OPTION.getHelp());
-		System.out.println(EXTENSION_OPTION.getHelp());
-		System.out.println("\n");
-	}
-
-
 	public List<String> getExtensions() {
 		return extensions;
 	}
+
+
+	protected boolean runReflectedMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
+		boolean processed = false;
+		if (!arg.startsWith(MINUS)) {
+			LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
+		} else {
+			for (ArgumentOption option : optionList) {
+				Method method = null;
+				if (option.matches(arg)) {
+					try {
+						method = this.getClass().getMethod(option.getMethodName(), option.getClass(), argIterator.getClass());
+					} catch (NoSuchMethodException nsme) {
+						LOG.debug("methods for "+this.getClass());
+						for (Method meth : thisClass.getDeclaredMethods()) {
+							LOG.debug(meth);
+						}
+						throw new RuntimeException(option.getMethodName()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+					}
+					method.setAccessible(true);
+					method.invoke(this, option, argIterator);
+					processed = true;
+					break;
+				}
+			}
+			if (!processed) {
+				LOG.error("Unknown arg: ("+arg+"), trying to recover");
+			}
+		}
+		return processed;
+	}
+
+	protected void processHelp() {
+		List<ArgumentOption> optionList = getOptionList();
+		for (ArgumentOption option : optionList) {
+			System.err.println(option.getHelp());
+		}
+	}
+
 
 }
