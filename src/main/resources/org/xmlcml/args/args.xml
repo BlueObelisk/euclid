@@ -1,5 +1,5 @@
 <argList>
-	<arg name="char" 
+	<arg name="input" 
 		brief="-i"
 		long="--input"
 		args="file(s)_and/or_url(s)"
@@ -7,7 +7,7 @@
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		method="processInput"
+		methodName="processInput"
 		>
 		<help>
 			INPUT:
@@ -39,7 +39,7 @@
 		default=""
 		min="0" 
 		max="1"
-		method="processOutput"
+		methodName="processOutput"
 		>
 		<help>
 			
@@ -62,7 +62,7 @@
 		default="(Booelan) false"
 		min="0" 
 		max="1"
-		method="processRecursive"
+		methodName="processRecursive"
 		>
 		<help>
 
@@ -83,7 +83,7 @@
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		method="processExtensions"
+		methodName="processExtensions"
 		>
 		<help>
 			
@@ -103,7 +103,7 @@
 		default=""
 		min="0" 
 		max="0"
-		method="processHelp"
+		methodName="processHelp"
 		>
 		<help>
 			
