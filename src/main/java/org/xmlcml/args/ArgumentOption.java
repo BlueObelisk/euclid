@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nu.xom.Element;
+import nu.xom.Nodes;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.xml.XMLUtil;
 
 /** simple option for controlling arguments.
  * 
@@ -19,7 +21,7 @@ public class ArgumentOption {
 	private static final String LONG = "long";
 	private static final String HELP = "help";
 	private static final String ARGS = "args";
-	private static final String CLASS = "class";
+	private static final String CLASS_TYPE = "class";
 	private static final String DEFAULT = "default";
 	private static final String MIN = "min";
 	private static final String MAX = "max";
@@ -94,20 +96,29 @@ public class ArgumentOption {
 		argumentOption.addLong(element);
 		argumentOption.addHelp(element);
 		argumentOption.addArgs(element);
-		argumentOption.addType(element);
+		argumentOption.addClassType(element);
 		argumentOption.addDefault(element);
 		argumentOption.addMinCount(element);
 		argumentOption.addMaxCount(element);
 		argumentOption.addMethodName(element);
 		return argumentOption;
 	}
+
 	
 	private void addMethodName(Element element) {
 		setMethodName(element.getAttributeValue(METHOD_NAME));
+		checkNotNull("methodName", methodName);
+	}
+
+	private void checkNotNull(String name, Object argumentValue) {
+		if (argumentValue == null) {
+			throw new RuntimeException(name+" for "+this+" should not be null");
+		}
 	}
 
 	private void addMaxCount(Element element) {
 		setMaxCount(createInteger(element.getAttributeValue(MAX)));
+		checkNotNull("maxCount", maxCount);
 	}
 
 	private Integer createInteger(String ss) {
@@ -130,20 +141,21 @@ public class ArgumentOption {
 
 	private void addMinCount(Element element) {
 		setMinCount(createInteger(element.getAttributeValue(MIN)));
+		checkNotNull("minCount", minCount);
 	}
 
 	private void addDefault(Element element) {
 		setDefault(element.getAttributeValue(DEFAULT));
+		checkNotNull("default", defalt);
 	}
 
-	private void addType(Element element) {
-		setClassType(element.getAttributeValue(CLASS));
+	private void addClassType(Element element) {
+		setClassType(element.getAttributeValue(CLASS_TYPE));
+		checkNotNull("classType", classType);
 	}
 
 	private void setClassType(String className) {
-		LOG.debug(">> "+className);
 		if (className != null) {
-			Class<?> classType = null;
 			try {
 				classType = Class.forName(className);
 			} catch (ClassNotFoundException e) {
@@ -154,18 +166,26 @@ public class ArgumentOption {
 
 	private void addArgs(Element element) {
 		setArgs(element.getAttributeValue(ARGS));
+		checkNotNull("args", args);
 	}
 
 	private void addHelp(Element element) {
-		setHelp(element.getAttributeValue(HELP));
+		List<Element> helpChildren = XMLUtil.getQueryElements(element, "*[local-name()='help']");
+		if (helpChildren.size() != 1) {
+			throw new RuntimeException("No help found for: "+this);
+		}
+		setHelp(helpChildren.get(0).getValue());
+		checkNotNull("help", help);
 	}
 
 	private void addLong(Element element) {
 		setLong(element.getAttributeValue(LONG));
+		checkNotNull("long", lng);
 	}
 
 	private void addBrief(Element element) {
 		setBrief(element.getAttributeValue(BRIEF));
+		checkNotNull("brief", brief);
 	}
 
 	public String getBrief() {
@@ -250,7 +270,7 @@ public class ArgumentOption {
 				Method method = argProcessorClass.getMethod(methodName, ArgumentOption.class, ArgIterator.class);
 				this.methodName = methodName;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method - please mail", e);
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+methodName+" - please mail", e);
 			}
 		}
 	}
