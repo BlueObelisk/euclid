@@ -13,6 +13,7 @@ import nu.xom.Element;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.files.FileContainer;
 import org.xmlcml.xml.XMLUtil;
 
 public class DefaultArgProcessor {
@@ -137,6 +138,7 @@ public class DefaultArgProcessor {
 	private boolean recursive = false;
 	protected List<String> inputList;
 	public List<ArgumentOption> argumentOptionList;
+	private ArrayList<FileContainer> fileContainerList;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -243,16 +245,6 @@ public class DefaultArgProcessor {
 		}
 	}
 
-	public void processInput(ArgumentOption divOption, ArgIterator argIterator) {
-		List<String> inputs = argIterator.createTokenListUpToNextMinus();
-		if (inputs.size() == 0) {
-			inputList = new ArrayList<String>();
-			LOG.error("Must give at least one input");
-		} else {
-			inputList = inputs;
-		}
-	}
-
 	private void checkCanAssign(Object obj, Method method) {
 	    if (!method.getDeclaringClass().isAssignableFrom(obj.getClass())) {
 	        throw new IllegalArgumentException(
@@ -264,6 +256,33 @@ public class DefaultArgProcessor {
 
 	// ============ METHODS ===============
 
+	public void processExtensions(ArgumentOption option, ArgIterator argIterator) {
+		setExtensions(argIterator.createTokenListUpToNextMinus());
+	}
+
+	public void processFileContainer(ArgumentOption option, ArgIterator argIterator) {
+		fileContainerList = new ArrayList<FileContainer>();
+		List<String> fileContainerNames = argIterator.createTokenListUpToNextMinus();
+		for (String fileContainerName : fileContainerNames) {
+			FileContainer fileContainer = new FileContainer(fileContainerName);
+			fileContainerList.add(fileContainer);
+		}
+	}
+
+	public void processHelp(ArgumentOption divOption, ArgIterator argIterator) {
+		processHelp();
+	}
+
+	public void processInput(ArgumentOption divOption, ArgIterator argIterator) {
+		List<String> inputs = argIterator.createTokenListUpToNextMinus();
+		if (inputs.size() == 0) {
+			inputList = new ArrayList<String>();
+			LOG.error("Must give at least one input");
+		} else {
+			inputList = inputs;
+		}
+	}
+
 	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
 		checkHasNext(argIterator);
 		output = argIterator.next();
@@ -271,14 +290,6 @@ public class DefaultArgProcessor {
 
 	public void processRecursive(ArgumentOption divOption, ArgIterator argIterator) {
 		recursive = true;
-	}
-
-	public void processExtensions(ArgumentOption divOption, ArgIterator argIterator) {
-		setExtensions(argIterator.createTokenListUpToNextMinus());
-	}
-
-	public void processHelp(ArgumentOption divOption, ArgIterator argIterator) {
-		processHelp();
 	}
 
 	// =====================================
@@ -306,6 +317,18 @@ public class DefaultArgProcessor {
 		return recursive;
 	}
 
+	public List<FileContainer> getFileContainerList() {
+		ensureFileContainerList();
+		return fileContainerList;
+	}
+
+	private void ensureFileContainerList() {
+		if (fileContainerList == null) {
+			fileContainerList = new ArrayList<FileContainer>();
+		}
+	}
+	
+
 	// --------------------------------
 	
 	public boolean parseArgs(String[] commandLineArgs) {
@@ -316,11 +339,6 @@ public class DefaultArgProcessor {
 	protected boolean parseArgs(ArgIterator argIterator) {
 		return parseArgs(argumentOptionList, argIterator);
 	}
-
-//	protected List<ArgumentOption> getOptionList() {
-//		return DEFAULT_OPTION_LIST;
-//	}
-
 
 	protected boolean parseArgs(List<ArgumentOption> optionList, ArgIterator argIterator) {
 		boolean processed = false;
@@ -379,6 +397,5 @@ public class DefaultArgProcessor {
 			System.err.println(option.getHelp());
 		}
 	}
-
 
 }
