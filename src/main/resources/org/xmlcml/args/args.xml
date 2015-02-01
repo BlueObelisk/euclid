@@ -31,6 +31,47 @@
 		</help>
 	</arg>	
 	
+	<arg name="fileContainer" 
+		brief="-f"
+		long="--fileContainer"
+		args="file(s)"
+		class="org.xmlcml.files.FileContainer"
+		default=""
+		min="1" 
+		max="Integer.MAX_VALUE"
+		methodName="processFileContainer"
+		>
+		<help>
+			FILE_CONTAINER:
+			create directory  contentmine/some/where/journal.pone.0115884/. It may contain
+			
+			results.json * // a listing of scraped files
+			
+			fulltext.xml ? // publishers XML
+			fulltext.pdf ? // publishers PDF
+			fulltext.html ? // raw HTML
+			provisional.pdf ? // provisional PDF (often disappears)
+			
+			foo12345.docx ? // data files numbered by publisher/author
+			bar54321.docx ?
+			ah1234.cif ? // crystallographic data
+			pqr987.cml ? // chemistry file
+			mmm.csv ? // table
+			pic5656.png ? // images
+			pic5657.gif ? // image
+			suppdata.pdf ? // supplemental data
+			
+			and more
+			
+			only results.json is mandatory. However there will normally be at least one fulltext.* file and probably at 
+			least one *.html file (as the landing page must be in HTML). Since quickscrape can extract data without 
+			fulltext it might also be deployed against a site with data files.
+			
+			There may be some redundancy - *.xml may be transformable into *.html and *.pdf into *.html. The PDF may also 
+			contain the same images as some exposed *.png.
+		</help>
+	</arg>	
+	
 	<arg name="output"
 		brief="-o"
 		long="--output"

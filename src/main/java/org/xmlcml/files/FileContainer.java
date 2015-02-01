@@ -1,6 +1,7 @@
 package org.xmlcml.files;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,76 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 
 
-/** collection of files from quickscrape with addiitons from Norma.
+/** collection of files within the ContentMine system.
+ * 
+ * The structure of scholarly articles often requires many constituent articles. For example an article may have a PDF, an HTML abstract, several GIFs for images, some tables in HTML, some DOCX files, CIFs for crystallography, etc.. These all need keeping together...
+
+Note that the Catalog (from CottageLabs) primarily holds metadata. [It's possible to hold some of the HTML content, but it soon starts to degrade performance]. We therefore have metadata in the Catalog and contentFiles on disk. These files and Open and can, in principle, be used independently of the Catalog.
+
+I am designing a "FileContainer" which passes the bundle down the pipeline. This should be independent of what language [Python , JS, Java...] is used to create or read them. We believe that a normal filing system is satisfactory (at least at present while we develop the technology).
+
+A typical pass for one DOI (e.g. journal.pone.0115884 ) through the pipeline (mandatory files are marked *, optional ?) might look like:
+
+DOI --> Quickscrape -->
+
+create directory  contentmine/some/where/journal.pone.0115884/. It may contain
+
+results.json * // a listing of scraped files
+
+fulltext.xml ? // publishers XML
+fulltext.pdf ? // publishers PDF
+fulltext.html ? // raw HTML
+provisional.pdf ? // provisional PDF (often disappears)
+
+foo12345.docx ? // data files numbered by publisher/author
+bar54321.docx ?
+ah1234.cif ? // crystallographic data
+pqr987.cml ? // chemistry file
+mmm.csv ? // table
+pic5656.png ? // images
+pic5657.gif ? // image
+suppdata.pdf ? // supplemental data
+
+and more
+
+only results.json is mandatory. However there will normally be at least one fulltext.* file and probably at least one *.html file (as the landing page must be in HTML). Since quickscrape can extract data without fulltext it might also be deployed against a site with data files.
+
+There may be some redundancy - *.xml may be trasformable into *.html and *.pdf into *.html. The PDF may also contain the same images as some exposed *.png.
+
+==================
+
+This container (directory) is then massed to Norma. Norma will normalize as much information as possible, and we can expect this to continue to develop. This includes:
+* conversion to Unicode (XML, HTML, and most "text" files)
+* normalization of characters (e.g. Angstrom -> Aring, smart quotes => "", superscript "o" to degrees, etc.)
+* creating well-formed HTML (often very hard)
+* converting PDF to SVG (very empricial and heuristic)
+* converting SVG to running text.
+* building primitives (circles, squares, from the raw graphics)
+* building graphics objects (arrows, textboxes, flowcharts) from the primitives
+* building text from SVG
+
+etc...
+
+This often creates a lot of temporary files, which may be usefully cached for a period. We may create a subdirectory ./svg with intermediate pages, or extracted SVGs. These will be recorded in results.json, which will act as metadata for the files and subdirectories.
+
+Norma will create ./svg/*.svg from PDF (using PDFBox and PDF2SVG), then fulltext.pdf.xhtml (heuristically created XHTML).  Norma will also create wellformed fulltext.html.xhtml from raw fulltext.html or from fulltext.xml.xhtml from fulltext.xml.
+
+In the future Norma will also convert MS-formats such as DOCX and PPT using Apach POI.
+
+Norma will then structure any flat structures into structured XHTML using grouping rules such as in XSLT2.
+
+At this stage we shall have structured XHTML files ("scholarly HTML") with linked images and tables and supplemental data.  We'll update results.json
+
+========================
+
+AMI can further index or transform the ScholarlyHTML and associated files. An AMI plugin (e.g. AMI-species) will produce species.results.xml - a file with the named species in textual context. Similar outputs come from sequence, or other tagging (geotagging).
+
+The main community development will come from regexes. For example we have
+
+regex.crystal.results.xml, regex.farm.results.xml, regex.clinical_trials.results.xml, etc.
+
+The results file include the regexes used and other metadata (more needed!). Again we can update results.json. We may also wish to delete temporary files such as the *.svg in PDF2SVG....
+
  * 
  * @author pm286
  *
@@ -41,7 +111,39 @@ public class FileContainer {
 		
 	}
 	
-	public void readQuickscrapeDirectory(File dir) {
+	public FileContainer(File dir, boolean delete) {
+		this.createDirectory(dir, delete);
+		this.directory = dir;
+	}
+	
+	public FileContainer(String filename) {
+		this(new File(filename), true); // check whether deleting is good idea
+	}
+
+	public void createDirectory(File dir, boolean delete) {
+		this.directory = dir;
+		if (dir == null) {
+			throw new RuntimeException("Null directory");
+		}
+		if (delete) {
+			try {
+				FileUtils.forceDelete(dir);
+			} catch (IOException e) {
+				throw new RuntimeException("Cannot delete directory: "+dir, e);
+			}
+		} else {
+			if (dir.exists()) {
+				throw new RuntimeException("Directory: "+dir+" already exists");
+			}
+		}
+		try {
+			FileUtils.forceMkdir(dir);
+		} catch (IOException e) {
+			throw new RuntimeException("Cannot make directory: "+dir+" already exists");
+		} // maybe 
+	}
+
+	public void readDirectory(File dir) {
 		this.directory = dir;
 		Multimap<String, File> map = HashMultimap.create();
 		
@@ -140,5 +242,22 @@ public class FileContainer {
 		return hasExistingFile(new File(directory, FULLTEXT_DOCX));
 	}
 	
+	@Override
+	public String toString() {
+		ensureFileList();
+		StringBuilder sb = new StringBuilder();
+		sb.append("dir: "+directory+"\n");
+		for (File file : fileList) {
+			sb.append(file.toString()+"\n");
+		}
+		return sb.toString();
+	}
+
+	private void ensureFileList() {
+		if (fileList == null) {
+			fileList = new ArrayList<File>();
+		}
+		
+	}
 	
 }
