@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
 
 
 /** collection of files within the ContentMine system.

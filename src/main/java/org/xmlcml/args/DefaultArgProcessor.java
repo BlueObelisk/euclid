@@ -19,8 +19,7 @@ import org.xmlcml.xml.XMLUtil;
 public class DefaultArgProcessor {
 
 	
-	private static final Logger LOG = Logger
-			.getLogger(DefaultArgProcessor.class);
+	private static final Logger LOG = Logger.getLogger(DefaultArgProcessor.class);
 	static {
 		LOG.setLevel(Level.DEBUG);
 	}
@@ -38,12 +37,12 @@ public class DefaultArgProcessor {
 	public static Pattern GENERAL_PATTERN = Pattern.compile("\\{([^\\}]*)\\}");
 	
 	protected String output;
-	private List<String> extensions = Arrays.asList(DEFAULT_EXTENSIONS);
+	protected List<String> extensionList = Arrays.asList(DEFAULT_EXTENSIONS);
 	private boolean recursive = false;
 	protected List<String> inputList;
 	public List<ArgumentOption> argumentOptionList;
 	public List<ArgumentOption> chosenArgumentOptionList;
-	private ArrayList<QuickscrapeDirectory> qDireectoryList;
+	protected ArrayList<QuickscrapeDirectory> quickscrapeDirectoryList;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -76,7 +75,6 @@ public class DefaultArgProcessor {
 			this.argumentOptionList = new ArrayList<ArgumentOption>();
 		}
 	}
-
 
 	public void expandWildcardsExhaustively() {
 		while (expandWildcardsOnce());
@@ -162,25 +160,25 @@ public class DefaultArgProcessor {
 
 	// ============ METHODS ===============
 
-	public void processExtensions(ArgumentOption option, ArgIterator argIterator) {
+	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
 		setExtensions(argIterator.createTokenListUpToNextMinus());
 	}
 
-	public void processQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
-		qDireectoryList = new ArrayList<QuickscrapeDirectory>();
+	public void parseQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
+		quickscrapeDirectoryList = new ArrayList<QuickscrapeDirectory>();
 		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus();
 		for (String qDirectoryName : qDirectoryNames) {
 			QuickscrapeDirectory quickscrapeDiectory = new QuickscrapeDirectory(qDirectoryName);
 			LOG.debug("FC "+qDirectoryName);
-			qDireectoryList.add(quickscrapeDiectory);
+			quickscrapeDirectoryList.add(quickscrapeDiectory);
 		}
 	}
 
-	public void processHelp(ArgumentOption divOption, ArgIterator argIterator) {
-		processHelp();
+	public void printHelp(ArgumentOption divOption, ArgIterator argIterator) {
+		printHelp();
 	}
 
-	public void processInput(ArgumentOption divOption, ArgIterator argIterator) {
+	public void parseInput(ArgumentOption divOption, ArgIterator argIterator) {
 		List<String> inputs = argIterator.createTokenListUpToNextMinus();
 		if (inputs.size() == 0) {
 			inputList = new ArrayList<String>();
@@ -195,12 +193,12 @@ public class DefaultArgProcessor {
 	}
 	
 
-	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
+	public void parseOutput(ArgumentOption divOption, ArgIterator argIterator) {
 		checkHasNext(argIterator);
 		output = argIterator.next();
 	}
 
-	public void processRecursive(ArgumentOption divOption, ArgIterator argIterator) {
+	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
 		recursive = true;
 	}
 
@@ -232,7 +230,7 @@ public class DefaultArgProcessor {
 
 	// =====================================
 	public void setExtensions(List<String> extensions) {
-		this.extensions = extensions;
+		this.extensionList = extensions;
 	}
 
 
@@ -257,12 +255,12 @@ public class DefaultArgProcessor {
 
 	public List<QuickscrapeDirectory> getQuickscrapeDirectoryList() {
 		ensureQuickscrapeDirectoryList();
-		return qDireectoryList;
+		return quickscrapeDirectoryList;
 	}
 
 	private void ensureQuickscrapeDirectoryList() {
-		if (qDireectoryList == null) {
-			qDireectoryList = new ArrayList<QuickscrapeDirectory>();
+		if (quickscrapeDirectoryList == null) {
+			quickscrapeDirectoryList = new ArrayList<QuickscrapeDirectory>();
 		}
 	}
 	
@@ -271,19 +269,11 @@ public class DefaultArgProcessor {
 	
 	public boolean parseArgs(String[] commandLineArgs) {
 		ArgIterator argIterator = new ArgIterator(commandLineArgs);
-		return parseArgs(argIterator);
-	}
-	
-	protected boolean parseArgs(ArgIterator argIterator) {
-		return parseArgs(argumentOptionList, argIterator);
-	}
-
-	protected boolean parseArgs(List<ArgumentOption> optionList, ArgIterator argIterator) {
 		boolean processed = false;
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
 			try {
-				processed = runReflectedMethod(this.getClass(), optionList, argIterator, arg);
+				processed = runReflectedMethod(this.getClass(), argumentOptionList, argIterator, arg);
 			} catch (Exception e) {
 				throw new RuntimeException("cannot process argument: "+arg, e);
 			}
@@ -292,7 +282,7 @@ public class DefaultArgProcessor {
 	}
 	
 	public List<String> getExtensions() {
-		return extensions;
+		return extensionList;
 	}
 
 
@@ -339,7 +329,7 @@ public class DefaultArgProcessor {
 		}
 	}
 
-	protected void processHelp() {
+	protected void printHelp() {
 		for (ArgumentOption option : argumentOptionList) {
 			System.err.println(option.getHelp());
 		}
@@ -357,6 +347,10 @@ public class DefaultArgProcessor {
 			sb.append(argumentOption.toString()+"\n");
 		}
 		return sb.toString();
+	}
+
+	protected void expandDefaults() {
+		LOG.error("Defaults not yet implemented; run explicit args");
 	}
 
 }

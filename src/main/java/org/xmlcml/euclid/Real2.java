@@ -15,7 +15,6 @@
  */
 
 package org.xmlcml.euclid;
-import java.awt.Dimension;
 import java.util.List;
 
 import org.apache.log4j.Logger;
