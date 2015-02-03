@@ -16,7 +16,6 @@
 
 package org.xmlcml.euclid;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.xmlcml.euclid.Axis.Axis2;

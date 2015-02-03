@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nu.xom.Element;
-import nu.xom.Nodes;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

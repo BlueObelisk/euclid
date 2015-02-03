@@ -7,7 +7,7 @@
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		methodName="processInput"
+		methodName="parseInput"
 		>
 		<help>
 			INPUT:
@@ -39,7 +39,7 @@
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		methodName="processQuickscrapeDirectory"
+		methodName="parseQuickscrapeDirectory"
 		>
 		<help>
 			FILE_CONTAINER:
@@ -80,7 +80,7 @@
 		default=""
 		min="0" 
 		max="1"
-		methodName="processOutput"
+		methodName="parseOutput"
 		>
 		<help>
 			
@@ -103,7 +103,7 @@
 		default="(Booelan) false"
 		min="0" 
 		max="1"
-		methodName="processRecursive"
+		methodName="parseRecursive"
 		>
 		<help>
 
@@ -124,7 +124,7 @@
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		methodName="processExtensions"
+		methodName="parseExtensions"
 		>
 		<help>
 			
@@ -144,7 +144,7 @@
 		default=""
 		min="0" 
 		max="0"
-		methodName="processHelp"
+		methodName="printHelp"
 		>
 		<help>
 			

@@ -18,7 +18,6 @@ package org.xmlcml.xml;
 
 import nu.xom.XPathContext;
 
-import org.xmlcml.euclid.EC;
 import org.xmlcml.euclid.EuclidConstants;
 
 /**

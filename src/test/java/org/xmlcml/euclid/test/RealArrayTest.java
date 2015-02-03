@@ -23,7 +23,6 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.euclid.ArrayBase.Trim;
 import org.xmlcml.euclid.EuclidConstants;
