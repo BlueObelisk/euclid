@@ -329,16 +329,16 @@ public class ArgumentOption {
 			// no defaults
 		} else if (defalt == null) {
 			// no defaults
-		} else if (classType.equals(String.class) && defalt instanceof String) {
+		} else if (classType.equals(String.class)) {
 			defaultStrings = new ArrayList<String>();
 			defaultStrings.add((String)defalt);
 			if (minCount == 1 && maxCount == 1) {
 				defaultString = (String)defalt;
 			}
-		} else if (classType.equals(Integer.class) && defalt instanceof Integer) {
+		} else if (classType.equals(Integer.class)) {
 			Integer defaultInteger = null;
 			try {
-				defaultInteger = (Integer)defalt;
+				defaultInteger = new Integer(String.valueOf(defalt));
 			} catch (Exception e) {
 				throw new RuntimeException("default should be of type Integer");
 			}
@@ -349,7 +349,7 @@ public class ArgumentOption {
 		} else if (classType.equals(Double.class) && defalt instanceof Double) {
 			Double defaultDouble = null;
 			try {
-				defaultDouble = (Double)defalt;
+				defaultDouble = new Double(String.valueOf(defalt));
 			} catch (Exception e) {
 				throw new RuntimeException("default should be of type Double");
 			}
@@ -360,7 +360,7 @@ public class ArgumentOption {
 		} else if (classType.equals(Boolean.class) && defalt instanceof Boolean) {
 			defaultBoolean = false;
 			try {
-				defaultBoolean = (Boolean) defalt;
+				defaultBoolean = new Boolean(String.valueOf(defalt));
 			} catch (Exception e) {
 				throw new RuntimeException("default should be of type Boolean");
 			}
@@ -436,7 +436,23 @@ public class ArgumentOption {
 
 	@Override 
 	public String toString() {
-		return brief+" or "+lng;
+		StringBuilder sb = new StringBuilder();
+		String maxCountS = (maxCount == Integer.MAX_VALUE) ? "" : String.valueOf(maxCount);
+ 		sb.append(brief+" or "+lng+"; {"+minCount+","+maxCountS+"}; "+methodName+"\n");
+		if (classType.equals(String.class)) {
+			sb.append("STRING: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
+		} else if (classType.equals(Integer.class)) {
+			sb.append("INTEGER: "+defaultInteger+" / "+defaultIntegers+"; "+integerValue+"; "+integerValues);
+		} else if (classType.equals(Double.class)) {
+			sb.append("DOUBLE: "+defaultDouble+" / "+defaultDoubles+"; "+doubleValue+"; "+doubleValues);
+		} else if (classType.equals(Boolean.class)) {
+			sb.append("BOOLEAN: "+defaultBoolean+"; "+booleanValue);
+		} else if (classType.equals(StringPair.class)) {
+			sb.append("STRINGPAIRS: ; "+stringPairValues);
+		} else if (classType.equals(Object.class)) {
+			sb.append("OBJECT ; "+stringValue);
+		}
+		return sb.toString();
 	}
 
 }
