@@ -1,5 +1,6 @@
 package org.xmlcml.args;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 import nu.xom.Builder;
 import nu.xom.Element;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.xmlcml.files.QuickscrapeDirectory;
@@ -169,7 +171,6 @@ public class DefaultArgProcessor {
 		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus();
 		for (String qDirectoryName : qDirectoryNames) {
 			QuickscrapeDirectory quickscrapeDiectory = new QuickscrapeDirectory(qDirectoryName);
-			LOG.debug("FC "+qDirectoryName);
 			quickscrapeDirectoryList.add(quickscrapeDiectory);
 		}
 	}

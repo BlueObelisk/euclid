@@ -96,12 +96,13 @@ public class QuickscrapeDirectory {
 		LOG.setLevel(Level.DEBUG);
 	}
 
-	private static final String RESULTS_JSON = "results.json";
-	private static final String FULLTEXT_DOCX = "fulltext.docx";
-	private static final String FULLTEXT_HTML = "fulltext.html";
-	private static final String FULLTEXT_PDF = "fulltext.pdf";
-	private static final String FULLTEXT_XML = "fulltext.xml";
-	private static final String ABSTRACT_HTML = "abstract.html";
+	public static final String RESULTS_JSON   = "results.json";
+	public static final String FULLTEXT_DOCX  = "fulltext.docx";
+	public static final String FULLTEXT_HTML  = "fulltext.html";
+	public static final String FULLTEXT_PDF   = "fulltext.pdf";
+	public static final String FULLTEXT_XML   = "fulltext.xml";
+	public static final String ABSTRACT_HTML  = "abstract.html";
+	public static final String SCHOLARLY_HTML = "scholarly.html";
 
 	private List<File> fileList;
 	private File directory;
@@ -116,7 +117,7 @@ public class QuickscrapeDirectory {
 	}
 	
 	public QuickscrapeDirectory(String filename) {
-		this(new File(filename), true); // check whether deleting is good idea
+		this(new File(filename), false); // check whether deleting is good idea
 	}
 
 	public void createDirectory(File dir, boolean delete) {
@@ -129,10 +130,6 @@ public class QuickscrapeDirectory {
 				FileUtils.forceDelete(dir);
 			} catch (IOException e) {
 				throw new RuntimeException("Cannot delete directory: "+dir, e);
-			}
-		} else {
-			if (dir.exists()) {
-				throw new RuntimeException("Directory: "+dir+" already exists");
 			}
 		}
 		try {
@@ -191,7 +188,10 @@ public class QuickscrapeDirectory {
 	}
 
 	private boolean hasExistingFile(File file) {
-		return (file != null) && file.exists() && !file.isDirectory();
+		boolean ok = (file != null);
+		ok &= file.exists();
+		ok &= !file.isDirectory();
+		return ok;
 	}
 
 	private boolean hasExistingSubDirectory(File subdir) {
@@ -226,21 +226,37 @@ public class QuickscrapeDirectory {
 	}
 
 	public boolean hasFulltextXML() {
-		return hasExistingFile(new File(directory, FULLTEXT_XML));
+		return hasExistingFile(getFulltextXML());
 	}
-	
+
+	public File getFulltextXML() {
+		return new File(directory, FULLTEXT_XML);
+	}
+
 	public boolean hasFulltextHTML() {
 		return hasExistingFile(new File(directory, FULLTEXT_HTML));
 	}
 	
+	public File getFulltextHTML() {
+		return new File(directory, FULLTEXT_HTML);
+	}
+
 	public boolean hasFulltextPDF() {
 		return hasExistingFile(new File(directory, FULLTEXT_PDF));
 	}
 	
+	public File getFulltextPDF() {
+		return new File(directory, FULLTEXT_PDF);
+	}
+
 	public boolean hasFulltextDOCX() {
 		return hasExistingFile(new File(directory, FULLTEXT_DOCX));
 	}
 	
+	public File getFulltextDOCX() {
+		return new File(directory, FULLTEXT_DOCX);
+	}
+
 	@Override
 	public String toString() {
 		ensureFileList();
@@ -258,5 +274,27 @@ public class QuickscrapeDirectory {
 		}
 		
 	}
+
+	public void writeFile(String content, String filename) {
+		File file = new File(directory, filename);
+		if (file.exists()) {
+			throw new RuntimeException("file already exists: "+file);
+		}
+		try {
+			FileUtils.write(file, content);
+		} catch (IOException e) {
+			throw new RuntimeException("Cannot write file: ", e);
+		}
+	}
+
+	public File getDirectory() {
+		return directory;
+	}
+
+	public List<File> listFiles(boolean recursive) {
+		List<File> files = new ArrayList<File>(FileUtils.listFiles(directory, null, recursive));
+		return files;
+	}
+
 	
 }
