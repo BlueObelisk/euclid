@@ -29,104 +29,8 @@ public class DefaultArgProcessor {
 	public static final String[] DEFAULT_EXTENSIONS = {"html", "xml"};
 	public final static String H = "-h";
 	public final static String HELP = "--help";
+	private static Pattern INTEGER_RANGE = Pattern.compile("(.*)\\{(\\d+),(\\d+)\\}(.*)");
 
-//	public final static ArgumentOption INPUT_OPTION = new ArgumentOption(
-//			DefaultArgProcessor.class,
-//			"-i",
-//			"--input",
-//			"file(s)_and/or_url(s)",
-//			"\nINPUT:\nInput stream (Files, directories, URLs), Norma tries to guess reasonable actions. \n"
-//					+ "also expands some simple wildcards. The argument can either be a single object, or a list. Within objects\n"
-//					+ "the content of curly brackets {...} is expanded as wildcards (cannot recurse). There can be multiple {...}\n"
-//					+ "within an object and all are expanded (but be sensible - this could generate the known universe and crash the\n"
-//					+ "system. (If this is misused it will be withdrawn). Objects (URLs, files) can be mixed but it's probably a\n"
-//					+ "poor idea.\n"
-//					+ "\n"
-//					+ "The logic is: \n"
-//					+ "(a) if an object starts with 'www' or 'http:' or 'https;' it's assumed to be a URL\n"
-//					+ "(b) if it is a directory, then the contents (filtered by extension) are added to the list as files\n"
-//					+ "(c) if it's a file it's added to the list\n"
-//					+ "the wildcards in files and URLs are then expanded and the results added to the list\n"
-//					+ "\n"
-//					+ "Current wildcards:\n"
-//					+ "  {n1:n2} n1,n2 integers: generate n1 ... n2 inclusive\n"
-//					+ "  {foo,bar,plugh} list of strings\n"
-//					+"",
-//					String.class,
-//					(String) null,
-//			1, Integer.MAX_VALUE,
-//			"processInput"
-//			);
-//
-//			
-//	public final static ArgumentOption OUTPUT_OPTION = new ArgumentOption(
-//			DefaultArgProcessor.class,
-//			"-o",
-//			"--output",
-//			"file_or_directory",
-//			"\nOUTPUT\n Output is to local filestore ATM. If there is only one input\n"
-//			+ "after wildcard expansion then a filename can be given. Else the argument must be a writeable directory; Norma\n"
-//			+ "will do her best to create filenames derived from the input names. Directory structures will not be preserved\n"
-//			+ "See also --recursive and --extensions",
-//			String.class,
-//			(String) null,
-//			0, 1,
-//			"processOutput"
-//			);
-//	
-//	public final static ArgumentOption RECURSIVE_OPTION = new ArgumentOption(
-//			DefaultArgProcessor.class,
-//			"-r",
-//			"--recursive",
-//			"",
-//			"\nRECURSIVE input directories\n "
-//			+ "If the input is a directory then by default only the first level is searched\n"
-//			+ "if the --recursive flag is set then all files in the directory tree may be input\n"
-//			+ "See also --extensions",
-//			Boolean.class,
-//			(Boolean)false,
-//			0, 0,
-//			"processRecursive"
-//			);
-//	
-//	public final static ArgumentOption EXTENSION_OPTION = new ArgumentOption(
-//			DefaultArgProcessor.class,
-//			"-e",
-//			"--extensions",
-//			"ext1 [ext2...]",
-//			"\nEXTENSIONS \n "
-//				+ "When a directory or directories are searched then all files are input by default\n"
-//				+ "It is possible to limit the search by using only certain extensions(which "
-//				+ "See also --recursive",
-//			String.class,
-//			(String) null,
-//			1, Integer.MAX_VALUE,
-//			"processExtensions"
-//			);
-//
-//	public final static ArgumentOption HELP_OPTION = new ArgumentOption(
-//			DefaultArgProcessor.class,
-//			"-h",
-//			"--help",
-//			"",
-//			"\nHELP \n "
-//				+ "outputs help for all options, including superclass DefaultArgProcessor",
-//			String.class,
-//			(String) null,
-//			0, 0,
-//			"processHelp"
-//			);
-//
-//	public final static List<ArgumentOption> DEFAULT_OPTION_LIST = Arrays.asList(
-//			new ArgumentOption[] {
-//				INPUT_OPTION,
-//				OUTPUT_OPTION,
-//				RECURSIVE_OPTION,
-//				EXTENSION_OPTION,
-//				HELP_OPTION
-//			}
-//	);
-	
 	private static String RESOURCE_NAME_TOP = "/org/xmlcml/args";
 	private static String ARGS_RESOURCE = RESOURCE_NAME_TOP+"/"+"args.xml";
 	
@@ -138,6 +42,7 @@ public class DefaultArgProcessor {
 	private boolean recursive = false;
 	protected List<String> inputList;
 	public List<ArgumentOption> argumentOptionList;
+	public List<ArgumentOption> chosenArgumentOptionList;
 	private ArrayList<FileContainer> fileContainerList;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
@@ -179,6 +84,7 @@ public class DefaultArgProcessor {
 	
 	public boolean expandWildcardsOnce() {
 		boolean change = false;
+		ensureInputList();
 		List<String> newInputList = new ArrayList<String>();
 		for (String input : inputList) {
 			List<String> expanded = expandWildcardsOnce(input);
@@ -265,6 +171,7 @@ public class DefaultArgProcessor {
 		List<String> fileContainerNames = argIterator.createTokenListUpToNextMinus();
 		for (String fileContainerName : fileContainerNames) {
 			FileContainer fileContainer = new FileContainer(fileContainerName);
+			LOG.debug("FC "+fileContainerName);
 			fileContainerList.add(fileContainer);
 		}
 	}
@@ -280,8 +187,37 @@ public class DefaultArgProcessor {
 			LOG.error("Must give at least one input");
 		} else {
 			inputList = inputs;
+			LOG.debug("Inputs: "+inputList);
+			if (inputList.size() == 1) {
+				inputList = expandWildcards(inputs.get(0));
+			}
 		}
 	}
+	
+	/** expand expressions/wildcards in input.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private List<String> expandWildcards(String input) {
+		Matcher matcher = INTEGER_RANGE.matcher(input);
+		List<String> inputs = new ArrayList<String>();
+		if (matcher.matches()) {
+			int start = Integer.parseInt(matcher.group(2));
+			int end = Integer.parseInt(matcher.group(3));
+			if (start <= end) {
+				for (int i = start; i <= end; i++) {
+					String input0 = matcher.group(1)+i+matcher.group(4);
+					inputs.add(input0);
+				}
+			}
+		} else {
+			inputs.add(input);
+		}
+		LOG.trace("inputs: "+inputs);
+		return inputs;
+	}
+
 
 	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
 		checkHasNext(argIterator);
@@ -359,6 +295,7 @@ public class DefaultArgProcessor {
 
 
 	protected boolean runReflectedMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
+		ensureChosenArgumentList();
 		boolean processed = false;
 		if (!arg.startsWith(MINUS)) {
 			LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
@@ -379,9 +316,11 @@ public class DefaultArgProcessor {
 						}
 						throw new RuntimeException(option.getMethodName()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 					}
+					LOG.debug("Using method: "+method);
 					method.setAccessible(true);
 					method.invoke(this, option, argIterator);
 					processed = true;
+					chosenArgumentOptionList.add(option);
 					break;
 				}
 			}
@@ -392,10 +331,30 @@ public class DefaultArgProcessor {
 		return processed;
 	}
 
+	private void ensureChosenArgumentList() {
+		if (chosenArgumentOptionList == null) {
+			chosenArgumentOptionList = new ArrayList<ArgumentOption>();
+		}
+	}
+
 	protected void processHelp() {
 		for (ArgumentOption option : argumentOptionList) {
 			System.err.println(option.getHelp());
 		}
+	}
+	
+	public List<ArgumentOption> getChosenArgumentList() {
+		ensureChosenArgumentList();
+		return chosenArgumentOptionList;
+	}
+	
+	public String createDebugString() {
+		StringBuilder sb = new StringBuilder();
+		getChosenArgumentList();
+		for (ArgumentOption argumentOption : chosenArgumentOptionList) {
+			sb.append(argumentOption.toString()+"\n");
+		}
+		return sb.toString();
 	}
 
 }
