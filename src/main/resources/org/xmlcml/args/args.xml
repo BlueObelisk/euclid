@@ -35,11 +35,11 @@
 		brief="-f"
 		long="--fileContainer"
 		args="file(s)"
-		class="org.xmlcml.files.FileContainer"
+		class="org.xmlcml.files.QuickscrapeDirectory"
 		default=""
 		min="1" 
 		max="Integer.MAX_VALUE"
-		methodName="processFileContainer"
+		methodName="processQuickscrapeDirectory"
 		>
 		<help>
 			FILE_CONTAINER:

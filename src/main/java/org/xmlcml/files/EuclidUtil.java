@@ -1,6 +1,12 @@
 package org.xmlcml.files;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
+
 import org.apache.commons.io.FilenameUtils;
+import org.xmlcml.euclid.Euclid;
 
 /** general static utilities.
  * 
@@ -34,6 +40,34 @@ public class EuclidUtil {
 	 */
 	public static boolean isURL(String name) {
 		return name.startsWith(HTTP) || name.startsWith(HTTPS);
+	}
+
+	/** heuristic ducktype to get input stream;
+	 * 
+	 * First assumes name is resource on classpath.
+	 * if fails; tries it as http:// or https:// URL
+	 * if fails; tries as filename
+	 * 
+	 * @param name (of resource, URL, or filename)
+	 * @return Opened stream, or null if not found
+	 */
+	public static InputStream getInputStream(String name) {
+		InputStream is = Euclid.class.getResourceAsStream(name);
+		if (is == null) {
+			try {
+				is = new URL(name).openStream();
+			} catch (Exception e) {
+				// not a URL
+			}
+		}
+		if (is == null) {
+			try {
+				is = new FileInputStream(name);
+			} catch (FileNotFoundException e) {
+				// no file
+			}
+		}
+		return is;
 	}
 
 

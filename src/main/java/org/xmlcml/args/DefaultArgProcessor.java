@@ -13,7 +13,7 @@ import nu.xom.Element;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.xmlcml.files.FileContainer;
+import org.xmlcml.files.QuickscrapeDirectory;
 import org.xmlcml.xml.XMLUtil;
 
 public class DefaultArgProcessor {
@@ -43,7 +43,7 @@ public class DefaultArgProcessor {
 	protected List<String> inputList;
 	public List<ArgumentOption> argumentOptionList;
 	public List<ArgumentOption> chosenArgumentOptionList;
-	private ArrayList<FileContainer> fileContainerList;
+	private ArrayList<QuickscrapeDirectory> qDireectoryList;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -166,13 +166,13 @@ public class DefaultArgProcessor {
 		setExtensions(argIterator.createTokenListUpToNextMinus());
 	}
 
-	public void processFileContainer(ArgumentOption option, ArgIterator argIterator) {
-		fileContainerList = new ArrayList<FileContainer>();
-		List<String> fileContainerNames = argIterator.createTokenListUpToNextMinus();
-		for (String fileContainerName : fileContainerNames) {
-			FileContainer fileContainer = new FileContainer(fileContainerName);
-			LOG.debug("FC "+fileContainerName);
-			fileContainerList.add(fileContainer);
+	public void processQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
+		qDireectoryList = new ArrayList<QuickscrapeDirectory>();
+		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus();
+		for (String qDirectoryName : qDirectoryNames) {
+			QuickscrapeDirectory quickscrapeDiectory = new QuickscrapeDirectory(qDirectoryName);
+			LOG.debug("FC "+qDirectoryName);
+			qDireectoryList.add(quickscrapeDiectory);
 		}
 	}
 
@@ -193,6 +193,18 @@ public class DefaultArgProcessor {
 			}
 		}
 	}
+	
+
+	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
+		checkHasNext(argIterator);
+		output = argIterator.next();
+	}
+
+	public void processRecursive(ArgumentOption divOption, ArgIterator argIterator) {
+		recursive = true;
+	}
+
+	// =====================================
 	
 	/** expand expressions/wildcards in input.
 	 * 
@@ -216,16 +228,6 @@ public class DefaultArgProcessor {
 		}
 		LOG.trace("inputs: "+inputs);
 		return inputs;
-	}
-
-
-	public void processOutput(ArgumentOption divOption, ArgIterator argIterator) {
-		checkHasNext(argIterator);
-		output = argIterator.next();
-	}
-
-	public void processRecursive(ArgumentOption divOption, ArgIterator argIterator) {
-		recursive = true;
 	}
 
 	// =====================================
@@ -253,14 +255,14 @@ public class DefaultArgProcessor {
 		return recursive;
 	}
 
-	public List<FileContainer> getFileContainerList() {
-		ensureFileContainerList();
-		return fileContainerList;
+	public List<QuickscrapeDirectory> getQuickscrapeDirectoryList() {
+		ensureQuickscrapeDirectoryList();
+		return qDireectoryList;
 	}
 
-	private void ensureFileContainerList() {
-		if (fileContainerList == null) {
-			fileContainerList = new ArrayList<FileContainer>();
+	private void ensureQuickscrapeDirectoryList() {
+		if (qDireectoryList == null) {
+			qDireectoryList = new ArrayList<QuickscrapeDirectory>();
 		}
 	}
 	

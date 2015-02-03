@@ -21,7 +21,7 @@ import com.google.common.collect.Multiset;
 
 Note that the Catalog (from CottageLabs) primarily holds metadata. [It's possible to hold some of the HTML content, but it soon starts to degrade performance]. We therefore have metadata in the Catalog and contentFiles on disk. These files and Open and can, in principle, be used independently of the Catalog.
 
-I am designing a "FileContainer" which passes the bundle down the pipeline. This should be independent of what language [Python , JS, Java...] is used to create or read them. We believe that a normal filing system is satisfactory (at least at present while we develop the technology).
+I am designing a "QuickscrapeDirectory" which passes the bundle down the pipeline. This should be independent of what language [Python , JS, Java...] is used to create or read them. We believe that a normal filing system is satisfactory (at least at present while we develop the technology).
 
 A typical pass for one DOI (e.g. journal.pone.0115884 ) through the pipeline (mandatory files are marked *, optional ?) might look like:
 
@@ -89,10 +89,10 @@ The results file include the regexes used and other metadata (more needed!). Aga
  * @author pm286
  *
  */
-public class FileContainer {
+public class QuickscrapeDirectory {
 
 
-	private static final Logger LOG = Logger.getLogger(FileContainer.class);
+	private static final Logger LOG = Logger.getLogger(QuickscrapeDirectory.class);
 	static {
 		LOG.setLevel(Level.DEBUG);
 	}
@@ -107,16 +107,16 @@ public class FileContainer {
 	private List<File> fileList;
 	private File directory;
 	
-	public FileContainer() {
+	public QuickscrapeDirectory() {
 		
 	}
 	
-	public FileContainer(File dir, boolean delete) {
+	public QuickscrapeDirectory(File dir, boolean delete) {
 		this.createDirectory(dir, delete);
 		this.directory = dir;
 	}
 	
-	public FileContainer(String filename) {
+	public QuickscrapeDirectory(String filename) {
 		this(new File(filename), true); // check whether deleting is good idea
 	}
 
