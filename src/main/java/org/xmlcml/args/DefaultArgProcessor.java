@@ -200,7 +200,8 @@ public class DefaultArgProcessor {
 	}
 
 	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
-		recursive = true;
+		List<String> booleans = argIterator.createTokenListUpToNextMinus();
+		recursive = booleans.size() == 0 ? true : new Boolean(booleans.get(0));
 	}
 
 	// =====================================
@@ -269,7 +270,9 @@ public class DefaultArgProcessor {
 	// --------------------------------
 	
 	public boolean parseArgs(String[] commandLineArgs) {
-		ArgIterator argIterator = new ArgIterator(commandLineArgs);
+		
+		String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
+		ArgIterator argIterator = new ArgIterator(totalArgs);
 		boolean processed = false;
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
@@ -279,9 +282,47 @@ public class DefaultArgProcessor {
 				throw new RuntimeException("cannot process argument: "+arg, e);
 			}
 		}
+//		List<ArgumentOption> unusedOptions = createUnusedArgumentList();
+//		createDefaultArgString(unusedOptions);
 		return processed;
 	}
-	
+
+	private String[] addDefaultsAndParsedArgs(String[] commandLineArgs) {
+		List<String> totalArgList = new ArrayList<String>(Arrays.asList(createDefaultArgumentStrings()));
+		List<String> commandArgList = Arrays.asList(commandLineArgs);
+		totalArgList.addAll(commandArgList);
+		String[] totalArgs = totalArgList.toArray(new String[0]);
+		return totalArgs;
+	}
+
+//	private List<ArgumentOption> createUnusedArgumentList() {
+//		List<ArgumentOption> unusedOptionList = new ArrayList<ArgumentOption>();
+//		for (ArgumentOption option : argumentOptionList) {
+//			boolean found = false;
+//			for (ArgumentOption chosenOption : chosenArgumentOptionList) {
+//				if (option.equals(chosenOption)) {
+//					found = true;
+//					break;
+//				}
+//			}
+//			if (!found) {
+//				unusedOptionList.add(option);
+//			}
+//		}
+//		return unusedOptionList;
+//	}
+
+	private String[] createDefaultArgumentStrings() {
+		StringBuilder sb = new StringBuilder();
+		for (ArgumentOption option : argumentOptionList) {
+			String defalt = option.getDefault().toString();
+			if (defalt != null && defalt.toString().trim().length() > 0) {
+				sb.append(option.getBrief()+" "+option.getDefault()+" ");
+			}
+		}
+		return sb.toString().trim().split("\\s+");
+	}
+
 	public List<String> getExtensions() {
 		return extensionList;
 	}
@@ -309,7 +350,6 @@ public class DefaultArgProcessor {
 						}
 						throw new RuntimeException(option.getMethodName()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 					}
-					LOG.debug("Using method: "+method);
 					method.setAccessible(true);
 					method.invoke(this, option, argIterator);
 					processed = true;
@@ -348,10 +388,6 @@ public class DefaultArgProcessor {
 			sb.append(argumentOption.toString()+"\n");
 		}
 		return sb.toString();
-	}
-
-	protected void expandDefaults() {
-		LOG.error("Defaults not yet implemented; run explicit args");
 	}
 
 }
