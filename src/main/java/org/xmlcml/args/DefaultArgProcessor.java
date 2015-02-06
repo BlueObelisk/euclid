@@ -295,23 +295,6 @@ public class DefaultArgProcessor {
 		return totalArgs;
 	}
 
-//	private List<ArgumentOption> createUnusedArgumentList() {
-//		List<ArgumentOption> unusedOptionList = new ArrayList<ArgumentOption>();
-//		for (ArgumentOption option : argumentOptionList) {
-//			boolean found = false;
-//			for (ArgumentOption chosenOption : chosenArgumentOptionList) {
-//				if (option.equals(chosenOption)) {
-//					found = true;
-//					break;
-//				}
-//			}
-//			if (!found) {
-//				unusedOptionList.add(option);
-//			}
-//		}
-//		return unusedOptionList;
-//	}
-
 	private String[] createDefaultArgumentStrings() {
 		StringBuilder sb = new StringBuilder();
 		for (ArgumentOption option : argumentOptionList) {
@@ -326,7 +309,6 @@ public class DefaultArgProcessor {
 	public List<String> getExtensions() {
 		return extensionList;
 	}
-
 
 	protected boolean runReflectedMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
 		ensureChosenArgumentList();

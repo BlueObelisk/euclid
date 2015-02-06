@@ -103,6 +103,7 @@ public class QuickscrapeDirectory {
 	public static final String FULLTEXT_XML   = "fulltext.xml";
 	public static final String ABSTRACT_HTML  = "abstract.html";
 	public static final String SCHOLARLY_HTML = "scholarly.html";
+	public static final String RESULTS_XML   = "results.xml";
 
 	private List<File> fileList;
 	private File directory;
@@ -241,6 +242,14 @@ public class QuickscrapeDirectory {
 		return new File(directory, FULLTEXT_HTML);
 	}
 
+	public boolean hasScholarlyHTML() {
+		return hasExistingFile(new File(directory, SCHOLARLY_HTML));
+	}
+	
+	public File getScholarlyHTML() {
+		return new File(directory, SCHOLARLY_HTML);
+	}
+
 	public boolean hasFulltextPDF() {
 		return hasExistingFile(new File(directory, FULLTEXT_PDF));
 	}
@@ -294,6 +303,13 @@ public class QuickscrapeDirectory {
 	public List<File> listFiles(boolean recursive) {
 		List<File> files = new ArrayList<File>(FileUtils.listFiles(directory, null, recursive));
 		return files;
+	}
+
+	public void writeResults(String resultsDirName, String resultsXML) throws Exception {
+		File resultsDir = new File(directory, resultsDirName);
+		resultsDir.mkdirs();
+		File directoryResultsFile = new File(resultsDir, RESULTS_XML);
+		FileUtils.writeStringToFile(directoryResultsFile, resultsXML);
 	}
 
 	
