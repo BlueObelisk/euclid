@@ -200,7 +200,7 @@ public class DefaultArgProcessor {
 	}
 
 	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
-		List<String> booleans = argIterator.createTokenListUpToNextMinus();
+		List<String> booleans = argIterator.createTokenListUpToNextMinus(divOption);
 		recursive = booleans.size() == 0 ? true : new Boolean(booleans.get(0));
 	}
 
