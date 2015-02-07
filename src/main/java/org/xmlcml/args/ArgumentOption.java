@@ -3,6 +3,8 @@ package org.xmlcml.args;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nu.xom.Element;
 
@@ -38,6 +40,10 @@ public class ArgumentOption {
 	private Object defalt;
 	private Integer minCount;
 	private Integer maxCount;
+	private Double minValue = null;
+	private Double maxValue = null;
+	private Pattern pattern = null;
+	private List<String> enums = null;
 	
 	private List<String> defaultStrings;
 	private List<Integer> defaultIntegers;
@@ -452,6 +458,95 @@ public class ArgumentOption {
 			sb.append("OBJECT ; "+stringValue);
 		}
 		return sb.toString();
+	}
+
+	/** checks argument count; 
+	 * 
+	 * @param list
+	 * @return null indicates correct; non-null is explanatory message.
+	 */
+	public String checkArgumentCount(List<String> list) {
+		String message = null;
+		if (minCount == null || maxCount == null) {
+			// no checking
+		} else if (minCount == maxCount && list.size() != maxCount) {
+			message = "require exactly "+minCount+" arguments for "+lng;
+		} else if (minCount > maxCount) {
+			message = "bad "+lng+" in args.xml file; minCount "+minCount+" should not be greater than maxCount: "+maxCount;
+		} else if (minCount > list.size()) {
+			message = "Need at least "+minCount+" arguments for "+lng+ "; found "+list.size();
+		} else if (maxCount < list.size()) {
+			message = "Too many arguments ("+list.size()+") for "+lng+" ; maximum is :"+maxCount;
+		}
+		return message;
+	}
+
+	/** checks argument values; 
+	 * 
+	 * @param list
+	 * @return null indicates correct; non-null is explanatory message.
+	 */
+	public String checkArgumentValues(List<String> list) {
+		String message = null;
+		for (String s : list) {
+			if (s == null) {
+				message = "Cannot have null values in "+lng;
+				break;
+			}
+			message = checkNumericValue(s);
+			if (message != null) break;
+			message = checkPatternValue(s);
+			if (message != null) break;
+			message = checkEnumValue(s);
+			if (message != null) break;
+		}
+		return message;
+	}
+
+	private String checkPatternValue(String s) {
+		String message = null;
+		if (pattern != null) {
+			Matcher matcher = pattern.matcher(s);
+			message = "Argument for "+lng +" ("+s+") does not match "+pattern;
+		}
+		return message;
+	}
+
+	private String checkEnumValue(String s) {
+		String message = null;
+		if (enums != null) {
+			message = "arg ("+s+") in "+lng+" does not match allowed values "+enums;
+			for (String enumx : enums) {
+				if (enumx.equals(s)) {
+					message = null;
+					break;
+				}
+			}
+		}
+		return message;
+	}
+
+	private String checkNumericValue(String s) {
+		String message = null;
+		Double d = null;
+		if (classType != null && classType.isAssignableFrom(Number.class)) {
+			try {
+				d = new Double(s);
+			} catch (NumberFormatException nfe) {
+				message = "Not a number: "+nfe+"; in "+lng;
+			}
+			if (minValue != null && d != null) {
+				if (d < minValue) {
+					message = "value ("+d+") below minimum for "+lng;
+				}
+			}
+			if (maxValue != null && d != null) {
+				if (d > maxValue) {
+					message = "value ("+d+") above maximum for "+lng;
+				}
+			}
+		}
+		return message;
 	}
 
 }

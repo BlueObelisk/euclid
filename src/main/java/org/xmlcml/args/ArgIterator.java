@@ -41,6 +41,28 @@ public class ArgIterator {
 	 * @param argIterator
 	 * @return
 	 */
+	public List<String> createTokenListUpToNextMinus(ArgumentOption argumentOption) {
+		List<String> list = this.createTokenListUpToNextMinus();
+		checkListSemantics(argumentOption, list);
+		return list;
+	}
+
+	private void checkListSemantics(ArgumentOption argumentOption, List<String> list) {
+		String msg = null;
+		msg = argumentOption.checkArgumentCount(list);
+		if (msg != null) throw new IllegalArgumentException(msg);
+		msg = argumentOption.checkArgumentValues(list);
+		if (msg != null) throw new IllegalArgumentException(msg);
+	}
+
+
+	/** read tokens until next - sign.
+	 * 
+	 * leave iterator ready to read next minus
+	 * 
+	 * @param argIterator
+	 * @return
+	 */
 	public List<String> createTokenListUpToNextMinus() {
 		List<String> list = new ArrayList<String>();
 		while (this.hasNext()) {
