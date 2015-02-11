@@ -1,6 +1,5 @@
 package org.xmlcml.args;
 
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.regex.Pattern;
 import nu.xom.Builder;
 import nu.xom.Element;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.xmlcml.files.QuickscrapeDirectory;
@@ -163,12 +162,12 @@ public class DefaultArgProcessor {
 	// ============ METHODS ===============
 
 	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
-		setExtensions(argIterator.createTokenListUpToNextMinus());
+		setExtensions(argIterator.createTokenListUpToNextMinus(option));
 	}
 
 	public void parseQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
 		quickscrapeDirectoryList = new ArrayList<QuickscrapeDirectory>();
-		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus();
+		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus(option);
 		for (String qDirectoryName : qDirectoryNames) {
 			QuickscrapeDirectory quickscrapeDiectory = new QuickscrapeDirectory(qDirectoryName);
 			quickscrapeDirectoryList.add(quickscrapeDiectory);
@@ -179,8 +178,8 @@ public class DefaultArgProcessor {
 		printHelp();
 	}
 
-	public void parseInput(ArgumentOption divOption, ArgIterator argIterator) {
-		List<String> inputs = argIterator.createTokenListUpToNextMinus();
+	public void parseInput(ArgumentOption option, ArgIterator argIterator) {
+		List<String> inputs = argIterator.createTokenListUpToNextMinus(option);
 		if (inputs.size() == 0) {
 			inputList = new ArrayList<String>();
 			LOG.error("Must give at least one input");
@@ -279,11 +278,9 @@ public class DefaultArgProcessor {
 			try {
 				processed = runReflectedMethod(this.getClass(), argumentOptionList, argIterator, arg);
 			} catch (Exception e) {
-				throw new RuntimeException("cannot process argument: "+arg, e);
+				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 			}
 		}
-//		List<ArgumentOption> unusedOptions = createUnusedArgumentList();
-//		createDefaultArgString(unusedOptions);
 		return processed;
 	}
 
@@ -320,17 +317,17 @@ public class DefaultArgProcessor {
 				Method method = null;
 				if (option.matches(arg)) {
 					try {
-						String methodName = option.getMethodName();
-						if (methodName == null) {
+						String parseMethod = option.getParseMethod();
+						if (parseMethod == null) {
 							throw new RuntimeException("arg: "+arg+" MUST have a methodName");
 						}
-						method = this.getClass().getMethod(methodName, option.getClass(), argIterator.getClass());
+						method = this.getClass().getMethod(parseMethod, option.getClass(), argIterator.getClass());
 					} catch (NoSuchMethodException nsme) {
 						LOG.debug("methods for "+this.getClass());
 						for (Method meth : thisClass.getDeclaredMethods()) {
 							LOG.debug(meth);
 						}
-						throw new RuntimeException(option.getMethodName()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+						throw new RuntimeException(option.getParseMethod()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 					}
 					method.setAccessible(true);
 					method.invoke(this, option, argIterator);

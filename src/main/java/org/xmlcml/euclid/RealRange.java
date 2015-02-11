@@ -16,6 +16,9 @@
 
 package org.xmlcml.euclid;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * maximum and minimum values
@@ -34,6 +37,8 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 		HORIZONTAL,
 		VERTICAL
 	};
+	
+	public static Pattern RANGE_PATTERN = Pattern.compile("\\{(\\d+),(\\d+)}");
 	
     /**
      * maximum of range
@@ -454,5 +459,17 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 	 */
 	public RealRange getRangeExtendedBy(double minExtend, double maxExtend) {
 		return  new RealRange(minval - minExtend, maxval + maxExtend);
+	}
+	public static RealRange createRange(String rangeString) {
+		RealRange range = null;
+		Matcher matcher =  RANGE_PATTERN.matcher(rangeString);
+		if (matcher.matches()) {
+			Double min = new Double(matcher.group(1));
+			Double max = new Double(matcher.group(2));
+			if (min <= max) {
+				range = new RealRange(min, max);
+			}
+		}
+		return range;
 	}
 }

@@ -2,14 +2,22 @@ package org.xmlcml.args;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
+import nu.xom.Nodes;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.euclid.IntRange;
+import org.xmlcml.euclid.RealRange;
 import org.xmlcml.xml.XMLUtil;
 
 /** simple option for controlling arguments.
@@ -20,30 +28,55 @@ import org.xmlcml.xml.XMLUtil;
 public class ArgumentOption {
 	private static final String BRIEF = "brief";
 	private static final String LONG = "long";
+	private static final String NAME = "name";
 	private static final String HELP = "help";
 	private static final String ARGS = "args";
 	private static final String CLASS_TYPE = "class";
 	private static final String DEFAULT = "default";
-	private static final String MIN = "min";
-	private static final String MAX = "max";
-	private static final String METHOD_NAME = "methodName";
+	private static final String COUNT_RANGE = "countRange";
+	private static final String VALUE_RANGE = "valueRange";
+	private static final String PARSE_METHOD = "parseMethod";
+	private static final String PATTERN = "pattern";
+	
+	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\d+),(\\d*|\\*)\\}");
+	private static final Pattern DOUBLE_RANGE = Pattern.compile("\\{(\\-?\\+?\\d+(\\.\\d*)?),(\\-?\\+?\\d+(\\.\\d*)?)\\}");
 
 	private static final Logger LOG = Logger.getLogger(ArgumentOption.class);
 	static {
 		LOG.setLevel(Level.DEBUG);
 	}
 	
+	private static Set<String> MANDATORY_ATTRIBUTES;
+	static {
+		MANDATORY_ATTRIBUTES = new HashSet<String>();
+		MANDATORY_ATTRIBUTES.add(NAME);
+		MANDATORY_ATTRIBUTES.add(LONG);
+		MANDATORY_ATTRIBUTES.add(ARGS);
+		MANDATORY_ATTRIBUTES.add(PARSE_METHOD);
+	}
+	private static Set<String> MANDATORY_CHILDREN;
+	static {
+		MANDATORY_CHILDREN = new HashSet<String>();
+		MANDATORY_CHILDREN.add(HELP);
+	}
+	private static Map<String, String> OPTIONAL_ATTRIBUTES;
+	static {
+		OPTIONAL_ATTRIBUTES = new HashMap<String, String>();
+		OPTIONAL_ATTRIBUTES.put(CLASS_TYPE, "java.lang.String");
+	}
+	
+	private String name;
 	private String brief;
 	private String lng;
 	private String help;
 	private Class<?> classType;
 	private Object defalt;
-	private Integer minCount;
-	private Integer maxCount;
-	private Double minValue = null;
-	private Double maxValue = null;
+	private IntRange countRange;
+	private String countRangeString;
+	private RealRange valueRange = null;
+	private String valueRangeString;
+	private String patternString = null;
 	private Pattern pattern = null;
-	private List<String> enums = null;
 	
 	private List<String> defaultStrings;
 	private List<Integer> defaultIntegers;
@@ -65,98 +98,120 @@ public class ArgumentOption {
 	private String args;
 	private List<StringPair> stringPairValues;
 	
-	private String methodName;
+	private String parseMethod;
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
 	
 	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
 		this.argProcessorClass = argProcessorClass;
 	}
 	
-	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass,
-			String brief, 
-			String lng, 
-			String args,
-			String help,
-			Class<?> classType,
-			Object defalt,
-			int minCount,
-			int maxCount,
-			String methodName
-			) {
-		this(argProcessorClass);
-		setBrief(brief);
-		setLong(lng);
-		setHelp(help);
-		setArgs(args);
-		setClassType(classType);
-		setDefault(defalt);
-		setMinCount(minCount);
-		setMaxCount(maxCount);
-		setMethodName(methodName);
-	}
-
+	/** factory method option for ArgumentOptions
+	 * 
+	 * @param argProcessor
+	 * @param element
+	 * @return
+	 */
 	public static ArgumentOption createOption(Class<? extends DefaultArgProcessor> argProcessor, Element element) {
+		
 		ArgumentOption argumentOption = new ArgumentOption(argProcessor);
-		argumentOption.addBrief(element);
-		argumentOption.addLong(element);
-		argumentOption.addHelp(element);
-		argumentOption.addArgs(element);
-		argumentOption.addClassType(element);
-		argumentOption.addDefault(element);
-		argumentOption.addMinCount(element);
-		argumentOption.addMaxCount(element);
-		argumentOption.addMethodName(element);
+		Set<String> mandatorySet = new HashSet<String>(MANDATORY_ATTRIBUTES);
+		Map<String, String> optionalAttributes = new HashMap<String, String>(OPTIONAL_ATTRIBUTES);
+		for (int i = 0; i < element.getAttributeCount(); i++) {
+			Attribute attribute = element.getAttribute(i);
+			String name = attribute.getLocalName();
+			String value = attribute.getValue();
+			argumentOption.setValue(name, value);
+			mandatorySet.remove(name);
+			optionalAttributes.put(name, null);
+		}
+		if (mandatorySet.size() > 0) {
+			throw new RuntimeException("The following attributes for "+argumentOption.name+" are mandatory: "+mandatorySet);
+		}
+		// setDefaults;
+		for (String name : optionalAttributes.keySet()) {
+			String value = optionalAttributes.get(name);
+			if (value != null) {
+				argumentOption.setValue(name, value);
+			}
+		}
+		// help
+		List<Element> helpNodes = XMLUtil.getQueryElements(element, "./*[local-name()='"+HELP+"']");
+		if (helpNodes.size() != 1) {
+			throw new RuntimeException("No help given for "+argumentOption.name);
+		} else {
+			argumentOption.setHelp(helpNodes.get(0).getValue());
+		}
 		return argumentOption;
 	}
 
-	
-	private void addMethodName(Element element) {
-		setMethodName(element.getAttributeValue(METHOD_NAME));
-		checkNotNull("methodName", methodName);
-	}
-
-	private void checkNotNull(String name, Object argumentValue) {
-		if (argumentValue == null) {
-			throw new RuntimeException(name+" for "+this+" should not be null");
-		}
-	}
-
-	private void addMaxCount(Element element) {
-		setMaxCount(createInteger(element.getAttributeValue(MAX)));
-		checkNotNull("maxCount", maxCount);
-	}
-
-	private Integer createInteger(String ss) {
-		Integer ii = null;
-		if (ss == null) {
-		} else if (ss.equals("Integer.MAX_VALUE")) {
-			ii = Integer.MAX_VALUE;
-		} else if (ss.equals("Integer.MIN_VALUE")) {
-			ii = Integer.MIN_VALUE;
+	private void setValue(String namex, String value) {
+		if (BRIEF.equals(namex)) {
+			this.setBrief(value);
+		} else if (LONG.equals(namex)) {
+			this.setLong(value);
+		} else if (NAME.equals(namex)) {
+			this.setName(value);
+		} else if (HELP.equals(namex)) {
+			this.setHelp(value);
+		} else if (ARGS.equals(namex)) {
+			this.setArgs(value);
+		} else if (CLASS_TYPE.equals(namex)) {
+			this.setClassType(value);
+		} else if (DEFAULT.equals(namex)) {
+			this.setDefault(value);
+		} else if (COUNT_RANGE.equals(namex)) {
+			this.setCountRange(value);
+		} else if (VALUE_RANGE.equals(namex)) {
+			this.setValueRange(value);
+		} else if (PARSE_METHOD.equals(namex)) {
+			this.setParseMethod(value);
+		} else if (PATTERN.equals(namex)) {
+			this.setPatternString(value);
 		} else {
-			try {
-				ii = new Integer(ss);
-			} catch (Exception e) {
-				LOG.error("Bad integer: "+ss);
-			}
+			throw new RuntimeException("Unknown attribute on <arg name='"+name+"'>: "+namex+"='"+value+"'");
 		}
-		LOG.trace("integer "+ii);
-		return ii;
 	}
 
-	private void addMinCount(Element element) {
-		setMinCount(createInteger(element.getAttributeValue(MIN)));
-		checkNotNull("minCount", minCount);
+	
+
+	private void setCountRange(String value) {
+		countRangeString = value;
+		setCountRange(createIntRange(countRangeString));
 	}
 
-	private void addDefault(Element element) {
-		setDefault(element.getAttributeValue(DEFAULT));
-		checkNotNull("default", defalt);
+	private void setCountRange(IntRange intRange) {
+		this.countRange = intRange;
 	}
 
-	private void addClassType(Element element) {
-		setClassType(element.getAttributeValue(CLASS_TYPE));
-		checkNotNull("classType", classType);
+	private void setValueRange(String value) {
+		valueRangeString = value;
+		setValueRange(createDoubleRange(valueRangeString));
+	}
+
+	private void setValueRange(RealRange realRange) {
+		this.valueRange = realRange;
+	}
+
+	private RealRange createDoubleRange(String valueRangeString2) {
+		return RealRange.createRange(valueRangeString);
+	}
+
+	private IntRange createIntRange(String ss) {
+		IntRange intRange = null;
+		Matcher matcher = INT_RANGE.matcher(ss);
+		if (matcher.matches()) {
+			String min = matcher.group(1);
+			int minInt = new Integer(min);
+			String max = matcher.group(2);
+			int maxInt = (max.equals("*")) ? Integer.MAX_VALUE : new Integer(max);
+			if (minInt > maxInt) {
+				throw new RuntimeException("Minimum must be less-than/equals: "+ss);
+			}
+			intRange = new IntRange(minInt, maxInt);
+		} else {
+			throw new RuntimeException("count range must be of form {min,max}; was "+ss);
+		}
+		return intRange;
 	}
 
 	private void setClassType(String className) {
@@ -169,36 +224,20 @@ public class ArgumentOption {
 		}
 	}
 
-	private void addArgs(Element element) {
-		setArgs(element.getAttributeValue(ARGS));
-		checkNotNull("args", args);
-	}
-
-	private void addHelp(Element element) {
-		List<Element> helpChildren = XMLUtil.getQueryElements(element, "*[local-name()='help']");
-		if (helpChildren.size() != 1) {
-			throw new RuntimeException("No help found for: "+this);
-		}
-		setHelp(helpChildren.get(0).getValue());
-		checkNotNull("help", help);
-	}
-
-	private void addLong(Element element) {
-		setLong(element.getAttributeValue(LONG));
-		checkNotNull("long", lng);
-	}
-
-	private void addBrief(Element element) {
-		setBrief(element.getAttributeValue(BRIEF));
-		checkNotNull("brief", brief);
-	}
-
 	public String getBrief() {
 		return brief;
 	}
 
 	public void setBrief(String brief) {
 		this.brief = brief;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getLong() {
@@ -249,34 +288,46 @@ public class ArgumentOption {
 		this.defalt = defalt;
 	}
 
-	public Integer getMinCount() {
-		return minCount;
+//	public Integer getMinCount() {
+//		return minCount;
+//	}
+//
+//	public void setMinCount(Integer minCount) {
+//		this.minCount = minCount;
+//	}
+//
+//	public Integer getMaxCount() {
+//		return maxCount;
+//	}
+//
+//	public void setMaxCount(Integer maxCount) {
+//		this.maxCount = maxCount;
+//	}
+
+	public String getParseMethod() {
+		return parseMethod;
 	}
 
-	public void setMinCount(Integer minCount) {
-		this.minCount = minCount;
-	}
-
-	public Integer getMaxCount() {
-		return maxCount;
-	}
-
-	public void setMaxCount(Integer maxCount) {
-		this.maxCount = maxCount;
-	}
-
-	public String getMethodName() {
-		return methodName;
-	}
-
-	public void setMethodName(String methodName) {
-		if (methodName != null) {
+	public void setParseMethod(String parseMethod) {
+		if (parseMethod != null) {
 			try {
-				Method method = argProcessorClass.getMethod(methodName, ArgumentOption.class, ArgIterator.class);
-				this.methodName = methodName;
+				Method method = argProcessorClass.getMethod(parseMethod, ArgumentOption.class, ArgIterator.class);
+				this.parseMethod = parseMethod;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+methodName+" - please mail", e);
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+parseMethod+" - please mail", e);
 			}
+		}
+	}
+
+	public String getPatternString() {
+		return patternString;
+	}
+
+	public void setPatternString(String patternString) {
+		if (patternString == null) {
+			LOG.error("null pattern");
+		} else {
+			Pattern pattern = Pattern.compile(patternString);
 		}
 	}
 
@@ -288,14 +339,13 @@ public class ArgumentOption {
 		doubleValues = defaultDoubles;
 		doubleValue = defaultDouble;
 		doubleValues = defaultDoubles;
-		if (inputs.size() < minCount) {
-			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
-		} else if (inputs.size() > maxCount) {
-			LOG.error("Must have at least "+minCount+" args; found: "+inputs.size());
-		} else if (classType == null) {
-			LOG.error("null type translates to String");
-			stringValues = inputs;
-		} else if (classType.equals(String.class)) {
+		if (!countRange.includes(inputs.size())) {
+			throw new RuntimeException("Bad number of arguments: "+inputs.size()+" incompatible with "+countRangeString);
+		}
+		if (classType == null) {
+			classType = String.class;
+		}
+		if (classType.equals(String.class)) {
 			stringValues = inputs;
 			stringValue = (inputs.size() == 0) ? defaultString : inputs.get(0);
 		} else if (classType.equals(Double.class)) {
@@ -304,6 +354,11 @@ public class ArgumentOption {
 				doubleValues.add(new Double(input));
 			}
 			doubleValue = (doubleValues.size() == 0) ? defaultDouble : doubleValues.get(0);
+			for (Number number : doubleValues) {
+				if (!valueRange.includes((double)number)) {
+					throw new RuntimeException("bad numeric value: "+number+" should conform to "+valueRangeString);
+				}
+			}
 		} else if (classType.equals(Boolean.class)) {
 			booleanValue = inputs.size() == 1 ? new Boolean(inputs.get(0)) : defaultBoolean;
 		} else if (classType.equals(Integer.class)) {
@@ -312,21 +367,30 @@ public class ArgumentOption {
 				integerValues.add(new Integer(input));
 			}
 			integerValue = (integerValues.size() == 0) ? defaultInteger : integerValues.get(0);
-		} else if (classType.equals(StringPair.class)) {
-			stringPairValues = new ArrayList<StringPair>();
-			for (String input : inputs) {
-				String[] fields = input.trim().split(",");
-				if (fields.length != 2) {
-					throw new RuntimeException("Cannot parse "+input+" as comma-separated pair (foo,bar)");
+			for (Number number : integerValues) {
+				if (!valueRange.includes((double)number)) {
+					throw new RuntimeException("bad numeric value: "+number+" should conform to "+valueRangeString);
 				}
-				stringPairValues.add(new StringPair(fields[0], fields[1]));
 			}
-			// NYI
-//			stringPairValueValue = (stringPairValues.size() == 0) ? defaultStringPairValue : stringPairValues.get(0);
+		} else if (classType.equals(StringPair.class)) {
+			checkStringPairs(inputs);
 		} else {
 			LOG.error("currently cannot support type: "+classType);
 		}
 		return this;
+	}
+
+	private void checkStringPairs(List<String> inputs) {
+		stringPairValues = new ArrayList<StringPair>();
+		for (String input : inputs) {
+			String[] fields = input.trim().split(",");
+			if (fields.length != 2) {
+				throw new RuntimeException("Cannot parse "+input+" as comma-separated pair (foo,bar)");
+			}
+			stringPairValues.add(new StringPair(fields[0], fields[1]));
+		}
+		// NYI
+//			stringPairValueValue = (stringPairValues.size() == 0) ? defaultStringPairValue : stringPairValues.get(0);
 	}
 
 	public ArgumentOption ensureDefaults() {
@@ -337,7 +401,7 @@ public class ArgumentOption {
 		} else if (classType.equals(String.class)) {
 			defaultStrings = new ArrayList<String>();
 			defaultStrings.add((String)defalt);
-			if (minCount == 1 && maxCount == 1) {
+			if (countRange.isEqualTo(new IntRange(1,1))) {
 				defaultString = (String)defalt;
 			}
 		} else if (classType.equals(Integer.class)) {
@@ -347,10 +411,7 @@ public class ArgumentOption {
 			} catch (Exception e) {
 				throw new RuntimeException("default should be of type Integer");
 			}
-			if (minCount != 1 || maxCount != 1) {
-				defaultIntegers = new ArrayList<Integer>();
-				defaultIntegers.add(defaultInteger);
-			}
+			// FIXME no defaults
 		} else if (classType.equals(Double.class) && defalt instanceof Double) {
 			Double defaultDouble = null;
 			try {
@@ -358,10 +419,7 @@ public class ArgumentOption {
 			} catch (Exception e) {
 				throw new RuntimeException("default should be of type Double");
 			}
-			if (minCount != 1 || maxCount != 1) {
-				defaultDoubles = new ArrayList<Double>();
-				defaultDoubles.add(defaultDouble);
-			}
+			// FIXME no defaults
 		} else if (classType.equals(Boolean.class) && defalt instanceof Boolean) {
 			defaultBoolean = false;
 			try {
@@ -442,8 +500,7 @@ public class ArgumentOption {
 	@Override 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		String maxCountS = (maxCount == Integer.MAX_VALUE) ? "" : String.valueOf(maxCount);
- 		sb.append(brief+" or "+lng+"; {"+minCount+","+maxCountS+"}; "+methodName+"\n");
+ 		sb.append(brief+" or "+lng+"; countRange; "+parseMethod+"\n");
 		if (classType.equals(String.class)) {
 			sb.append("STRING: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
 		} else if (classType.equals(Integer.class)) {
@@ -467,16 +524,10 @@ public class ArgumentOption {
 	 */
 	public String checkArgumentCount(List<String> list) {
 		String message = null;
-		if (minCount == null || maxCount == null) {
-			// no checking
-		} else if (minCount == maxCount && list.size() != maxCount) {
-			message = "require exactly "+minCount+" arguments for "+lng;
-		} else if (minCount > maxCount) {
-			message = "bad "+lng+" in args.xml file; minCount "+minCount+" should not be greater than maxCount: "+maxCount;
-		} else if (minCount > list.size()) {
-			message = "Need at least "+minCount+" arguments for "+lng+ "; found "+list.size();
-		} else if (maxCount < list.size()) {
-			message = "Too many arguments ("+list.size()+") for "+lng+" ; maximum is :"+maxCount;
+		if (countRange != null) {
+			if (!countRange.includes(list.size())) {
+				message = "argument count ("+list.size()+") is not compatible with "+countRangeString;
+			}
 		}
 		return message;
 	}
@@ -497,8 +548,6 @@ public class ArgumentOption {
 			if (message != null) break;
 			message = checkPatternValue(s);
 			if (message != null) break;
-			message = checkEnumValue(s);
-			if (message != null) break;
 		}
 		return message;
 	}
@@ -512,19 +561,19 @@ public class ArgumentOption {
 		return message;
 	}
 
-	private String checkEnumValue(String s) {
-		String message = null;
-		if (enums != null) {
-			message = "arg ("+s+") in "+lng+" does not match allowed values "+enums;
-			for (String enumx : enums) {
-				if (enumx.equals(s)) {
-					message = null;
-					break;
-				}
-			}
-		}
-		return message;
-	}
+//	private String checkEnumValue(String s) {
+//		String message = null;
+//		if (enums != null) {
+//			message = "arg ("+s+") in "+lng+" does not match allowed values "+enums;
+//			for (String enumx : enums) {
+//				if (enumx.equals(s)) {
+//					message = null;
+//					break;
+//				}
+//			}
+//		}
+//		return message;
+//	}
 
 	private String checkNumericValue(String s) {
 		String message = null;
@@ -535,15 +584,8 @@ public class ArgumentOption {
 			} catch (NumberFormatException nfe) {
 				message = "Not a number: "+nfe+"; in "+lng;
 			}
-			if (minValue != null && d != null) {
-				if (d < minValue) {
-					message = "value ("+d+") below minimum for "+lng;
-				}
-			}
-			if (maxValue != null && d != null) {
-				if (d > maxValue) {
-					message = "value ("+d+") above maximum for "+lng;
-				}
+			if (!valueRange.includes(d)) {
+				message = "value: "+d+" incompatible with: "+valueRange;
 			}
 		}
 		return message;
