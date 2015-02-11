@@ -3,7 +3,6 @@
 		brief="-i"
 		long="--input"
 		args="file(s)_and/or_url(s)"
-		class="java.lang.String"
 		default=""
 		countRange="{1,*}"
 		parseMethod="parseInput"
@@ -30,10 +29,10 @@
 		</help>
 	</arg>	
 	
-	<arg name="fileContainer" 
-		brief="-f"
-		long="--fileContainer"
-		args="file(s)"
+	<arg name="quickscrapeDirectory" 
+		brief="-q"
+		long="--quickscrapeDirectory"
+		args="director(ies)"
 		class="org.xmlcml.files.QuickscrapeDirectory"
 		default=""
 		countRange="{1,*}"
@@ -74,9 +73,8 @@
 		brief="-o"
 		long="--output"
 		args="file_or_directory"
-		class="java.lang.String"
 		default=""
-		countRange="{0,1}"
+		countRange="{1,1}"
 		parseMethod="parseOutput"
 		>
 		<help>
@@ -98,7 +96,7 @@
 		args=""
 		class="java.lang.Boolean"
 		default="false"
-		countRange="{0,1}"
+		countRange="{1,1}"
 		parseMethod="parseRecursive"
 		>
 		<help>

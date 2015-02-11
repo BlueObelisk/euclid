@@ -38,7 +38,7 @@ public class QuickscrapeDirectoryTest {
 		// copy so we don't write back into test area
 		FileUtils.copyDirectory(Fixtures.TEST_PLOSONE_0115884_DIR, container0115884);
 		String[] args = {
-			"-f", container0115884.toString(),
+			"-q", container0115884.toString(),
 		};
 		DefaultArgProcessor argProcessor = new DefaultArgProcessor();
 		argProcessor.parseArgs(args);
