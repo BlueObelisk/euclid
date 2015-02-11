@@ -5,9 +5,8 @@
 		args="file(s)_and/or_url(s)"
 		class="java.lang.String"
 		default=""
-		min="1" 
-		max="Integer.MAX_VALUE"
-		methodName="parseInput"
+		countRange="{1,*}"
+		parseMethod="parseInput"
 		>
 		<help>
 			INPUT:
@@ -37,9 +36,8 @@
 		args="file(s)"
 		class="org.xmlcml.files.QuickscrapeDirectory"
 		default=""
-		min="1" 
-		max="Integer.MAX_VALUE"
-		methodName="parseQuickscrapeDirectory"
+		countRange="{1,*}"
+		parseMethod="parseQuickscrapeDirectory"
 		>
 		<help>
 			FILE_CONTAINER:
@@ -78,9 +76,8 @@
 		args="file_or_directory"
 		class="java.lang.String"
 		default=""
-		min="0" 
-		max="1"
-		methodName="parseOutput"
+		countRange="{0,1}"
+		parseMethod="parseOutput"
 		>
 		<help>
 			
@@ -101,9 +98,8 @@
 		args=""
 		class="java.lang.Boolean"
 		default="false"
-		min="0" 
-		max="1"
-		methodName="parseRecursive"
+		countRange="{0,1}"
+		parseMethod="parseRecursive"
 		>
 		<help>
 
@@ -122,9 +118,8 @@
 		args="ext1 [ext2...]"
 		class="java.lang.String"
 		default=""
-		min="1" 
-		max="Integer.MAX_VALUE"
-		methodName="parseExtensions"
+		countRange="{1,*}"
+		parseMethod="parseExtensions"
 		>
 		<help>
 			
@@ -142,9 +137,8 @@
 		args=" "
 		class="java.lang.String"
 		default=""
-		min="0" 
-		max="0"
-		methodName="printHelp"
+		countRange="{0,0}"
+		parseMethod="printHelp"
 		>
 		<help>
 			
