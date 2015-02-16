@@ -500,7 +500,7 @@ public class ArgumentOption {
 	@Override 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
- 		sb.append(brief+" or "+lng+"; countRange; "+parseMethod+"\n");
+ 		sb.append(brief+" or "+lng+"; "+countRange+"; "+parseMethod+"; ");
 		if (classType.equals(String.class)) {
 			sb.append("STRING: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
 		} else if (classType.equals(Integer.class)) {
@@ -544,10 +544,24 @@ public class ArgumentOption {
 				message = "Cannot have null values in "+lng;
 				break;
 			}
+			message = checkBooleanValue(s);
+			if (message != null) break;
 			message = checkNumericValue(s);
 			if (message != null) break;
 			message = checkPatternValue(s);
 			if (message != null) break;
+		}
+		return message;
+	}
+
+	private String checkBooleanValue(String s) {
+		String message = null;
+		if (classType != null && classType.isAssignableFrom(Boolean.class)) {
+			try {
+				new Boolean(s);
+			} catch (Exception e) {
+				message = "Argument for "+lng +" ("+s+") should be true or false";
+			}
 		}
 		return message;
 	}
@@ -560,20 +574,6 @@ public class ArgumentOption {
 		}
 		return message;
 	}
-
-//	private String checkEnumValue(String s) {
-//		String message = null;
-//		if (enums != null) {
-//			message = "arg ("+s+") in "+lng+" does not match allowed values "+enums;
-//			for (String enumx : enums) {
-//				if (enumx.equals(s)) {
-//					message = null;
-//					break;
-//				}
-//			}
-//		}
-//		return message;
-//	}
 
 	private String checkNumericValue(String s) {
 		String message = null;
