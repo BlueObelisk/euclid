@@ -13,7 +13,7 @@ import org.xmlcml.euclid.Euclid;
  * @author pm286
  *
  */
-public class EuclidUtil {
+public class EuclidSource {
 
 
 	public static final String DOI = "doi:";
