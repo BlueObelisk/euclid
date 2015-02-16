@@ -200,7 +200,7 @@ public class DefaultArgProcessor {
 
 	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
 		List<String> booleans = argIterator.createTokenListUpToNextMinus(divOption);
-		recursive = booleans.size() == 0 ? true : new Boolean(booleans.get(0));
+		recursive = /*booleans.size() == 0 ? true : */ new Boolean(booleans.get(0));
 	}
 
 	// =====================================
@@ -272,6 +272,7 @@ public class DefaultArgProcessor {
 		
 		String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
 		ArgIterator argIterator = new ArgIterator(totalArgs);
+		LOG.debug("args with defaults is: "+totalArgs);
 		boolean processed = false;
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
