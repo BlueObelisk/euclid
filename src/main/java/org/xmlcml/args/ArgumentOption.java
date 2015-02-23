@@ -2,6 +2,7 @@ package org.xmlcml.args;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,8 @@ public class ArgumentOption {
 	private static final String ARGS = "args";
 	private static final String CLASS_TYPE = "class";
 	private static final String DEFAULT = "default";
+	private static final String FORBIDDEN = "forbidden";
+	private static final String REQUIRED = "required";
 	private static final String COUNT_RANGE = "countRange";
 	private static final String VALUE_RANGE = "valueRange";
 	private static final String PARSE_METHOD = "parseMethod";
@@ -63,11 +66,12 @@ public class ArgumentOption {
 	static {
 		OPTIONAL_ATTRIBUTES = new HashMap<String, String>();
 		OPTIONAL_ATTRIBUTES.put(CLASS_TYPE, "java.lang.String");
+		OPTIONAL_ATTRIBUTES.put(DEFAULT, "");
 	}
 	
 	private String name;
 	private String brief;
-	private String lng;
+	private String verbose;
 	private String help;
 	private Class<?> classType;
 	private Object defalt;
@@ -77,6 +81,10 @@ public class ArgumentOption {
 	private String valueRangeString;
 	private String patternString = null;
 	private Pattern pattern = null;
+	private String forbiddenString = null;
+	private List<String> forbiddenArguments = null;
+	private String requiredString = null;
+	private List<String> requiredArguments = null;
 	
 	private List<String> defaultStrings;
 	private List<Integer> defaultIntegers;
@@ -124,6 +132,7 @@ public class ArgumentOption {
 			mandatorySet.remove(name);
 			optionalAttributes.put(name, null);
 		}
+		LOG.trace("B/D "+argumentOption.brief+"/"+argumentOption.defalt+" // "+argumentOption);
 		if (mandatorySet.size() > 0) {
 			throw new RuntimeException("The following attributes for "+argumentOption.name+" are mandatory: "+mandatorySet);
 		}
@@ -161,6 +170,10 @@ public class ArgumentOption {
 			this.setDefault(value);
 		} else if (COUNT_RANGE.equals(namex)) {
 			this.setCountRange(value);
+		} else if (FORBIDDEN.equals(namex)) {
+			this.setForbiddenString(value);
+		} else if (REQUIRED.equals(namex)) {
+			this.setRequiredString(value);
 		} else if (VALUE_RANGE.equals(namex)) {
 			this.setValueRange(value);
 		} else if (PARSE_METHOD.equals(namex)) {
@@ -240,12 +253,12 @@ public class ArgumentOption {
 		this.name = name;
 	}
 
-	public String getLong() {
-		return lng;
+	public String getVerbose() {
+		return verbose;
 	}
 
-	public void setLong(String lng) {
-		this.lng = lng;
+	public void setLong(String verbose) {
+		this.verbose = verbose;
 	}
 
 	public String getArgs() {
@@ -255,11 +268,13 @@ public class ArgumentOption {
 	public void setArgs(String args) {
 		this.args = args;
 	}
+	
+	
 
 	public String getHelp() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n"+brief);
-		sb.append(" or "+lng+" ");
+		sb.append(" or "+verbose+" ");
 	    if (args.trim().length() > 0) {
 	    	sb.append(" "+args);
 	    }
@@ -288,22 +303,6 @@ public class ArgumentOption {
 		this.defalt = defalt;
 	}
 
-//	public Integer getMinCount() {
-//		return minCount;
-//	}
-//
-//	public void setMinCount(Integer minCount) {
-//		this.minCount = minCount;
-//	}
-//
-//	public Integer getMaxCount() {
-//		return maxCount;
-//	}
-//
-//	public void setMaxCount(Integer maxCount) {
-//		this.maxCount = maxCount;
-//	}
-
 	public String getParseMethod() {
 		return parseMethod;
 	}
@@ -330,6 +329,23 @@ public class ArgumentOption {
 			Pattern pattern = Pattern.compile(patternString);
 		}
 	}
+	
+	private String getForbiddenString() {
+		return forbiddenString;
+	}
+
+	public String getRequiredString() {
+		return requiredString;
+	}
+
+	public void setRequiredString(String required) {
+		this.requiredString = required;
+	}
+
+	public void setForbiddenString(String forbidden) {
+		this.forbiddenString = forbidden;
+	}
+
 
 	public ArgumentOption processArgs(List<String> inputs) {
 		ensureDefaults();
@@ -420,7 +436,7 @@ public class ArgumentOption {
 				throw new RuntimeException("default should be of type Double");
 			}
 			// FIXME no defaults
-		} else if (classType.equals(Boolean.class) && defalt instanceof Boolean) {
+		} else if (classType.equals(Boolean.class) && defalt instanceof String) {
 			defaultBoolean = false;
 			try {
 				defaultBoolean = new Boolean(String.valueOf(defalt));
@@ -462,7 +478,7 @@ public class ArgumentOption {
 	}
 
 	public boolean matches(String arg) {
-		return (brief.equals(arg) || lng.equals(arg));
+		return (brief.equals(arg) || verbose.equals(arg));
 	}
 	
 	public List<Double> getDoubleValues() {
@@ -500,8 +516,10 @@ public class ArgumentOption {
 	@Override 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
- 		sb.append(brief+" or "+lng+"; "+countRange+"; "+parseMethod+"; ");
-		if (classType.equals(String.class)) {
+ 		sb.append(brief+" or "+verbose+"; "+countRange+"; "+parseMethod+"; ");
+		if (classType == null) {
+			sb.append("NULL CLASS: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
+		} else if (classType.equals(String.class)) {
 			sb.append("STRING: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
 		} else if (classType.equals(Integer.class)) {
 			sb.append("INTEGER: "+defaultInteger+" / "+defaultIntegers+"; "+integerValue+"; "+integerValues);
@@ -541,7 +559,7 @@ public class ArgumentOption {
 		String message = null;
 		for (String s : list) {
 			if (s == null) {
-				message = "Cannot have null values in "+lng;
+				message = "Cannot have null values in "+verbose;
 				break;
 			}
 			message = checkBooleanValue(s);
@@ -560,7 +578,7 @@ public class ArgumentOption {
 			try {
 				new Boolean(s);
 			} catch (Exception e) {
-				message = "Argument for "+lng +" ("+s+") should be true or false";
+				message = "Argument for "+verbose +" ("+s+") should be true or false";
 			}
 		}
 		return message;
@@ -570,7 +588,7 @@ public class ArgumentOption {
 		String message = null;
 		if (pattern != null) {
 			Matcher matcher = pattern.matcher(s);
-			message = "Argument for "+lng +" ("+s+") does not match "+pattern;
+			message = "Argument for "+verbose +" ("+s+") does not match "+pattern;
 		}
 		return message;
 	}
@@ -582,13 +600,76 @@ public class ArgumentOption {
 			try {
 				d = new Double(s);
 			} catch (NumberFormatException nfe) {
-				message = "Not a number: "+nfe+"; in "+lng;
+				message = "Not a number: "+nfe+"; in "+verbose;
 			}
 			if (!valueRange.includes(d)) {
 				message = "value: "+d+" incompatible with: "+valueRange;
 			}
 		}
 		return message;
+	}
+
+	public void processDependencies(List<ArgumentOption> argumentOptionList) {
+		processForbidden(argumentOptionList);
+		processRequired(argumentOptionList);
+	}
+
+	private void processRequired(List<ArgumentOption> argumentOptionList) {
+		this.getRequiredArguments();
+		if (requiredArguments != null) {
+			for (String requiredArgument : requiredArguments) {
+				LOG.debug(this.getVerbose()+" REQUIRED "+requiredArgument);
+				if (!argumentOccursInOptions(requiredArgument, argumentOptionList)) {
+					throw new RuntimeException("Cannot find required option: "+requiredArgument);
+				}
+			}
+		}
+	}
+
+	private static boolean argumentOccursInOptions(String requiredArgument, List<ArgumentOption> argumentOptionList) {
+		for (ArgumentOption argumentOption : argumentOptionList) {
+			String optionVerbose = argumentOption.getVerbose();
+			if (requiredArgument.equals(optionVerbose)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void processForbidden(List<ArgumentOption> argumentOptionList) {
+		for (ArgumentOption argumentOption : argumentOptionList) {
+			if (isForbidden(argumentOption)) {
+				throw new RuntimeException("Must not have both "+this.verbose+" and "+argumentOption.getVerbose());
+			}
+		}
+	}
+
+	private boolean isForbidden(ArgumentOption argumentOption) {
+		String argument = argumentOption.getVerbose();
+		if (argument != null) {
+			List<String> forbiddenArguments = this.getForbiddenArguments();
+			for (String forbiddenArgument : forbiddenArguments) {
+				if (argument.equals(forbiddenArgument)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private List<String> getForbiddenArguments() {
+		forbiddenArguments = getWhitespaceSeparatedArguments(this.getForbiddenString());
+		return forbiddenArguments;
+	}
+
+	private List<String> getRequiredArguments() {
+		requiredArguments = getWhitespaceSeparatedArguments(this.getRequiredString());
+		return requiredArguments;
+	}
+
+	private static List<String> getWhitespaceSeparatedArguments(String strings) {
+		return (strings == null) ? new ArrayList<String>() :
+			new ArrayList<String>(Arrays.asList(strings.split("\\s+")));
 	}
 
 }
