@@ -1,5 +1,6 @@
 package org.xmlcml.args;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 import nu.xom.Builder;
 import nu.xom.Element;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -26,7 +28,7 @@ public class DefaultArgProcessor {
 	}
 	
 	public static final String MINUS = "-";
-	public static final String[] DEFAULT_EXTENSIONS = {"html", "xml"};
+	public static final String[] DEFAULT_EXTENSIONS = {"html", "xml", "pdf"};
 	public final static String H = "-h";
 	public final static String HELP = "--help";
 	private static Pattern INTEGER_RANGE = Pattern.compile("(.*)\\{(\\d+),(\\d+)\\}(.*)");
@@ -162,7 +164,15 @@ public class DefaultArgProcessor {
 	// ============ METHODS ===============
 
 	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
-		setExtensions(argIterator.createTokenListUpToNextMinus(option));
+		List<String> extensions = argIterator.createTokenListUpToNextMinus(option);
+		if (areAllowedExtensions(extensions)) {
+			setExtensions(extensions);
+		}
+	}
+
+	private boolean areAllowedExtensions(List<String> extensions) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	public void parseQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
@@ -184,10 +194,9 @@ public class DefaultArgProcessor {
 			inputList = new ArrayList<String>();
 			LOG.error("Must give at least one input");
 		} else {
-			inputList = inputs;
-			LOG.debug("Inputs: "+inputList);
-			if (inputList.size() == 1) {
-				inputList = expandWildcards(inputs.get(0));
+			inputList = new ArrayList<String>();
+			for (String input : inputs) {
+				inputList.addAll(expandWildcards(input));
 			}
 		}
 	}
@@ -272,7 +281,7 @@ public class DefaultArgProcessor {
 		
 		String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
 		ArgIterator argIterator = new ArgIterator(totalArgs);
-		LOG.debug("args with defaults is: "+totalArgs);
+		LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
 		boolean processed = false;
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
@@ -282,10 +291,41 @@ public class DefaultArgProcessor {
 				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 			}
 		}
+		finalizeArgs();
 		return processed;
 	}
 
+	private void finalizeArgs() {
+		processArgumentDependencies();
+		finalizeInputList();
+	}
+
+	private void processArgumentDependencies() {
+		for (ArgumentOption argumentOption : chosenArgumentOptionList) {
+			argumentOption.processDependencies(chosenArgumentOptionList);
+		}
+	}
+
+	private void finalizeInputList() {
+		List<String> inputList0 = new ArrayList<String>();
+		ensureInputList();
+		for (String input : inputList) {
+			File file = new File(input);
+			if (file.isDirectory()) {
+				List<File> files = new ArrayList<File>(
+						FileUtils.listFiles(file, getExtensions().toArray(new String[0]), recursive));
+				for (File file0 : files) {
+					inputList0.add(file0.toString());
+				}
+			} else {
+				inputList0.add(input);
+			}
+		}
+		inputList = inputList0;
+	}
+
 	private String[] addDefaultsAndParsedArgs(String[] commandLineArgs) {
+		String[] defaultArgs = createDefaultArgumentStrings();
 		List<String> totalArgList = new ArrayList<String>(Arrays.asList(createDefaultArgumentStrings()));
 		List<String> commandArgList = Arrays.asList(commandLineArgs);
 		totalArgList.addAll(commandArgList);
@@ -296,16 +336,25 @@ public class DefaultArgProcessor {
 	private String[] createDefaultArgumentStrings() {
 		StringBuilder sb = new StringBuilder();
 		for (ArgumentOption option : argumentOptionList) {
-			String defalt = option.getDefault().toString();
+			String defalt = String.valueOf(option.getDefault());
+//			LOG.debug(option+" // "+defalt);
 			if (defalt != null && defalt.toString().trim().length() > 0) {
 				sb.append(option.getBrief()+" "+option.getDefault()+" ");
 			}
 		}
-		return sb.toString().trim().split("\\s+");
+		String s = sb.toString().trim();
+		return s.length() == 0 ? new String[0] : s.split("\\s+");
 	}
 
 	public List<String> getExtensions() {
+		ensureExtensionList();
 		return extensionList;
+	}
+
+	private void ensureExtensionList() {
+		if (extensionList == null) {
+			extensionList = new ArrayList<String>();
+		}
 	}
 
 	protected boolean runReflectedMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {

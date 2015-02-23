@@ -3,9 +3,9 @@
 		brief="-i"
 		long="--input"
 		args="file(s)_and/or_url(s)"
-		default=""
 		countRange="{1,*}"
 		parseMethod="parseInput"
+		forbidden="--quickscrapeDirectory"
 		>
 		<help>
 			INPUT:
@@ -34,9 +34,9 @@
 		long="--quickscrapeDirectory"
 		args="director(ies)"
 		class="org.xmlcml.files.QuickscrapeDirectory"
-		default=""
 		countRange="{1,*}"
 		parseMethod="parseQuickscrapeDirectory"
+		forbidden="--input --output"
 		>
 		<help>
 			FILE_CONTAINER:
@@ -73,7 +73,6 @@
 		brief="-o"
 		long="--output"
 		args="file_or_directory"
-		default=""
 		countRange="{1,1}"
 		parseMethod="parseOutput"
 		>
@@ -98,6 +97,7 @@
 		default="false"
 		countRange="{1,1}"
 		parseMethod="parseRecursive"
+		forbidden="--quickscrapeDirectory)"
 		>
 		<help>
 
@@ -115,7 +115,6 @@
 		long="--extensions"
 		args="ext1 [ext2...]"
 		class="java.lang.String"
-		default=""
 		countRange="{1,*}"
 		parseMethod="parseExtensions"
 		>
@@ -134,7 +133,6 @@
 		long="--help"
 		args=" "
 		class="java.lang.String"
-		default=""
 		countRange="{0,0}"
 		parseMethod="printHelp"
 		>
