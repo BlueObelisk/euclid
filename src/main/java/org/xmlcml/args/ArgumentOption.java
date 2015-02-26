@@ -65,8 +65,8 @@ public class ArgumentOption {
 	private static Map<String, String> OPTIONAL_ATTRIBUTES;
 	static {
 		OPTIONAL_ATTRIBUTES = new HashMap<String, String>();
-		OPTIONAL_ATTRIBUTES.put(CLASS_TYPE, "java.lang.String");
-		OPTIONAL_ATTRIBUTES.put(DEFAULT, "");
+		OPTIONAL_ATTRIBUTES.put(CLASS_TYPE, "java.lang.String"); // class defaults to String
+		OPTIONAL_ATTRIBUTES.put(DEFAULT, "");                    // default defaults to ""
 	}
 	
 	private String name;

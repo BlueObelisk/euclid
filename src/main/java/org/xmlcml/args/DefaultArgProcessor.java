@@ -16,7 +16,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.xmlcml.files.QuickscrapeDirectory;
+import org.xmlcml.files.QuickscrapeNorma;
+import org.xmlcml.files.QuickscrapeNormaList;
 import org.xmlcml.xml.XMLUtil;
 
 public class DefaultArgProcessor {
@@ -40,12 +41,13 @@ public class DefaultArgProcessor {
 	public static Pattern GENERAL_PATTERN = Pattern.compile("\\{([^\\}]*)\\}");
 	
 	protected String output;
-	protected List<String> extensionList = Arrays.asList(DEFAULT_EXTENSIONS);
+//	protected List<String> extensionList = Arrays.asList(DEFAULT_EXTENSIONS);
+	protected List<String> extensionList = null;
 	private boolean recursive = false;
 	protected List<String> inputList;
 	public List<ArgumentOption> argumentOptionList;
 	public List<ArgumentOption> chosenArgumentOptionList;
-	protected ArrayList<QuickscrapeDirectory> quickscrapeDirectoryList;
+	protected QuickscrapeNormaList quickscrapeNormaList;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -165,22 +167,19 @@ public class DefaultArgProcessor {
 
 	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
 		List<String> extensions = argIterator.createTokenListUpToNextMinus(option);
-		if (areAllowedExtensions(extensions)) {
-			setExtensions(extensions);
+		if (extensions.size() != 1) {
+			throw new RuntimeException("Currently requires exactly one extension, found: "+extensions);
 		}
+		setExtensions(extensions);
 	}
 
-	private boolean areAllowedExtensions(List<String> extensions) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	public void parseQuickscrapeDirectory(ArgumentOption option, ArgIterator argIterator) {
-		quickscrapeDirectoryList = new ArrayList<QuickscrapeDirectory>();
+	public void parseQuickscrapeNorma(ArgumentOption option, ArgIterator argIterator) {
+		quickscrapeNormaList = new QuickscrapeNormaList();
 		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus(option);
 		for (String qDirectoryName : qDirectoryNames) {
-			QuickscrapeDirectory quickscrapeDiectory = new QuickscrapeDirectory(qDirectoryName);
-			quickscrapeDirectoryList.add(quickscrapeDiectory);
+			QuickscrapeNorma quickscrapeNorma = new QuickscrapeNorma(qDirectoryName);
+			quickscrapeNormaList.add(quickscrapeNorma);
 		}
 	}
 
@@ -263,36 +262,34 @@ public class DefaultArgProcessor {
 		return recursive;
 	}
 
-	public List<QuickscrapeDirectory> getQuickscrapeDirectoryList() {
-		ensureQuickscrapeDirectoryList();
-		return quickscrapeDirectoryList;
+	public QuickscrapeNormaList getQuickscrapeNormaList() {
+		ensureQuickscrapeNormaList();
+		return quickscrapeNormaList;
 	}
 
-	private void ensureQuickscrapeDirectoryList() {
-		if (quickscrapeDirectoryList == null) {
-			quickscrapeDirectoryList = new ArrayList<QuickscrapeDirectory>();
+	protected void ensureQuickscrapeNormaList() {
+		if (quickscrapeNormaList == null) {
+			quickscrapeNormaList = new QuickscrapeNormaList();
 		}
 	}
 	
 
 	// --------------------------------
 	
-	public boolean parseArgs(String[] commandLineArgs) {
+	public void parseArgs(String[] commandLineArgs) {
 		
 		String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
 		ArgIterator argIterator = new ArgIterator(totalArgs);
 		LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
-		boolean processed = false;
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
 			try {
-				processed = runReflectedMethod(this.getClass(), argumentOptionList, argIterator, arg);
+				boolean processed = runReflectedMethod(this.getClass(), argumentOptionList, argIterator, arg);
 			} catch (Exception e) {
 				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 			}
 		}
 		finalizeArgs();
-		return processed;
 	}
 
 	private void finalizeArgs() {
@@ -312,16 +309,21 @@ public class DefaultArgProcessor {
 		for (String input : inputList) {
 			File file = new File(input);
 			if (file.isDirectory()) {
-				List<File> files = new ArrayList<File>(
-						FileUtils.listFiles(file, getExtensions().toArray(new String[0]), recursive));
-				for (File file0 : files) {
-					inputList0.add(file0.toString());
-				}
+				addDirectoryFiles(inputList0, file);
 			} else {
 				inputList0.add(input);
 			}
 		}
 		inputList = inputList0;
+	}
+
+	private void addDirectoryFiles(List<String> inputList0, File file) {
+		String[] extensions = getExtensions().toArray(new String[0]);
+		List<File> files = new ArrayList<File>(
+				FileUtils.listFiles(file, extensions, recursive));
+		for (File file0 : files) {
+			inputList0.add(file0.toString());
+		}
 	}
 
 	private String[] addDefaultsAndParsedArgs(String[] commandLineArgs) {
@@ -417,6 +419,17 @@ public class DefaultArgProcessor {
 			sb.append(argumentOption.toString()+"\n");
 		}
 		return sb.toString();
+	}
+
+	/** runs commands after assembling input.
+	 * 
+	 * normally called after parseArgs().
+	 * 
+	 * Override in subclasses
+	 * 
+	 */
+	public void run() {
+		LOG.error("Override run(); in subclasses");
 	}
 
 }

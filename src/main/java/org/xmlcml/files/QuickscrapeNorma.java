@@ -3,7 +3,12 @@ package org.xmlcml.files;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -20,7 +25,7 @@ import com.google.common.collect.Multimap;
 
 Note that the Catalog (from CottageLabs) primarily holds metadata. [It's possible to hold some of the HTML content, but it soon starts to degrade performance]. We therefore have metadata in the Catalog and contentFiles on disk. These files and Open and can, in principle, be used independently of the Catalog.
 
-I am designing a "QuickscrapeDirectory" which passes the bundle down the pipeline. This should be independent of what language [Python , JS, Java...] is used to create or read them. We believe that a normal filing system is satisfactory (at least at present while we develop the technology).
+I am designing a "QuickscrapeNorma" which passes the bundle down the pipeline. This should be independent of what language [Python , JS, Java...] is used to create or read them. We believe that a normal filing system is satisfactory (at least at present while we develop the technology).
 
 A typical pass for one DOI (e.g. journal.pone.0115884 ) through the pipeline (mandatory files are marked *, optional ?) might look like:
 
@@ -56,7 +61,7 @@ This container (directory) is then massed to Norma. Norma will normalize as much
 * conversion to Unicode (XML, HTML, and most "text" files)
 * normalization of characters (e.g. Angstrom -> Aring, smart quotes => "", superscript "o" to degrees, etc.)
 * creating well-formed HTML (often very hard)
-* converting PDF to SVG (very empricial and heuristic)
+* converting PDF to SVG (very empirical and heuristic)
 * converting SVG to running text.
 * building primitives (circles, squares, from the raw graphics)
 * building graphics objects (arrows, textboxes, flowcharts) from the primitives
@@ -79,7 +84,6 @@ At this stage we shall have structured XHTML files ("scholarly HTML") with linke
 AMI can further index or transform the ScholarlyHTML and associated files. An AMI plugin (e.g. AMI-species) will produce species.results.xml - a file with the named species in textual context. Similar outputs come from sequence, or other tagging (geotagging).
 
 The main community development will come from regexes. For example we have
-
 regex.crystal.results.xml, regex.farm.results.xml, regex.clinical_trials.results.xml, etc.
 
 The results file include the regexes used and other metadata (more needed!). Again we can update results.json. We may also wish to delete temporary files such as the *.svg in PDF2SVG....
@@ -88,39 +92,163 @@ The results file include the regexes used and other metadata (more needed!). Aga
  * @author pm286
  *
  */
-public class QuickscrapeDirectory {
+public class QuickscrapeNorma {
 
 
-	private static final Logger LOG = Logger.getLogger(QuickscrapeDirectory.class);
+
+	private static final Logger LOG = Logger.getLogger(QuickscrapeNorma.class);
 	static {
 		LOG.setLevel(Level.DEBUG);
 	}
 
-	public static final String RESULTS_JSON   = "results.json";
+	private static final String DOCX = "docx";
+	private static final String EPUB = "epub";
+	private static final String HTML = "html";
+	private static final String PDF = "pdf";
+	private static final String XML = "xml";
+
+	public static final String ABSTRACT_HTML  = "abstract.html";
 	public static final String FULLTEXT_DOCX  = "fulltext.docx";
 	public static final String FULLTEXT_HTML  = "fulltext.html";
 	public static final String FULLTEXT_PDF   = "fulltext.pdf";
 	public static final String FULLTEXT_XML   = "fulltext.xml";
-	public static final String ABSTRACT_HTML  = "abstract.html";
-	public static final String SCHOLARLY_HTML = "scholarly.html";
+	public static final String RESULTS_JSON   = "results.json";
 	public static final String RESULTS_XML   = "results.xml";
+	public static final String SCHOLARLY_HTML = "scholarly.html";
 
-	private List<File> fileList;
-	private File directory;
+	public final static List<String> RESERVED_FILE_NAMES;
+	static {
+			RESERVED_FILE_NAMES = Arrays.asList(new String[] {
+					ABSTRACT_HTML,
+					FULLTEXT_DOCX,
+					FULLTEXT_HTML,
+					FULLTEXT_PDF,
+					FULLTEXT_XML,
+					RESULTS_JSON,
+					RESULTS_XML,
+					SCHOLARLY_HTML
+			});
+	}
+	public static final String RESULTS_DIR  = "results/";
+	public static final String PDF_DIR  = "pdf/";
+
+	public final static List<String> RESERVED_DIR_NAMES;
+	static {
+			RESERVED_DIR_NAMES = Arrays.asList(new String[] {
+					RESULTS_DIR,
+					PDF_DIR,
+			});
+	}
 	
-	public QuickscrapeDirectory() {
+	public final static Map<String, String> RESERVED_FILES_BY_EXTENSION = new HashMap<String, String>();
+	static {
+		RESERVED_FILES_BY_EXTENSION.put(DOCX, FULLTEXT_DOCX);
+//		RESERVED_FILES_BY_EXTENSION.put(EPUB, FULLTEXT_EPUB);
+		RESERVED_FILES_BY_EXTENSION.put(HTML, FULLTEXT_HTML);
+		RESERVED_FILES_BY_EXTENSION.put(PDF, FULLTEXT_PDF);
+		RESERVED_FILES_BY_EXTENSION.put(XML, FULLTEXT_XML);
+	}
+	
+	public static boolean isReservedFilename(String name) {
+		return RESERVED_FILE_NAMES.contains(name);
+	}
+	
+	public static boolean isReservedDirectory(String name) {
+		return RESERVED_DIR_NAMES.contains(name);
+	}
+	
+//	private List<File> fileList;
+	private File directory;
+	private List<File> reservedFileList;
+	private List<File> nonReservedFileList;
+	private List<File> reservedDirList;
+	private List<File> nonReservedDirList;
+	
+	public QuickscrapeNorma() {
 		
 	}
 	
-	public QuickscrapeDirectory(File dir, boolean delete) {
-		this.createDirectory(dir, delete);
-		this.directory = dir;
+	/** creates QN object but does not alter filestore.
+	 * 
+	 * @param directory
+	 */
+	public QuickscrapeNorma(File directory) {
+		this.directory = directory;
 	}
 	
-	public QuickscrapeDirectory(String filename) {
-		this(new File(filename), false); // check whether deleting is good idea
+	/** ensures filestore matches a QuickscrapeNorma structure.
+	 * 
+	 * @param directory
+	 * @param delete
+	 */
+	public QuickscrapeNorma(File directory, boolean delete) {
+		this(directory);
+		this.createDirectory(directory, delete);
+	}
+	
+	public QuickscrapeNorma(String filename) {
+		this(new File(filename), false); 
 	}
 
+	public void ensureReservedFilenames() {
+		if (reservedFileList == null) {
+			reservedFileList = new ArrayList<File>();
+			nonReservedFileList = new ArrayList<File>();
+			reservedDirList = new ArrayList<File>();
+			nonReservedDirList = new ArrayList<File>();
+			List<File> files = new ArrayList<File>(FileUtils.listFiles(directory, null, false));
+			for (File file : files) {
+				if (file.isDirectory()) {
+					if (isReservedDirectory(FilenameUtils.getName(file.getAbsolutePath()))) {
+						reservedDirList.add(file);
+					} else {
+						nonReservedDirList.add(file);
+					}
+				} else {
+					if (isReservedFilename(FilenameUtils.getName(file.getAbsolutePath()))) {
+						reservedFileList.add(file);
+					} else {
+						nonReservedFileList.add(file);
+					}
+				}
+			}
+		}
+	}
+	
+	public List<File> getReservedDirectoryList() {
+		ensureReservedFilenames();
+		return reservedDirList;
+	}
+	
+	public List<File> getReservedFileList() {
+		ensureReservedFilenames();
+		return reservedFileList;
+	}
+	
+	public List<File> getNonReservedDirectoryList() {
+		ensureReservedFilenames();
+		return nonReservedDirList;
+	}
+	
+	public List<File> getNonReservedFileList() {
+		ensureReservedFilenames();
+		return nonReservedFileList;
+	}
+	
+	public static boolean containsNoReservedFilenames(File dir) {
+		if (dir != null && dir.isDirectory()) {
+			List<File> files = new ArrayList<File>(FileUtils.listFiles(dir, null, false));
+			for (File file : files) {
+				String name = FilenameUtils.getName(file.getAbsolutePath());
+				if (!isReservedFilename(name)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	
 	public void createDirectory(File dir, boolean delete) {
 		this.directory = dir;
 		if (dir == null) {
@@ -145,17 +273,17 @@ public class QuickscrapeDirectory {
 		Multimap<String, File> map = HashMultimap.create();
 		
 		requireDirectoryExists(dir);
-		fileList = new ArrayList<File>(FileUtils.listFiles(dir, null, false));
+//		fileList = new ArrayList<File>(FileUtils.listFiles(dir, null, false));
 		checkRequiredQuickscrapeFiles();
-		indexByFileExtensions();
+//		indexByFileExtensions();
 	}
 
-	private void indexByFileExtensions() {
-		for (File file : fileList) {
-			addFileToExtensionTable(file);
-			
-		}
-	}
+//	private void indexByFileExtensions() {
+//		for (File file : fileList) {
+//			addFileToExtensionTable(file);
+//			
+//		}
+//	}
 
 	private void addFileToExtensionTable(File file) {
 		String extension = FilenameUtils.getExtension(file.getName()).toLowerCase();
@@ -165,6 +293,7 @@ public class QuickscrapeDirectory {
 		requireExistingNonEmptyFile(new File(directory, RESULTS_JSON));
 	}
 
+	// ??
 	/*
 	private void checkMandatory(String testFilename) {
 		testFilename = FilenameUtils.separatorsToUnix(testFilename);
@@ -180,13 +309,14 @@ public class QuickscrapeDirectory {
 	}
 	*/
 
-	public List<File> getFileList() {
-		return fileList;
-	}
+//	public List<File> getFileList() {
+//		ensureReservedFilenames();
+//		return fileList;
+//	}
 
-	public void setFileList(List<File> fileList) {
-		this.fileList = fileList;
-	}
+//	public void setFileList(List<File> fileList) {
+//		this.fileList = fileList;
+//	}
 
 	private boolean hasExistingFile(File file) {
 		boolean ok = (file != null);
@@ -268,21 +398,21 @@ public class QuickscrapeDirectory {
 
 	@Override
 	public String toString() {
-		ensureFileList();
+		ensureReservedFilenames();
 		StringBuilder sb = new StringBuilder();
 		sb.append("dir: "+directory+"\n");
-		for (File file : fileList) {
+		for (File file : getReservedFileList()) {
 			sb.append(file.toString()+"\n");
 		}
 		return sb.toString();
 	}
 
-	private void ensureFileList() {
-		if (fileList == null) {
-			fileList = new ArrayList<File>();
-		}
-		
-	}
+//	private void ensureFileList() {
+//		if (fileList == null) {
+//			fileList = new ArrayList<File>();
+//		}
+//		
+//	}
 
 	public void writeFile(String content, String filename) {
 		File file = new File(directory, filename);
@@ -310,6 +440,27 @@ public class QuickscrapeDirectory {
 		resultsDir.mkdirs();
 		File directoryResultsFile = new File(resultsDir, RESULTS_XML);
 		FileUtils.writeStringToFile(directoryResultsFile, resultsXML);
+	}
+
+	public static String getQNFilename(String name) {
+		String filename = null;
+		String extension = FilenameUtils.getExtension(name);
+		if (extension.equals("")) {
+			// no type
+		} else if (PDF.equals(extension)) {
+			filename = FULLTEXT_PDF;
+		} else if (XML.equals(extension)) {
+			filename = FULLTEXT_XML;
+		} else if (HTML.equals(extension)) {
+			filename = FULLTEXT_HTML;
+		}
+		return filename;
+	}
+
+	public Element getMetadataElement() {
+		Element metadata = new Element("qsNorma");
+		metadata.appendChild(this.toString());
+		return metadata;
 	}
 
 	

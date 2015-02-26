@@ -5,7 +5,6 @@
 		args="file(s)_and/or_url(s)"
 		countRange="{1,*}"
 		parseMethod="parseInput"
-		forbidden="--quickscrapeDirectory"
 		>
 		<help>
 			INPUT:
@@ -29,13 +28,13 @@
 		</help>
 	</arg>	
 	
-	<arg name="quickscrapeDirectory" 
+	<arg name="quickscrapeNorma" 
 		brief="-q"
-		long="--quickscrapeDirectory"
+		long="--quickscrapeNorma"
 		args="director(ies)"
-		class="org.xmlcml.files.QuickscrapeDirectory"
+		class="org.xmlcml.files.QuickscrapeNorma"
 		countRange="{1,*}"
-		parseMethod="parseQuickscrapeDirectory"
+		parseMethod="parseQuickscrapeNorma"
 		forbidden="--input --output"
 		>
 		<help>
@@ -77,13 +76,11 @@
 		parseMethod="parseOutput"
 		>
 		<help>
-			
 			OUTPUT
 			 Output is to local filestore ATM. If there is only one input
 			after wildcard expansion then a filename can be given. Else the argument must be a writeable directory; Norma
 			will do her best to create filenames derived from the input names. Directory structures will not be preserved
 			See also --recursive and --extensions",
-
 		</help>
 	</arg>	
 			
@@ -97,16 +94,13 @@
 		default="false"
 		countRange="{1,1}"
 		parseMethod="parseRecursive"
-		forbidden="--quickscrapeDirectory)"
 		>
 		<help>
-
 			RECURSIVE
 			input directories
 			If the input is a directory then by default only the first level is searched
 			if the --recursive flag is set then all files in the directory tree may be input
 			See also --extensions
-			
 		</help>
 	</arg>	
 	
@@ -114,17 +108,14 @@
 		brief="-e"
 		long="--extensions"
 		args="ext1 [ext2...]"
-		class="java.lang.String"
 		countRange="{1,*}"
 		parseMethod="parseExtensions"
 		>
 		<help>
-			
 			EXTENSIONS
 				When a directory or directories are searched then all files are input by default
 				It is possible to limit the search by using only certain extensions
 				See also --recursive.
-			
 		</help>
 	</arg>
 		
@@ -132,12 +123,10 @@
 		brief="-h"
 		long="--help"
 		args=" "
-		class="java.lang.String"
 		countRange="{0,0}"
 		parseMethod="printHelp"
 		>
 		<help>
-			
 			HELP
 				outputs help for all options, including superclass DefaultArgProcessor
 		</help>
