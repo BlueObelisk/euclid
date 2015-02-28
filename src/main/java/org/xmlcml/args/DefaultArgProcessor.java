@@ -248,6 +248,10 @@ public class DefaultArgProcessor {
 		return inputList;
 	}
 
+	public String getSingleInput() {
+		ensureInputList();
+		return (inputList.size() != 1) ? null : inputList.get(0);
+	}
 	private void ensureInputList() {
 		if (inputList == null) {
 			inputList = new ArrayList<String>();
@@ -284,7 +288,7 @@ public class DefaultArgProcessor {
 		while (argIterator.hasNext()) {
 			String arg = argIterator.next();
 			try {
-				boolean processed = runReflectedMethod(this.getClass(), argumentOptionList, argIterator, arg);
+				runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
 			} catch (Exception e) {
 				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 			}
@@ -358,22 +362,34 @@ public class DefaultArgProcessor {
 			extensionList = new ArrayList<String>();
 		}
 	}
+	
+	public void runArgsOnQNList() {
+		for (ArgumentOption option : chosenArgumentOptionList) {
+			if (option.getRunMethodName() != null) {
+				try {
+					runRunMethod(option);
+				} catch (Exception e) {
+					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+				}
+			}
+		}
+	}
 
-	protected boolean runReflectedMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
+	protected void runParseMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
 		ensureChosenArgumentList();
 		boolean processed = false;
 		if (!arg.startsWith(MINUS)) {
 			LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
 		} else {
 			for (ArgumentOption option : optionList) {
-				Method method = null;
+				Method runMethod = null;
 				if (option.matches(arg)) {
 					try {
-						String parseMethod = option.getParseMethod();
-						if (parseMethod == null) {
-							throw new RuntimeException("arg: "+arg+" MUST have a methodName");
+						String parseMethodName = option.getParseMethod();
+						if (parseMethodName == null) {
+							throw new RuntimeException("arg: "+arg+" MUST have a parseMethod");
 						}
-						method = this.getClass().getMethod(parseMethod, option.getClass(), argIterator.getClass());
+						runMethod = this.getClass().getMethod(parseMethodName, option.getClass(), argIterator.getClass());
 					} catch (NoSuchMethodException nsme) {
 						LOG.debug("methods for "+this.getClass());
 						for (Method meth : thisClass.getDeclaredMethods()) {
@@ -381,8 +397,8 @@ public class DefaultArgProcessor {
 						}
 						throw new RuntimeException(option.getParseMethod()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 					}
-					method.setAccessible(true);
-					method.invoke(this, option, argIterator);
+					runMethod.setAccessible(true);
+					runMethod.invoke(this, option, argIterator);
 					processed = true;
 					chosenArgumentOptionList.add(option);
 					break;
@@ -392,7 +408,20 @@ public class DefaultArgProcessor {
 				LOG.error("Unknown arg: ("+arg+"), trying to recover");
 			}
 		}
-		return processed;
+	}
+
+	protected void runRunMethod(ArgumentOption option) throws Exception {
+		String runMethodName = option.getRunMethodName();
+		if (runMethodName != null) {
+			Method method = null;
+			try {
+				method = this.getClass().getMethod(runMethodName, option.getClass()); 
+			} catch (NoSuchMethodException nsme) {
+				throw new RuntimeException(runMethodName+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+			}
+			method.setAccessible(true);
+			method.invoke(this, option);
+		}
 	}
 
 	private void ensureChosenArgumentList() {

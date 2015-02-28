@@ -35,7 +35,6 @@
 		class="org.xmlcml.files.QuickscrapeNorma"
 		countRange="{1,*}"
 		parseMethod="parseQuickscrapeNorma"
-		forbidden="--input --output"
 		>
 		<help>
 			FILE_CONTAINER:
