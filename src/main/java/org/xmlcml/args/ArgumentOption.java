@@ -39,6 +39,7 @@ public class ArgumentOption {
 	private static final String COUNT_RANGE = "countRange";
 	private static final String VALUE_RANGE = "valueRange";
 	private static final String PARSE_METHOD = "parseMethod";
+	private static final String RUN_METHOD = "runMethod";
 	private static final String PATTERN = "pattern";
 	
 	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\d+),(\\d*|\\*)\\}");
@@ -106,7 +107,8 @@ public class ArgumentOption {
 	private String args;
 	private List<StringPair> stringPairValues;
 	
-	private String parseMethod;
+	private String runMethodName;
+	private String parseMethodName;
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
 	
 	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
@@ -178,6 +180,8 @@ public class ArgumentOption {
 			this.setValueRange(value);
 		} else if (PARSE_METHOD.equals(namex)) {
 			this.setParseMethod(value);
+		} else if (RUN_METHOD.equals(namex)) {
+			this.setRunMethod(value);
 		} else if (PATTERN.equals(namex)) {
 			this.setPatternString(value);
 		} else {
@@ -304,16 +308,32 @@ public class ArgumentOption {
 	}
 
 	public String getParseMethod() {
-		return parseMethod;
+		return parseMethodName;
 	}
 
-	public void setParseMethod(String parseMethod) {
-		if (parseMethod != null) {
+	public String getRunMethodName() {
+		return runMethodName;
+	}
+
+	public void setParseMethod(String parseMethodName) {
+		if (parseMethodName != null) {
 			try {
-				Method method = argProcessorClass.getMethod(parseMethod, ArgumentOption.class, ArgIterator.class);
-				this.parseMethod = parseMethod;
+				Method method = argProcessorClass.getMethod(parseMethodName, ArgumentOption.class, ArgIterator.class);
+				this.parseMethodName = parseMethodName;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+parseMethod+" - please mail", e);
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+parseMethodName+" - please mail", e);
+			}
+		}
+	}
+
+	public void setRunMethod(String runMethodName) {
+		if (runMethodName != null) {
+			try {
+				Method method = argProcessorClass.getMethod(runMethodName, ArgumentOption.class);
+				LOG.trace("RUN METHOD "+method);
+				this.runMethodName = runMethodName;
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+runMethodName+" - please mail", e);
 			}
 		}
 	}
@@ -516,7 +536,7 @@ public class ArgumentOption {
 	@Override 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
- 		sb.append(brief+" or "+verbose+"; "+countRange+"; "+parseMethod+"; ");
+ 		sb.append(brief+" or "+verbose+"; "+countRange+"; "+parseMethodName+"; ");
 		if (classType == null) {
 			sb.append("NULL CLASS: "+defaultString+" / "+defaultStrings+"; "+stringValue+"; "+stringValues);
 		} else if (classType.equals(String.class)) {
@@ -618,7 +638,7 @@ public class ArgumentOption {
 		this.getRequiredArguments();
 		if (requiredArguments != null) {
 			for (String requiredArgument : requiredArguments) {
-				LOG.debug(this.getVerbose()+" REQUIRED "+requiredArgument);
+				LOG.trace(this.getVerbose()+" REQUIRED "+requiredArgument);
 				if (!argumentOccursInOptions(requiredArgument, argumentOptionList)) {
 					throw new RuntimeException("Cannot find required option: "+requiredArgument);
 				}

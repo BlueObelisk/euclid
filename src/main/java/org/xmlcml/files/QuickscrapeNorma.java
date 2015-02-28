@@ -318,7 +318,7 @@ public class QuickscrapeNorma {
 //		this.fileList = fileList;
 //	}
 
-	private boolean hasExistingFile(File file) {
+	private static boolean hasExistingFile(File file) {
 		boolean ok = (file != null);
 		ok &= file.exists();
 		ok &= !file.isDirectory();
@@ -357,35 +357,62 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasFulltextXML() {
-		return hasExistingFile(getFulltextXML());
+		return hasExistingFile(getExistingFulltextXML());
 	}
 
-	public File getFulltextXML() {
-		return new File(directory, FULLTEXT_XML);
+	public File getExistingFulltextXML() {
+		return getExistingReservedFile(FULLTEXT_XML);
 	}
 
 	public boolean hasFulltextHTML() {
 		return hasExistingFile(new File(directory, FULLTEXT_HTML));
 	}
 	
-	public File getFulltextHTML() {
-		return new File(directory, FULLTEXT_HTML);
+	public File getExisitingFulltextHTML() {
+		return getExistingReservedFile(FULLTEXT_HTML);
+	}
+
+	public boolean hasResultsJSON() {
+		return hasExistingFile(new File(directory, RESULTS_JSON));
+	}
+	
+	public File getExistingResultsJSON() {
+		return getExistingReservedFile(RESULTS_JSON);
+	}
+
+	public boolean hasResultsXML() {
+		return hasExistingFile(new File(directory, RESULTS_XML));
+	}
+	
+	public File getExistingResultsXML() {
+		return getExistingReservedFile(RESULTS_XML);
 	}
 
 	public boolean hasScholarlyHTML() {
 		return hasExistingFile(new File(directory, SCHOLARLY_HTML));
 	}
 	
-	public File getScholarlyHTML() {
-		return new File(directory, SCHOLARLY_HTML);
+	public File getExistingScholarlyHTML() {
+		return getExistingReservedFile(SCHOLARLY_HTML);
 	}
 
 	public boolean hasFulltextPDF() {
 		return hasExistingFile(new File(directory, FULLTEXT_PDF));
 	}
 	
-	public File getFulltextPDF() {
-		return new File(directory, FULLTEXT_PDF);
+	public File getExisitingFulltextPDF() {
+		return getExistingReservedFile(FULLTEXT_PDF);
+	}
+
+	public File getReservedFile(String reservedName) {
+		
+		File file = !isReservedFilename(reservedName) ? null : new File(directory, reservedName);
+		return file;
+	}
+
+	public File getExistingReservedFile(String reservedName) {
+		File file = new File(directory, reservedName);
+		return hasExistingFile(file) ? file : null;
 	}
 
 	public boolean hasFulltextDOCX() {
@@ -442,7 +469,7 @@ public class QuickscrapeNorma {
 		FileUtils.writeStringToFile(directoryResultsFile, resultsXML);
 	}
 
-	public static String getQNFilename(String name) {
+	public static String getQNReservedFilenameForExtension(String name) {
 		String filename = null;
 		String extension = FilenameUtils.getExtension(name);
 		if (extension.equals("")) {
