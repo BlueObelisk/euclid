@@ -490,5 +490,10 @@ public class QuickscrapeNorma {
 		return metadata;
 	}
 
+	public static boolean isNonEmptyNonReservedInputList(List<String> inputList) {
+		return inputList != null &&
+			(inputList.size() != 1 ||
+			!QuickscrapeNorma.isReservedFilename(inputList.get(0)));
+	}
 	
 }
