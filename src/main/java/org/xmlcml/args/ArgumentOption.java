@@ -40,6 +40,7 @@ public class ArgumentOption {
 	private static final String VALUE_RANGE = "valueRange";
 	private static final String PARSE_METHOD = "parseMethod";
 	private static final String RUN_METHOD = "runMethod";
+	private static final String OUTPUT_METHOD = "outputMethod";
 	private static final String PATTERN = "pattern";
 	
 	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\d+),(\\d*|\\*)\\}");
@@ -107,8 +108,10 @@ public class ArgumentOption {
 	private String args;
 	private List<StringPair> stringPairValues;
 	
-	private String runMethodName;
 	private String parseMethodName;
+	private String runMethodName;
+	private String outputMethodName;
+	
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
 	
 	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
@@ -176,14 +179,16 @@ public class ArgumentOption {
 			this.setForbiddenString(value);
 		} else if (REQUIRED.equals(namex)) {
 			this.setRequiredString(value);
-		} else if (VALUE_RANGE.equals(namex)) {
-			this.setValueRange(value);
+		} else if (OUTPUT_METHOD.equals(namex)) {
+			this.setOutputMethod(value);
 		} else if (PARSE_METHOD.equals(namex)) {
 			this.setParseMethod(value);
-		} else if (RUN_METHOD.equals(namex)) {
-			this.setRunMethod(value);
 		} else if (PATTERN.equals(namex)) {
 			this.setPatternString(value);
+		} else if (RUN_METHOD.equals(namex)) {
+			this.setRunMethod(value);
+		} else if (VALUE_RANGE.equals(namex)) {
+			this.setValueRange(value);
 		} else {
 			throw new RuntimeException("Unknown attribute on <arg name='"+name+"'>: "+namex+"='"+value+"'");
 		}
@@ -311,19 +316,19 @@ public class ArgumentOption {
 		return parseMethodName;
 	}
 
-	public String getRunMethodName() {
-		return runMethodName;
-	}
-
 	public void setParseMethod(String parseMethodName) {
 		if (parseMethodName != null) {
 			try {
 				Method method = argProcessorClass.getMethod(parseMethodName, ArgumentOption.class, ArgIterator.class);
 				this.parseMethodName = parseMethodName;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+parseMethodName+" - please mail", e);
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+parseMethodName+" (edit ArgProcessor)", e);
 			}
 		}
+	}
+
+	public String getRunMethodName() {
+		return runMethodName;
 	}
 
 	public void setRunMethod(String runMethodName) {
@@ -333,7 +338,23 @@ public class ArgumentOption {
 				LOG.trace("RUN METHOD "+method);
 				this.runMethodName = runMethodName;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+runMethodName+" - please mail", e);
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+runMethodName+" (edit ArgProcessor)", e);
+			}
+		}
+	}
+
+	public String getOutputMethodName() {
+		return outputMethodName;
+	}
+
+	public void setOutputMethod(String outputMethodName) {
+		if (outputMethodName != null) {
+			try {
+				Method method = argProcessorClass.getMethod(outputMethodName, ArgumentOption.class);
+				LOG.trace("OUTPUT METHOD "+method);
+				this.outputMethodName = outputMethodName;
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+outputMethodName+" (edit ArgProcessor)", e);
 			}
 		}
 	}

@@ -48,6 +48,7 @@ public class DefaultArgProcessor {
 	public List<ArgumentOption> argumentOptionList;
 	public List<ArgumentOption> chosenArgumentOptionList;
 	protected QuickscrapeNormaList quickscrapeNormaList;
+	protected QuickscrapeNorma currentQuickscrapeNorma;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -62,7 +63,7 @@ public class DefaultArgProcessor {
 		try {
 			InputStream is = this.getClass().getResourceAsStream(resourceName);
 			if (is == null) {
-				throw new RuntimeException("Cannot read: "+resourceName);
+				throw new RuntimeException("Cannot read/find input resource stream: "+resourceName);
 			}
 			Element argElement = new Builder().build(is).getRootElement();
 			List<Element> elementList = XMLUtil.getQueryElements(argElement, "/*/*[local-name()='arg']");
@@ -363,9 +364,10 @@ public class DefaultArgProcessor {
 		}
 	}
 	
-	public void runArgsOnQNList() {
+	public void runRunMethodsOnChosenArgOptions() {
 		for (ArgumentOption option : chosenArgumentOptionList) {
-			if (option.getRunMethodName() != null) {
+			String runMethodName = option.getRunMethodName();
+			if (runMethodName != null) {
 				try {
 					runRunMethod(option);
 				} catch (Exception e) {
@@ -374,6 +376,21 @@ public class DefaultArgProcessor {
 			}
 		}
 	}
+	
+	public void runOutputMethodsOnChosenArgOptions() {
+		for (ArgumentOption option : chosenArgumentOptionList) {
+			String outputMethodName = option.getOutputMethodName();
+			if (outputMethodName != null) {
+				try {
+					runOutputMethod(option);
+				} catch (Exception e) {
+					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+				}
+			}
+		}
+	}
+
+
 
 	protected void runParseMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
 		ensureChosenArgumentList();
@@ -382,14 +399,14 @@ public class DefaultArgProcessor {
 			LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
 		} else {
 			for (ArgumentOption option : optionList) {
-				Method runMethod = null;
+				Method parseMethod = null;
 				if (option.matches(arg)) {
 					try {
 						String parseMethodName = option.getParseMethod();
 						if (parseMethodName == null) {
 							throw new RuntimeException("arg: "+arg+" MUST have a parseMethod");
 						}
-						runMethod = this.getClass().getMethod(parseMethodName, option.getClass(), argIterator.getClass());
+						parseMethod = this.getClass().getMethod(parseMethodName, option.getClass(), argIterator.getClass());
 					} catch (NoSuchMethodException nsme) {
 						LOG.debug("methods for "+this.getClass());
 						for (Method meth : thisClass.getDeclaredMethods()) {
@@ -397,8 +414,8 @@ public class DefaultArgProcessor {
 						}
 						throw new RuntimeException(option.getParseMethod()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 					}
-					runMethod.setAccessible(true);
-					runMethod.invoke(this, option, argIterator);
+					parseMethod.setAccessible(true);
+					parseMethod.invoke(this, option, argIterator);
 					processed = true;
 					chosenArgumentOptionList.add(option);
 					break;
@@ -413,14 +430,28 @@ public class DefaultArgProcessor {
 	protected void runRunMethod(ArgumentOption option) throws Exception {
 		String runMethodName = option.getRunMethodName();
 		if (runMethodName != null) {
-			Method method = null;
+			Method runMethod = null;
 			try {
-				method = this.getClass().getMethod(runMethodName, option.getClass()); 
+				runMethod = this.getClass().getMethod(runMethodName, option.getClass()); 
 			} catch (NoSuchMethodException nsme) {
 				throw new RuntimeException(runMethodName+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
 			}
-			method.setAccessible(true);
-			method.invoke(this, option);
+			runMethod.setAccessible(true);
+			runMethod.invoke(this, option);
+		}
+	}
+
+	protected void runOutputMethod(ArgumentOption option) throws Exception {
+		String outputMethodName = option.getOutputMethodName();
+		if (outputMethodName != null) {
+			Method outputMethod = null;
+			try {
+				outputMethod = this.getClass().getMethod(outputMethodName, option.getClass()); 
+			} catch (NoSuchMethodException nsme) {
+				throw new RuntimeException(outputMethodName+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+			}
+			outputMethod.setAccessible(true);
+			outputMethod.invoke(this, option);
 		}
 	}
 
@@ -450,15 +481,24 @@ public class DefaultArgProcessor {
 		return sb.toString();
 	}
 
-	/** runs commands after assembling input.
-	 * 
-	 * normally called after parseArgs().
-	 * 
-	 * Override in subclasses
-	 * 
-	 */
-	public void run() {
-		LOG.error("Override run(); in subclasses");
+	public void runAndOutput() {
+		ensureQuickscrapeNormaList();
+		for (int i = 0; i < quickscrapeNormaList.size(); i++) {
+			currentQuickscrapeNorma = quickscrapeNormaList.get(i);
+			runRunMethodsOnChosenArgOptions();
+			runOutputMethodsOnChosenArgOptions();
+		}
 	}
+
+//	/** runs commands after assembling input.
+//	 * 
+//	 * normally called after parseArgs().
+//	 * 
+//	 * Override in subclasses
+//	 * 
+//	 */
+//	public void run() {
+//		LOG.error("Override run(); in subclasses");
+//	}
 
 }
