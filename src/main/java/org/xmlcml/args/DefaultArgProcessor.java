@@ -291,6 +291,7 @@ public class DefaultArgProcessor {
 			try {
 				runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
 			} catch (Exception e) {
+				e.printStackTrace();
 				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 			}
 		}
@@ -371,6 +372,7 @@ public class DefaultArgProcessor {
 				try {
 					runRunMethod(option);
 				} catch (Exception e) {
+					e.printStackTrace();
 					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 				}
 			}
