@@ -1,6 +1,8 @@
 package org.xmlcml.files;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.xml.XMLUtil;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -444,7 +447,7 @@ public class QuickscrapeNorma {
 	public void writeFile(String content, String filename) {
 		File file = new File(directory, filename);
 		if (file.exists()) {
-			throw new RuntimeException("file already exists: "+file);
+			LOG.error("file already exists (overwritten) "+file);
 		}
 		try {
 			FileUtils.write(file, content);
@@ -462,11 +465,18 @@ public class QuickscrapeNorma {
 		return files;
 	}
 
-	public void writeResults(String resultsDirName, String resultsXML) throws Exception {
-		File resultsDir = new File(directory, resultsDirName);
-		resultsDir.mkdirs();
-		File directoryResultsFile = new File(resultsDir, RESULTS_XML);
-		FileUtils.writeStringToFile(directoryResultsFile, resultsXML);
+	public void writeResults(String resultsFileName, String resultsXML) throws Exception {
+		File resultsFile =new File(directory, resultsFileName);
+		FileUtils.writeStringToFile(resultsFile, resultsXML);
+	}
+
+	public void writeResults(String resultsFileName, Element resultsXML) {
+		File resultsFile = new File(directory, resultsFileName);
+		try {
+			XMLUtil.debug(resultsXML, new FileOutputStream(resultsFile), 1);
+		} catch (IOException e) {
+			throw new RuntimeException("cannot write XML ", e);
+		}
 	}
 
 	public static String getQNReservedFilenameForExtension(String name) {
@@ -495,5 +505,29 @@ public class QuickscrapeNorma {
 			(inputList.size() != 1 ||
 			!QuickscrapeNorma.isReservedFilename(inputList.get(0)));
 	}
-	
+
+	public void copyTo(File destDir, boolean overwrite) throws IOException {
+		if (destDir == null) {
+			throw new RuntimeException("Null destination file in copyTo()");
+		} else {
+			boolean canWrite = true;
+			if (destDir.exists()) {
+				if (overwrite) {
+					try {
+						FileUtils.forceDelete(destDir);
+					} catch (IOException e) {
+						LOG.error("cannot delete: "+destDir);
+						canWrite = false;
+					}
+				} else {
+					LOG.error("Cannot overwrite :"+destDir);
+					canWrite = false;
+				}
+			}
+			if (canWrite) {
+				FileUtils.copyDirectory(this.directory, destDir);
+			}
+		}
+	}
+
 }
