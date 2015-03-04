@@ -282,20 +282,23 @@ public class DefaultArgProcessor {
 	// --------------------------------
 	
 	public void parseArgs(String[] commandLineArgs) {
-		
-		String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
-		ArgIterator argIterator = new ArgIterator(totalArgs);
-		LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
-		while (argIterator.hasNext()) {
-			String arg = argIterator.next();
-			try {
-				runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+		if (commandLineArgs == null || commandLineArgs.length == 0) {
+			printHelp();
+		} else {
+			String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
+			ArgIterator argIterator = new ArgIterator(totalArgs);
+			LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
+			while (argIterator.hasNext()) {
+				String arg = argIterator.next();
+				try {
+					runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+				}
 			}
+			finalizeArgs();
 		}
-		finalizeArgs();
 	}
 
 	private void finalizeArgs() {
