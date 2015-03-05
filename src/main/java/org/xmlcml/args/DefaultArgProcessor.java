@@ -40,8 +40,25 @@ public class DefaultArgProcessor {
 	private static final Pattern INTEGER_RANGE_PATTERN = Pattern.compile("(\\d+):(\\d+)");
 	public static Pattern GENERAL_PATTERN = Pattern.compile("\\{([^\\}]*)\\}");
 	
+	/** creates a list of tokens that are found in an allowed list.
+	 * 
+	 * @param allowed
+	 * @param tokens
+	 * @return list of allowed tokens
+	 */
+	protected static List<String> getChosenList(List<String> allowed, List<String> tokens) {
+		List<String> chosenTokens = new ArrayList<String>();
+		for (String method : tokens) {
+			if (allowed.contains(method)) {
+				chosenTokens.add(method);
+			} else {
+				LOG.error("Unknown token: "+method);
+			}
+		}
+		return chosenTokens;
+	}
+
 	protected String output;
-//	protected List<String> extensionList = Arrays.asList(DEFAULT_EXTENSIONS);
 	protected List<String> extensionList = null;
 	private boolean recursive = false;
 	protected List<String> inputList;
@@ -290,6 +307,7 @@ public class DefaultArgProcessor {
 			LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
 			while (argIterator.hasNext()) {
 				String arg = argIterator.next();
+				LOG.trace("arg> "+arg);
 				try {
 					runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
 				} catch (Exception e) {
