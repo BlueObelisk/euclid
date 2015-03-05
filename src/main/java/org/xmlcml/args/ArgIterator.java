@@ -50,9 +50,9 @@ public class ArgIterator {
 	private void checkListSemantics(ArgumentOption argumentOption, List<String> list) {
 		String msg = null;
 		msg = argumentOption.checkArgumentCount(list);
-		if (msg != null) throw new IllegalArgumentException(msg);
+		if (msg != null) throw new IllegalArgumentException(argumentOption.getVerbose()+"; "+msg);
 		msg = argumentOption.checkArgumentValues(list);
-		if (msg != null) throw new IllegalArgumentException(msg);
+		if (msg != null) throw new IllegalArgumentException(argumentOption.getVerbose()+"; "+msg);
 	}
 
 

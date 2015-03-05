@@ -115,9 +115,14 @@ public class ArgumentOption {
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
 	
 	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
+		setDefaults();
 		this.argProcessorClass = argProcessorClass;
 	}
 	
+	private void setDefaults() {
+		brief = "";
+	}
+
 	/** factory method option for ArgumentOptions
 	 * 
 	 * @param argProcessor
