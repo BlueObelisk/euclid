@@ -465,18 +465,22 @@ public class QuickscrapeNorma {
 		return files;
 	}
 
-	public void writeResults(String resultsFileName, String resultsXML) throws Exception {
-		File resultsFile =new File(directory, resultsFileName);
-		FileUtils.writeStringToFile(resultsFile, resultsXML);
+	public void writeResults(String resultsFileName, String results) throws Exception {
+		File resultsFile = new File(directory, resultsFileName);
+		FileUtils.writeStringToFile(resultsFile, results);
 	}
 
-	public void writeResults(String resultsFileName, Element resultsXML) {
-		File resultsFile = new File(directory, resultsFileName);
+	public void writeResults(File resultsFile, Element resultsXML) {
+//		File resultsFile = new File(directory, resultsFileName);
 		try {
 			XMLUtil.debug(resultsXML, new FileOutputStream(resultsFile), 1);
 		} catch (IOException e) {
 			throw new RuntimeException("cannot write XML ", e);
 		}
+	}
+
+	public void writeResults(String resultsFileName, Element resultsXML) {
+		writeResults(new File(directory, resultsFileName), resultsXML);
 	}
 
 	public static String getQNReservedFilenameForExtension(String name) {
