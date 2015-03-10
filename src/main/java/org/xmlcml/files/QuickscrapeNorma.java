@@ -1,7 +1,6 @@
 package org.xmlcml.files;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -144,6 +143,7 @@ public class QuickscrapeNorma {
 	}
 	
 	public final static Map<String, String> RESERVED_FILES_BY_EXTENSION = new HashMap<String, String>();
+	private static final String RESULTS_DIRECTORY_NAME = "results";
 	static {
 		RESERVED_FILES_BY_EXTENSION.put(DOCX, FULLTEXT_DOCX);
 //		RESERVED_FILES_BY_EXTENSION.put(EPUB, FULLTEXT_EPUB);
@@ -532,6 +532,18 @@ public class QuickscrapeNorma {
 				FileUtils.copyDirectory(this.directory, destDir);
 			}
 		}
+	}
+
+	public void createResultsDirectoryAndOutputResultsElement(String title, ResultsElement resultsElement, String resultsDirectoryName) {
+		if (title == null) {
+			LOG.error("null title");
+			return;
+		}
+		File resultsDirectory = new File(getDirectory(), RESULTS_DIRECTORY_NAME);
+		File resultsSubDirectory = new File(resultsDirectory, title);
+		resultsSubDirectory.mkdirs();
+		File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
+		writeResults(resultsFile, resultsElement);
 	}
 
 }
