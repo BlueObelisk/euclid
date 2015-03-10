@@ -407,6 +407,7 @@ public class DefaultArgProcessor {
 				try {
 					runOutputMethod(option);
 				} catch (Exception e) {
+					e.printStackTrace();
 					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
 				}
 			}
