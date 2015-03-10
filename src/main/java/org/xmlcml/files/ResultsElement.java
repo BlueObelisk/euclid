@@ -3,9 +3,12 @@ package org.xmlcml.files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlcml.xml.XMLUtil;
-
+import nu.xom.Attribute;
 import nu.xom.Element;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.xmlcml.xml.XMLUtil;
 
 /** a container for ResultElement's.
  * 
@@ -15,11 +18,32 @@ import nu.xom.Element;
 
 public class ResultsElement extends Element {
 
+	
+	private static final Logger LOG = Logger.getLogger(ResultsElement.class);
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
+	
 	public static final String TAG = "results";
+	public static final String TITLE = "title";
 
 	public ResultsElement() {
 		super(TAG);
 	}
+
+	public ResultsElement(String title) {
+		this();
+		this.setTitle(title);
+	}
+
+	public void setTitle(String title) {
+		this.addAttribute(new Attribute(TITLE, title));
+	}
+
+	public String getTitle() {
+		return this.getAttributeValue(TITLE);
+	}
+	
 
 	/** transfers with detachment ResultElemen's in one ResultsElement to another.
 	 * 
@@ -41,6 +65,6 @@ public class ResultsElement extends Element {
 		}
 		return resultElementList;
 	}
-	
+
 	
 }
