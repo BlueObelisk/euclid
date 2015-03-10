@@ -1,6 +1,7 @@
 package org.xmlcml.args;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import nu.xom.Builder;
 import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -89,7 +92,7 @@ public class DefaultArgProcessor {
 				argumentOptionList.add(argOption);
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Cannot read args file "+resourceName, e);
+			throw new RuntimeException("Cannot read/process args file "+resourceName, e);
 		}
 	}
 	
@@ -195,9 +198,41 @@ public class DefaultArgProcessor {
 	public void parseQuickscrapeNorma(ArgumentOption option, ArgIterator argIterator) {
 		quickscrapeNormaList = new QuickscrapeNormaList();
 		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus(option);
+		createQuickscrapeNormaList(qDirectoryNames);
+		LOG.debug("QSNList "+quickscrapeNormaList.size());
+	}
+
+	private void createQuickscrapeNormaList(List<String> qDirectoryNames) {
+		FileFilter directoryFilter = new FileFilter() {
+			public boolean accept(File file) {
+				return file.isDirectory();
+			}
+		};
+
 		for (String qDirectoryName : qDirectoryNames) {
+			File qDirectory = new File(qDirectoryName);
+			if (!qDirectory.exists() || !qDirectory.isDirectory()) {
+				LOG.error("Not a directory: "+qDirectory.getAbsolutePath());
+				continue;
+			}
+			LOG.debug("DIR "+qDirectoryName);
 			QuickscrapeNorma quickscrapeNorma = new QuickscrapeNorma(qDirectoryName);
-			quickscrapeNormaList.add(quickscrapeNorma);
+			if (quickscrapeNorma.containsNoReservedFilenames()) {
+				LOG.debug("Not a QSN directory "+qDirectory.getAbsolutePath()+"; looking for child QSNs");
+				List<File> childFiles = new ArrayList<File>(Arrays.asList(qDirectory.listFiles(directoryFilter)));
+				LOG.debug(childFiles.size());
+				List<String> childFilenames = new ArrayList<String>();
+				for (File childFile : childFiles) {
+					if (childFile.isDirectory()) {
+						childFilenames.add(childFile.toString());
+					}
+				}
+				LOG.debug(childFilenames);
+				// recurse (no mixed directory structures)
+				createQuickscrapeNormaList(childFilenames);
+			} else {
+				quickscrapeNormaList.add(quickscrapeNorma);
+			}
 		}
 	}
 
@@ -366,13 +401,21 @@ public class DefaultArgProcessor {
 		StringBuilder sb = new StringBuilder();
 		for (ArgumentOption option : argumentOptionList) {
 			String defalt = String.valueOf(option.getDefault());
-//			LOG.debug(option+" // "+defalt);
 			if (defalt != null && defalt.toString().trim().length() > 0) {
-				sb.append(option.getBrief()+" "+option.getDefault()+" ");
+				String command = getBriefOrVerboseCommand(option);
+				sb.append(command+" "+option.getDefault()+" ");
 			}
 		}
 		String s = sb.toString().trim();
 		return s.length() == 0 ? new String[0] : s.split("\\s+");
+	}
+
+	private String getBriefOrVerboseCommand(ArgumentOption option) {
+		String command = option.getBrief();
+		if (command == null || command.trim().length() == 0) {
+			command = option.getVerbose();
+		}
+		return command;
 	}
 
 	public List<String> getExtensions() {
@@ -513,16 +556,5 @@ public class DefaultArgProcessor {
 			runOutputMethodsOnChosenArgOptions();
 		}
 	}
-
-//	/** runs commands after assembling input.
-//	 * 
-//	 * normally called after parseArgs().
-//	 * 
-//	 * Override in subclasses
-//	 * 
-//	 */
-//	public void run() {
-//		LOG.error("Override run(); in subclasses");
-//	}
 
 }

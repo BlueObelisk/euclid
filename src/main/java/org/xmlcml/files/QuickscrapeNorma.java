@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.args.ArgumentOption;
 import org.xmlcml.xml.XMLUtil;
 
 import com.google.common.collect.HashMultimap;
@@ -241,16 +242,24 @@ public class QuickscrapeNorma {
 	public static boolean containsNoReservedFilenames(File dir) {
 		if (dir != null && dir.isDirectory()) {
 			List<File> files = new ArrayList<File>(FileUtils.listFiles(dir, null, false));
+			int nonReserved = 0;
 			for (File file : files) {
-				String name = FilenameUtils.getName(file.getAbsolutePath());
-				if (!isReservedFilename(name)) {
-					return false;
+				if (!file.isHidden()) {
+					String name = FilenameUtils.getName(file.getAbsolutePath());
+					if (!isReservedFilename(name)) {
+						return false;
+					}
+					nonReserved++;
 				}
 			}
+			return nonReserved == 0;
 		}
-		return true;
+		return false;
 	}
 	
+	public boolean containsNoReservedFilenames() {
+		return QuickscrapeNorma.containsNoReservedFilenames(directory);
+	}
 	
 	public void createDirectory(File dir, boolean delete) {
 		this.directory = dir;
@@ -281,55 +290,15 @@ public class QuickscrapeNorma {
 //		indexByFileExtensions();
 	}
 
-//	private void indexByFileExtensions() {
-//		for (File file : fileList) {
-//			addFileToExtensionTable(file);
-//			
-//		}
-//	}
-
-	private void addFileToExtensionTable(File file) {
-		String extension = FilenameUtils.getExtension(file.getName()).toLowerCase();
-	}
-
 	private void checkRequiredQuickscrapeFiles() {
 		requireExistingNonEmptyFile(new File(directory, RESULTS_JSON));
 	}
-
-	// ??
-	/*
-	private void checkMandatory(String testFilename) {
-		testFilename = FilenameUtils.separatorsToUnix(testFilename);
-		testFilename = FilenameUtils.normalize(testFilename);
-		String testPath = FilenameUtils.getPath(testFilename);
-		String testBase = FilenameUtils.getBaseName(testFilename);
-		for (File file : fileList) {
-			String fname = FilenameUtils.separatorsToUnix(file.getName());
-			fname = FilenameUtils.normalize(fname);
-			String path = FilenameUtils.getPath(fname);
-			String base = FilenameUtils.getBaseName(testFilename);
-		}
-	}
-	*/
-
-//	public List<File> getFileList() {
-//		ensureReservedFilenames();
-//		return fileList;
-//	}
-
-//	public void setFileList(List<File> fileList) {
-//		this.fileList = fileList;
-//	}
 
 	private static boolean hasExistingFile(File file) {
 		boolean ok = (file != null);
 		ok &= file.exists();
 		ok &= !file.isDirectory();
 		return ok;
-	}
-
-	private boolean hasExistingSubDirectory(File subdir) {
-		return (subdir != null) && subdir.exists() && !subdir.isDirectory();
 	}
 
 	private void requireDirectoryExists(File dir) {
@@ -437,13 +406,6 @@ public class QuickscrapeNorma {
 		return sb.toString();
 	}
 
-//	private void ensureFileList() {
-//		if (fileList == null) {
-//			fileList = new ArrayList<File>();
-//		}
-//		
-//	}
-
 	public void writeFile(String content, String filename) {
 		File file = new File(directory, filename);
 		if (file.exists()) {
@@ -534,16 +496,47 @@ public class QuickscrapeNorma {
 		}
 	}
 
-	public void createResultsDirectoryAndOutputResultsElement(String title, ResultsElement resultsElement, String resultsDirectoryName) {
+	/** creates a subdirectory of results/ and writes each result file to its own directory.
+	 * 
+	 * Example:
+	 * 		qsnorma1_2_3/
+	 * 			results/
+	 * 				words/
+	 * 					frequencies/
+	 * 						results.xml
+	 * 					lengths/
+	 * 						results.xml
+	 * 
+	 * here the option is defined in an element in args.xml with name="words"
+	 * 
+	 * @param option 
+	 * @param resultsElementList
+	 * @param resultsDirectoryName
+	 */
+	public void createResultsDirectoryAndOutputResultsElement(
+			ArgumentOption option, List<ResultsElement> resultsElementList, String resultsDirectoryName) {
+		File optionDirectory = new File(getResultsDirectory(), option.getName());
+		for (ResultsElement resultsElement : resultsElementList) {
+			createResultsDirectoryAndOutputResultsElement(optionDirectory, resultsElement);
+		}
+	}
+
+	private void createResultsDirectoryAndOutputResultsElement(File optionDirectory, ResultsElement resultsElement) {
+		String title = resultsElement.getTitle();
 		if (title == null) {
 			LOG.error("null title");
-			return;
+		} else {
+			File resultsSubDirectory = new File(optionDirectory, title);
+			resultsSubDirectory.mkdirs();
+			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
+			writeResults(resultsFile, resultsElement);
+			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
 		}
+	}
+
+	private File getResultsDirectory() {
 		File resultsDirectory = new File(getDirectory(), RESULTS_DIRECTORY_NAME);
-		File resultsSubDirectory = new File(resultsDirectory, title);
-		resultsSubDirectory.mkdirs();
-		File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
-		writeResults(resultsFile, resultsElement);
+		return resultsDirectory;
 	}
 
 }
