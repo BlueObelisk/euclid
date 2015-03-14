@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-import nu.xom.Nodes;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -38,6 +37,7 @@ public class ArgumentOption {
 	private static final String REQUIRED = "required";
 	private static final String COUNT_RANGE = "countRange";
 	private static final String VALUE_RANGE = "valueRange";
+	private static final String FINAL_METHOD = "finalMethod";
 	private static final String PARSE_METHOD = "parseMethod";
 	private static final String RUN_METHOD = "runMethod";
 	private static final String OUTPUT_METHOD = "outputMethod";
@@ -111,6 +111,7 @@ public class ArgumentOption {
 	private String parseMethodName;
 	private String runMethodName;
 	private String outputMethodName;
+	private String finalMethodName;
 	
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
 	
@@ -184,6 +185,8 @@ public class ArgumentOption {
 			this.setForbiddenString(value);
 		} else if (REQUIRED.equals(namex)) {
 			this.setRequiredString(value);
+		} else if (FINAL_METHOD.equals(namex)) {
+			this.setFinalMethod(value);
 		} else if (OUTPUT_METHOD.equals(namex)) {
 			this.setOutputMethod(value);
 		} else if (PARSE_METHOD.equals(namex)) {
@@ -359,10 +362,27 @@ public class ArgumentOption {
 				LOG.trace("OUTPUT METHOD "+method);
 				this.outputMethodName = outputMethodName;
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Non-existent method "+argProcessorClass+"; "+outputMethodName+" (edit ArgProcessor)", e);
+				throw new RuntimeException("Non-existent outputMethod "+argProcessorClass+"; "+outputMethodName+" (edit ArgProcessor)", e);
 			}
 		}
 	}
+
+	public void setFinalMethod(String finalMethodName) {
+		if (finalMethodName != null) {
+			try {
+				Method method = argProcessorClass.getMethod(finalMethodName, ArgumentOption.class);
+				LOG.trace("FINAL METHOD "+method);
+				this.finalMethodName = finalMethodName;
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Non-existent finalMethod "+argProcessorClass+"; "+finalMethodName+" (edit ArgProcessor)", e);
+			}
+		}
+	}
+
+	public String getFinalMethodName() {
+		return finalMethodName;
+	}
+
 
 	public String getPatternString() {
 		return patternString;

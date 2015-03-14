@@ -118,6 +118,18 @@
 		</help>
 	</arg>
 		
+	<arg name="summaryfile"
+		long="--summaryfile"
+		args="summaryfile"
+		countRange="{1,1}"
+		parseMethod="parseSummaryFile"
+		>
+		<help>
+		SUMMARY FILE
+		Directory to write summaries to.
+		</help>
+	</arg>
+		
 	<arg name="help"
 		brief="-h"
 		long="--help"

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nu.xom.Document;
 import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
@@ -294,10 +295,17 @@ public class QuickscrapeNorma {
 		requireExistingNonEmptyFile(new File(directory, RESULTS_JSON));
 	}
 
-	private static boolean hasExistingFile(File file) {
+	public static boolean isExistingFile(File file) {
 		boolean ok = (file != null);
 		ok &= file.exists();
 		ok &= !file.isDirectory();
+		return ok;
+	}
+
+	public static boolean isExistingDirectory(File file) {
+		boolean ok = (file != null);
+		ok &= file.exists();
+		ok &= file.isDirectory();
 		return ok;
 	}
 
@@ -329,7 +337,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasFulltextXML() {
-		return hasExistingFile(getExistingFulltextXML());
+		return isExistingFile(getExistingFulltextXML());
 	}
 
 	public File getExistingFulltextXML() {
@@ -337,7 +345,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasFulltextHTML() {
-		return hasExistingFile(new File(directory, FULLTEXT_HTML));
+		return isExistingFile(new File(directory, FULLTEXT_HTML));
 	}
 	
 	public File getExisitingFulltextHTML() {
@@ -345,7 +353,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasResultsJSON() {
-		return hasExistingFile(new File(directory, RESULTS_JSON));
+		return isExistingFile(new File(directory, RESULTS_JSON));
 	}
 	
 	public File getExistingResultsJSON() {
@@ -353,7 +361,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasResultsXML() {
-		return hasExistingFile(new File(directory, RESULTS_XML));
+		return isExistingFile(new File(directory, RESULTS_XML));
 	}
 	
 	public File getExistingResultsXML() {
@@ -361,7 +369,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasScholarlyHTML() {
-		return hasExistingFile(new File(directory, SCHOLARLY_HTML));
+		return isExistingFile(new File(directory, SCHOLARLY_HTML));
 	}
 	
 	public File getExistingScholarlyHTML() {
@@ -369,7 +377,7 @@ public class QuickscrapeNorma {
 	}
 
 	public boolean hasFulltextPDF() {
-		return hasExistingFile(new File(directory, FULLTEXT_PDF));
+		return isExistingFile(new File(directory, FULLTEXT_PDF));
 	}
 	
 	public File getExisitingFulltextPDF() {
@@ -384,15 +392,19 @@ public class QuickscrapeNorma {
 
 	public File getExistingReservedFile(String reservedName) {
 		File file = new File(directory, reservedName);
-		return hasExistingFile(file) ? file : null;
+		return isExistingFile(file) ? file : null;
 	}
 
 	public boolean hasFulltextDOCX() {
-		return hasExistingFile(new File(directory, FULLTEXT_DOCX));
+		return isExistingFile(new File(directory, FULLTEXT_DOCX));
 	}
 	
 	public File getFulltextDOCX() {
 		return new File(directory, FULLTEXT_DOCX);
+	}
+
+	public File getExistingResultsDir() {
+		return new File(directory, RESULTS_DIR);
 	}
 
 	@Override
@@ -537,6 +549,25 @@ public class QuickscrapeNorma {
 	private File getResultsDirectory() {
 		File resultsDirectory = new File(getDirectory(), RESULTS_DIRECTORY_NAME);
 		return resultsDirectory;
+	}
+
+	public ResultsElement getResultsElement(String pluginName, String methodName) {
+		File resultsDir = getExistingResultsDir();
+		ResultsElement resultsElement = null;
+		if (QuickscrapeNorma.isExistingDirectory(resultsDir)) {
+			File pluginDir = new File(resultsDir, pluginName);
+			if (QuickscrapeNorma.isExistingDirectory(pluginDir)) {
+				File methodDir = new File(pluginDir, methodName);
+				if (QuickscrapeNorma.isExistingDirectory(methodDir)) {
+					File resultsXML = new File(methodDir, QuickscrapeNorma.RESULTS_XML);
+					if (QuickscrapeNorma.isExistingFile(resultsXML)) {
+						Document resultsDoc = XMLUtil.parseQuietlyToDocument(resultsXML);
+						resultsElement = ResultsElement.createResults(resultsDoc.getRootElement());
+					}
+				}
+			}
+		}
+		return resultsElement;
 	}
 
 }

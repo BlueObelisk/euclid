@@ -1,10 +1,13 @@
 package org.xmlcml.files;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Text;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -16,7 +19,7 @@ import org.xmlcml.xml.XMLUtil;
  *
  */
 
-public class ResultsElement extends Element {
+public class ResultsElement extends Element implements Iterable<ResultElement> {
 
 	
 	private static final Logger LOG = Logger.getLogger(ResultsElement.class);
@@ -26,6 +29,8 @@ public class ResultsElement extends Element {
 	
 	public static final String TAG = "results";
 	public static final String TITLE = "title";
+	
+	protected List<ResultElement> resultElementList;
 
 	public ResultsElement() {
 		super(TAG);
@@ -44,26 +49,66 @@ public class ResultsElement extends Element {
 		return this.getAttributeValue(TITLE);
 	}
 	
+	/** create ResultsElement from reading Element.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public static ResultsElement createResults(Element element) {
+		return (ResultsElement) createResults0(element);
+	}
+	
+	private static Element createResults0(Element element) {
+		Element newElement = null;
+		String tag = element.getLocalName();
+		if (ResultsElement.TAG.equals(tag)) {	
+			newElement = new ResultsElement();
+		} else if (ResultElement.TAG.equals(tag)) {	
+			newElement = new ResultElement();
+		} else {
+			LOG.error("Unknown element: "+tag);
+		}
+		XMLUtil.copyAttributes(element, newElement);
+		for (int i = 0; i < element.getChildCount(); i++) {
+			Node child = element.getChild(i);
+			if (child instanceof Text) {
+				child = child.copy();
+			} else {
+				child = ResultsElement.createResults0((Element)child);
+			}
+			if (newElement != null && child != null) {	
+				newElement.appendChild(child);
+			}
+		}
+		LOG.trace("XML :"+newElement.toXML());
+		return newElement;
+	}
 
 	/** transfers with detachment ResultElemen's in one ResultsElement to another.
 	 * 
 	 * @param subResultsElement source of ResultElement's
 	 */
 	public void transferResultElements(ResultsElement subResultsElement) {
-		List<ResultElement> subResults = subResultsElement.getResultElementList();
+		List<ResultElement> subResults = subResultsElement.getOrCreateResultElementList();
 		for (ResultElement subResult : subResults) {
 			subResult.detach();
 			this.appendChild(subResult);
 		}
 	}
 
-	private List<ResultElement> getResultElementList() {
-		List<ResultElement> resultElementList = new ArrayList<ResultElement>();
+	protected List<ResultElement> getOrCreateResultElementList() {
+		resultElementList = new ArrayList<ResultElement>();
 		List<Element> resultChildren = XMLUtil.getQueryElements(this, "./*[local-name()='"+ResultElement.TAG+"']");
 		for (Element resultElement : resultChildren) {
 			resultElementList.add((ResultElement) resultElement);
 		}
 		return resultElementList;
+	}
+
+	@Override
+	public Iterator<ResultElement> iterator() {
+		getOrCreateResultElementList();
+		return resultElementList.iterator();
 	}
 
 	
