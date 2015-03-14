@@ -16,8 +16,10 @@
 
 package org.xmlcml.euclid;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -230,6 +232,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
             this.setElementAt(i, ref.elementAt(j));
         }
     }
+    
     /**
      * clone.
      * 
@@ -243,6 +246,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
         temp.bufsize = nelem;
         return (Object) temp;
     }
+    
     /**
      * copy constructor.
      * 
@@ -1345,6 +1349,14 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
 	}
 	public Iterator<Integer> iterator() {
 		return (array == null || array.length < nelem) ? null : new IntegerIterator(array, nelem);
+	}
+	
+	public Set<Integer> createIntegerSet() {
+		Set<Integer> integerSet = new HashSet<Integer>();
+		for (int i = 0; i < array.length; i++) {
+			integerSet.add(array[i]);
+		}
+		return integerSet;
 	}
 }
 class IntegerIterator implements Iterator<Integer> {

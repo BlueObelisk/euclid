@@ -14,8 +14,6 @@ import nu.xom.Builder;
 import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FalseFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -41,6 +39,7 @@ public class DefaultArgProcessor {
 	private static String ARGS_RESOURCE = RESOURCE_NAME_TOP+"/"+"args.xml";
 	
 	private static final Pattern INTEGER_RANGE_PATTERN = Pattern.compile("(\\d+):(\\d+)");
+	protected static final String ARGS_XML = "args.xml";
 	public static Pattern GENERAL_PATTERN = Pattern.compile("\\{([^\\}]*)\\}");
 	
 	/** creates a list of tokens that are found in an allowed list.
@@ -69,6 +68,7 @@ public class DefaultArgProcessor {
 	public List<ArgumentOption> chosenArgumentOptionList;
 	protected QuickscrapeNormaList quickscrapeNormaList;
 	protected QuickscrapeNorma currentQuickscrapeNorma;
+	protected String summaryFileName;
 	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
@@ -199,7 +199,6 @@ public class DefaultArgProcessor {
 		quickscrapeNormaList = new QuickscrapeNormaList();
 		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus(option);
 		createQuickscrapeNormaList(qDirectoryNames);
-		LOG.debug("QSNList "+quickscrapeNormaList.size());
 	}
 
 	private void createQuickscrapeNormaList(List<String> qDirectoryNames) {
@@ -215,19 +214,16 @@ public class DefaultArgProcessor {
 				LOG.error("Not a directory: "+qDirectory.getAbsolutePath());
 				continue;
 			}
-			LOG.debug("DIR "+qDirectoryName);
 			QuickscrapeNorma quickscrapeNorma = new QuickscrapeNorma(qDirectoryName);
 			if (quickscrapeNorma.containsNoReservedFilenames()) {
-				LOG.debug("Not a QSN directory "+qDirectory.getAbsolutePath()+"; looking for child QSNs");
 				List<File> childFiles = new ArrayList<File>(Arrays.asList(qDirectory.listFiles(directoryFilter)));
-				LOG.debug(childFiles.size());
 				List<String> childFilenames = new ArrayList<String>();
 				for (File childFile : childFiles) {
 					if (childFile.isDirectory()) {
 						childFilenames.add(childFile.toString());
 					}
 				}
-				LOG.debug(childFilenames);
+				LOG.trace(childFilenames);
 				// recurse (no mixed directory structures)
 				createQuickscrapeNormaList(childFilenames);
 			} else {
@@ -262,6 +258,11 @@ public class DefaultArgProcessor {
 	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
 		List<String> booleans = argIterator.createTokenListUpToNextMinus(divOption);
 		recursive = /*booleans.size() == 0 ? true : */ new Boolean(booleans.get(0));
+	}
+
+	public void parseSummaryFile(ArgumentOption divOption, ArgIterator argIterator) {
+		List<String> tokens = argIterator.createTokenListUpToNextMinus(divOption);
+		summaryFileName = tokens.size() == 1 ? tokens.get(0) : null;
 	}
 
 	// =====================================
@@ -317,6 +318,10 @@ public class DefaultArgProcessor {
 
 	public boolean isRecursive() {
 		return recursive;
+	}
+
+	public String getSummaryFileName() {
+		return summaryFileName;
 	}
 
 	public QuickscrapeNormaList getQuickscrapeNormaList() {
@@ -457,6 +462,20 @@ public class DefaultArgProcessor {
 		}
 	}
 
+	public void runFinalMethodsOnChosenArgOptions() {
+		for (ArgumentOption option : chosenArgumentOptionList) {
+			String finalMethodName = option.getFinalMethodName();
+			if (finalMethodName != null) {
+				try {
+					runFinalMethod(option);
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+				}
+			}
+		}
+	}
+
 
 
 	protected void runParseMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
@@ -522,6 +541,20 @@ public class DefaultArgProcessor {
 		}
 	}
 
+	protected void runFinalMethod(ArgumentOption option) throws Exception {
+		String finalMethodName = option.getFinalMethodName();
+		if (finalMethodName != null) {
+			Method finalMethod = null;
+			try {
+				finalMethod = this.getClass().getMethod(finalMethodName, option.getClass()); 
+			} catch (NoSuchMethodException nsme) {
+				throw new RuntimeException(finalMethodName+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+			}
+			finalMethod.setAccessible(true);
+			finalMethod.invoke(this, option);
+		}
+	}
+
 	private void ensureChosenArgumentList() {
 		if (chosenArgumentOptionList == null) {
 			chosenArgumentOptionList = new ArrayList<ArgumentOption>();
@@ -555,6 +588,7 @@ public class DefaultArgProcessor {
 			runRunMethodsOnChosenArgOptions();
 			runOutputMethodsOnChosenArgOptions();
 		}
+		runFinalMethodsOnChosenArgOptions();
 	}
 
 }
