@@ -118,6 +118,7 @@ public class QuickscrapeNorma {
 	public static final String FULLTEXT_XML   = "fulltext.xml";
 	public static final String RESULTS_JSON   = "results.json";
 	public static final String RESULTS_XML   = "results.xml";
+	public static final String RESULTS_HTML   = "results.html";
 	public static final String SCHOLARLY_HTML = "scholarly.html";
 
 	public final static List<String> RESERVED_FILE_NAMES;
@@ -525,25 +526,31 @@ public class QuickscrapeNorma {
 	 * @param resultsElementList
 	 * @param resultsDirectoryName
 	 */
-	public void createResultsDirectoryAndOutputResultsElement(
+	public List<File> createResultsDirectoriesAndOutputResultsElement(
 			ArgumentOption option, List<ResultsElement> resultsElementList, String resultsDirectoryName) {
 		File optionDirectory = new File(getResultsDirectory(), option.getName());
+		List<File> outputDirectoryList = new ArrayList<File>();
 		for (ResultsElement resultsElement : resultsElementList) {
-			createResultsDirectoryAndOutputResultsElement(optionDirectory, resultsElement);
+			File outputDirectory = createResultsDirectoryAndOutputResultsElement(optionDirectory, resultsElement);
+			outputDirectoryList.add(outputDirectory);
 		}
+		return outputDirectoryList;
+		
 	}
 
-	private void createResultsDirectoryAndOutputResultsElement(File optionDirectory, ResultsElement resultsElement) {
+	private File createResultsDirectoryAndOutputResultsElement(File optionDirectory, ResultsElement resultsElement) {
+		File resultsSubDirectory = null;
 		String title = resultsElement.getTitle();
 		if (title == null) {
 			LOG.error("null title");
 		} else {
-			File resultsSubDirectory = new File(optionDirectory, title);
+			resultsSubDirectory = new File(optionDirectory, title);
 			resultsSubDirectory.mkdirs();
 			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
 			writeResults(resultsFile, resultsElement);
 			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
 		}
+		return resultsSubDirectory;
 	}
 
 	private File getResultsDirectory() {
