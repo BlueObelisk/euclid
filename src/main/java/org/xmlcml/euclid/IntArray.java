@@ -853,10 +853,11 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @return (minValue, maxValue)
      */
     public IntRange getRange() throws ArrayIndexOutOfBoundsException {
+        IntRange r = null;
         if (nelem == 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        IntRange r = new IntRange();
+        r = new IntRange();
         for (int i = 0; i < nelem; i++) {
             r.add(array[i]);
         }

@@ -1,4 +1,4 @@
-<argList>
+<argList name="defaults">
 	<arg name="input" 
 		brief="-i"
 		long="--input"
@@ -143,4 +143,3 @@
 		</help>
 	</arg>	
 </argList>
-			

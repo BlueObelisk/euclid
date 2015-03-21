@@ -1,0 +1,57 @@
+<argList name="sandpit">
+
+	<arg name="integer" 
+		long="--integer"
+		args="[integer]"
+		countRange="{1,1}"
+		valueRange="{3,7}"
+		class="java.lang.Integer"
+		parseMethod="parseInteger"
+		>
+		<help>
+		A single Integer with predefined value range
+		</help>
+	</arg>	
+	
+	<arg name="integerarray" 
+		long="--integerarray"
+		args="[integer] [integer...]"
+		countRange="{1,4}"
+		valueRange="{3,7}"
+		class="java.lang.Integer"
+		parseMethod="parseIntegerArray"
+		>
+		<help>
+		An array of integers with predefined count and value ranges
+		</help>
+	</arg>	
+	
+	<arg name="double" 
+		long="--double"
+		args="[double]"
+		countRange="{1,1}"
+		valueRange="{3.1,7.2}"
+		class="java.lang.Double"
+		parseMethod="parseDouble"
+		>
+		<help>
+		A single Double with predefined value range
+		</help>
+	</arg>	
+	
+	<arg name="doublearray" 
+		long="--doublearray"
+		args="[double] [double...]"
+		countRange="{1,4}"
+		valueRange="{3.1,7.2}"
+		class="java.lang.Double"
+		parseMethod="parseDoubleArray"
+		>
+		<help>
+		An array of doubles with predefined count and value ranges
+		</help>
+	</arg>	
+	
+	
+</argList>
+			

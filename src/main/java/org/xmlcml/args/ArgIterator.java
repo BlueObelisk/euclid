@@ -5,14 +5,33 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.xmlcml.euclid.IntArray;
+import org.xmlcml.euclid.IntRange;
+import org.xmlcml.euclid.RealArray;
+import org.xmlcml.euclid.RealRange;
+
 /** wraps ListIterator as this causes reflection problems.
+ * 
+ * Tokens of form -[digit]... are treated as numbers
+ * Tokens of form -[letter]... are treated as flags
  * 
  * @author pm286
  *
  */
 public class ArgIterator {
 
+	
+	private static final Logger LOG = Logger.getLogger(ArgIterator.class);
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
+	
+	private final static char MINUS = '-';
+	
 	private ListIterator<String> listIterator;
+	private RealArray doubleArray;
 	
 	public ArgIterator(ListIterator<String> listIterator) {
 		this.listIterator = listIterator;
@@ -36,13 +55,14 @@ public class ArgIterator {
 
 	/** read tokens until next - sign.
 	 * 
+	 * minus must be folloed by a letter, not a number
 	 * leave iterator ready to read next minus
 	 * 
 	 * @param argIterator
 	 * @return
 	 */
-	public List<String> createTokenListUpToNextMinus(ArgumentOption argumentOption) {
-		List<String> list = this.createTokenListUpToNextMinus();
+	public List<String> createTokenListUpToNextNonDigitMinus(ArgumentOption argumentOption) {
+		List<String> list = this.createTokenListUpToNextNonDigitMinus();
 		checkListSemantics(argumentOption, list);
 		return list;
 	}
@@ -63,11 +83,13 @@ public class ArgIterator {
 	 * @param argIterator
 	 * @return
 	 */
-	public List<String> createTokenListUpToNextMinus() {
+	public List<String> createTokenListUpToNextNonDigitMinus() {
 		List<String> list = new ArrayList<String>();
 		while (this.hasNext()) {
 			String next = this.next();
-			if (next.startsWith(DefaultArgProcessor.MINUS)) {
+			Character next1 = next.length() <= 1 ? null : next.charAt(1);
+			// flag is -letter... or --
+			if (next.charAt(0) == MINUS && (Character.isLetter(next1) || next1 == MINUS)) {
 				this.previous();
 				break;
 			}
@@ -75,5 +97,95 @@ public class ArgIterator {
 		}
 		return list;
 	}
+
+	// STRING
+	String getString(ArgumentOption option) {
+		List<String> tokens = createTokenListUpToNextNonDigitMinus(option);
+		if (tokens.size() != 1) {
+			throw new RuntimeException("Expected only 1 argument; found: "+tokens.size());
+		}
+		return tokens.get(0);
+	}
+
+	// BOOLEAN
+	public Boolean getBoolean(ArgumentOption option) {
+		Boolean bool = null;
+		String s = getString(option);
+		try {
+			bool = new Boolean(s);
+		} catch (Exception e) {
+			throw new RuntimeException("Cannot create a Boolean from: "+s);
+		}
+		return bool;
+	}
+	
+	// DOUBLE
+	public Double getDouble(ArgumentOption option) {
+		Double dubble = null;
+		String s = getString(option);
+		try {
+			dubble = new Double(s);
+		} catch (Exception e) {
+			throw new RuntimeException("Cannot create a Double from: "+s);
+		}
+		return dubble;
+	}
+
+	public RealRange getRealRange(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		RealRange realRange = null;
+		try {
+			realRange = new RealRange(new Double(tokens.get(0)), new Double(tokens.get(1)));
+		} catch (Exception e) {
+			throw new RuntimeException("need 2 arguments for double range: "+tokens);
+		}
+		return realRange;
+	}
+
+	public RealArray getDoubleArray(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		RealArray realArray = null;
+		try {
+			realArray = new RealArray(tokens.toArray(new String[0]));
+		} catch (Exception e) {
+			throw new RuntimeException("bad real array"+tokens, e);
+		}
+		return realArray;
+	}
+	
+	// INTEGER
+	public Integer getInteger(ArgumentOption option) {
+		Integer intg = null;
+		String s = getString(option);
+		try {
+			intg = new Integer(s);
+		} catch (Exception e) {
+			throw new RuntimeException("Cannot create an Integer from: "+s, e);
+		}
+		return intg;
+	}
+
+	public IntRange getIntRange(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		IntRange intRange = null;
+		try {
+			intRange = new IntRange((int)new Integer(tokens.get(0)), (int)new Integer(tokens.get(1)));
+		} catch (Exception e) {
+			throw new RuntimeException("need 2 arguments for integer range: "+tokens);
+		}
+		return intRange;
+	}
+
+	public IntArray getIntArray(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		IntArray intArray = null;
+		try {
+			intArray = new IntArray(tokens.toArray(new String[0]));
+		} catch (Exception e) {
+			throw new RuntimeException("bad integer array"+tokens, e);
+		}
+		return intArray;
+	}
+	
 
 }

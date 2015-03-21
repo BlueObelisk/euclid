@@ -70,6 +70,8 @@ public class DefaultArgProcessor {
 	protected QuickscrapeNorma currentQuickscrapeNorma;
 	protected String summaryFileName;
 	
+	
+	
 	protected List<ArgumentOption> getArgumentOptionList() {
 		return argumentOptionList;
 	}
@@ -86,6 +88,7 @@ public class DefaultArgProcessor {
 				throw new RuntimeException("Cannot read/find input resource stream: "+resourceName);
 			}
 			Element argElement = new Builder().build(is).getRootElement();
+			LOG.debug("XML"+argElement.toXML());
 			List<Element> elementList = XMLUtil.getQueryElements(argElement, "/*/*[local-name()='arg']");
 			for (Element element : elementList) {
 				ArgumentOption argOption = ArgumentOption.createOption(this.getClass(), element);
@@ -169,11 +172,11 @@ public class DefaultArgProcessor {
 		return newStringList;
 	}
 
-	protected void checkHasNext(ArgIterator argIterator) {
-		if (!argIterator.hasNext()) {
-			throw new RuntimeException("ran off end; expected more arguments");
-		}
-	}
+//	protected void checkHasNext(ArgIterator argIterator) {
+//		if (!argIterator.hasNext()) {
+//			throw new RuntimeException("ran off end; expected more arguments");
+//		}
+//	}
 
 	private void checkCanAssign(Object obj, Method method) {
 	    if (!method.getDeclaringClass().isAssignableFrom(obj.getClass())) {
@@ -187,20 +190,40 @@ public class DefaultArgProcessor {
 	// ============ METHODS ===============
 
 	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
-		List<String> extensions = argIterator.createTokenListUpToNextMinus(option);
-		if (extensions.size() != 1) {
-			throw new RuntimeException("Currently requires exactly one extension, found: "+extensions);
-		}
+		List<String> extensions = argIterator.createTokenListUpToNextNonDigitMinus(option);
 		setExtensions(extensions);
 	}
 
 
 	public void parseQuickscrapeNorma(ArgumentOption option, ArgIterator argIterator) {
-		quickscrapeNormaList = new QuickscrapeNormaList();
-		List<String> qDirectoryNames = argIterator.createTokenListUpToNextMinus(option);
+		List<String> qDirectoryNames = argIterator.createTokenListUpToNextNonDigitMinus(option);
 		createQuickscrapeNormaList(qDirectoryNames);
 	}
 
+	public void printHelp(ArgumentOption option, ArgIterator argIterator) {
+		printHelp();
+	}
+
+	public void parseInput(ArgumentOption option, ArgIterator argIterator) {
+		List<String> inputs = argIterator.createTokenListUpToNextNonDigitMinus(option);
+		inputList = expandAllWildcards(inputs);
+	}
+
+
+	public void parseOutput(ArgumentOption option, ArgIterator argIterator) {
+		output = argIterator.getString(option);
+	}
+
+	public void parseRecursive(ArgumentOption option, ArgIterator argIterator) {
+		recursive = argIterator.getBoolean(option);
+	}
+
+	public void parseSummaryFile(ArgumentOption option, ArgIterator argIterator) {
+		summaryFileName = argIterator.getString(option);
+	}
+
+	// =====================================
+	
 	private void createQuickscrapeNormaList(List<String> qDirectoryNames) {
 		FileFilter directoryFilter = new FileFilter() {
 			public boolean accept(File file) {
@@ -208,6 +231,7 @@ public class DefaultArgProcessor {
 			}
 		};
 
+		quickscrapeNormaList = new QuickscrapeNormaList();
 		for (String qDirectoryName : qDirectoryNames) {
 			File qDirectory = new File(qDirectoryName);
 			if (!qDirectory.exists() || !qDirectory.isDirectory()) {
@@ -232,40 +256,14 @@ public class DefaultArgProcessor {
 		}
 	}
 
-	public void printHelp(ArgumentOption divOption, ArgIterator argIterator) {
-		printHelp();
-	}
 
-	public void parseInput(ArgumentOption option, ArgIterator argIterator) {
-		List<String> inputs = argIterator.createTokenListUpToNextMinus(option);
-		if (inputs.size() == 0) {
-			inputList = new ArrayList<String>();
-			LOG.error("Must give at least one input");
-		} else {
-			inputList = new ArrayList<String>();
-			for (String input : inputs) {
-				inputList.addAll(expandWildcards(input));
-			}
+	private List<String> expandAllWildcards(List<String> inputs) {
+		inputList = new ArrayList<String>();
+		for (String input : inputs) {
+			inputList.addAll(expandWildcards(input));
 		}
+		return inputList;
 	}
-	
-
-	public void parseOutput(ArgumentOption divOption, ArgIterator argIterator) {
-		checkHasNext(argIterator);
-		output = argIterator.next();
-	}
-
-	public void parseRecursive(ArgumentOption divOption, ArgIterator argIterator) {
-		List<String> booleans = argIterator.createTokenListUpToNextMinus(divOption);
-		recursive = /*booleans.size() == 0 ? true : */ new Boolean(booleans.get(0));
-	}
-
-	public void parseSummaryFile(ArgumentOption divOption, ArgIterator argIterator) {
-		List<String> tokens = argIterator.createTokenListUpToNextMinus(divOption);
-		summaryFileName = tokens.size() == 1 ? tokens.get(0) : null;
-	}
-
-	// =====================================
 	
 	/** expand expressions/wildcards in input.
 	 * 
@@ -351,8 +349,7 @@ public class DefaultArgProcessor {
 				try {
 					runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
 				} catch (Exception e) {
-					e.printStackTrace();
-					throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+					throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")", e);
 				}
 			}
 			finalizeArgs();
@@ -463,6 +460,7 @@ public class DefaultArgProcessor {
 	}
 
 	public void runFinalMethodsOnChosenArgOptions() {
+		ensureChosenArgumentList();
 		for (ArgumentOption option : chosenArgumentOptionList) {
 			String finalMethodName = option.getFinalMethodName();
 			if (finalMethodName != null) {

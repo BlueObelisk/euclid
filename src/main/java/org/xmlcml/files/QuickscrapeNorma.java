@@ -163,7 +163,6 @@ public class QuickscrapeNorma {
 		return RESERVED_DIR_NAMES.contains(name);
 	}
 	
-//	private List<File> fileList;
 	private File directory;
 	private List<File> reservedFileList;
 	private List<File> nonReservedFileList;
@@ -244,17 +243,17 @@ public class QuickscrapeNorma {
 	public static boolean containsNoReservedFilenames(File dir) {
 		if (dir != null && dir.isDirectory()) {
 			List<File> files = new ArrayList<File>(FileUtils.listFiles(dir, null, false));
-			int nonReserved = 0;
+//			int nonReserved = 0;
 			for (File file : files) {
 				if (!file.isHidden()) {
 					String name = FilenameUtils.getName(file.getAbsolutePath());
-					if (!isReservedFilename(name)) {
+					if (isReservedFilename(name)) {
 						return false;
 					}
-					nonReserved++;
+//					nonReserved++;
 				}
 			}
-			return nonReserved == 0;
+			return true;
 		}
 		return false;
 	}

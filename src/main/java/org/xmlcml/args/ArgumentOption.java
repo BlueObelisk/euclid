@@ -43,8 +43,8 @@ public class ArgumentOption {
 	private static final String OUTPUT_METHOD = "outputMethod";
 	private static final String PATTERN = "pattern";
 	
-	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\d+),(\\d*|\\*)\\}");
-	private static final Pattern DOUBLE_RANGE = Pattern.compile("\\{(\\-?\\+?\\d+(\\.\\d*)?),(\\-?\\+?\\d+(\\.\\d*)?)\\}");
+	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\*|\\-?\\d+),(\\-?\\d*|\\*)\\}");
+	private static final Pattern DOUBLE_RANGE = Pattern.compile("\\{(\\-?\\+?\\d+\\.?\\d*|\\*),(\\-?\\+?\\d+\\.?\\d*|\\*)\\}");
 
 	private static final Logger LOG = Logger.getLogger(ArgumentOption.class);
 	static {
@@ -79,7 +79,8 @@ public class ArgumentOption {
 	private Object defalt;
 	private IntRange countRange;
 	private String countRangeString;
-	private RealRange valueRange = null;
+	private IntRange intValueRange = null;
+	private RealRange realValueRange = null;
 	private String valueRangeString;
 	private String patternString = null;
 	private Pattern pattern = null;
@@ -135,14 +136,10 @@ public class ArgumentOption {
 		ArgumentOption argumentOption = new ArgumentOption(argProcessor);
 		Set<String> mandatorySet = new HashSet<String>(MANDATORY_ATTRIBUTES);
 		Map<String, String> optionalAttributes = new HashMap<String, String>(OPTIONAL_ATTRIBUTES);
-		for (int i = 0; i < element.getAttributeCount(); i++) {
-			Attribute attribute = element.getAttribute(i);
-			String name = attribute.getLocalName();
-			String value = attribute.getValue();
-			argumentOption.setValue(name, value);
-			mandatorySet.remove(name);
-			optionalAttributes.put(name, null);
-		}
+		// get class first because so much else depends
+		String classType = element.getAttributeValue(CLASS_TYPE);
+		argumentOption.setClassType(classType);
+		lookForKnownAttributes(element, argumentOption, mandatorySet, optionalAttributes);
 		LOG.trace("B/D "+argumentOption.brief+"/"+argumentOption.defalt+" // "+argumentOption);
 		if (mandatorySet.size() > 0) {
 			throw new RuntimeException("The following attributes for "+argumentOption.name+" are mandatory: "+mandatorySet);
@@ -162,6 +159,19 @@ public class ArgumentOption {
 			argumentOption.setHelp(helpNodes.get(0).getValue());
 		}
 		return argumentOption;
+	}
+
+	private static void lookForKnownAttributes(Element element,
+			ArgumentOption argumentOption, Set<String> mandatorySet,
+			Map<String, String> optionalAttributes) {
+		for (int i = 0; i < element.getAttributeCount(); i++) {
+			Attribute attribute = element.getAttribute(i);
+			String name = attribute.getLocalName();
+			String value = attribute.getValue();
+			argumentOption.setValue(name, value);
+			mandatorySet.remove(name);
+			optionalAttributes.put(name, null);
+		}
 	}
 
 	private void setValue(String namex, String value) {
@@ -215,15 +225,39 @@ public class ArgumentOption {
 
 	private void setValueRange(String value) {
 		valueRangeString = value;
-		setValueRange(createDoubleRange(valueRangeString));
+		if (Integer.class.equals(classType)) {
+			setValueRange(createIntRange(valueRangeString));
+		} else if (Double.class.equals(classType)) {
+			setValueRange(createDoubleRange(valueRangeString));
+		} else {
+			throw new RuntimeException("Must give class if using valueRanges: "+classType);
+		}
 	}
 
 	private void setValueRange(RealRange realRange) {
-		this.valueRange = realRange;
+		this.realValueRange = realRange;
 	}
 
-	private RealRange createDoubleRange(String valueRangeString2) {
-		return RealRange.createRange(valueRangeString);
+	private void setValueRange(IntRange intRange) {
+		this.intValueRange = intRange;
+	}
+
+	private RealRange createDoubleRange(String valueRangeString) {
+		RealRange realRange = null;
+		Matcher matcher = DOUBLE_RANGE.matcher(valueRangeString);
+		if (matcher.matches()) {
+			String min = matcher.group(1);
+			double minReal = (min.equals("*")) ? -1 * Double.MAX_VALUE : new Double(min);
+			String max = matcher.group(2);
+			double maxReal = (max.equals("*")) ? Double.MAX_VALUE : new Double(max);
+			if (minReal > maxReal) {
+				throw new RuntimeException("Minimum ("+minReal+")must be less-than/equals: "+maxReal+" in :"+valueRangeString);
+			}
+			realRange = new RealRange(minReal, maxReal);
+		} else {
+			throw new RuntimeException("count range must be of form {min,max}; was "+valueRangeString);
+		}
+		return realRange;
 	}
 
 	private IntRange createIntRange(String ss) {
@@ -231,11 +265,11 @@ public class ArgumentOption {
 		Matcher matcher = INT_RANGE.matcher(ss);
 		if (matcher.matches()) {
 			String min = matcher.group(1);
-			int minInt = new Integer(min);
+			int minInt = (min.equals("*")) ? -1*Integer.MAX_VALUE : new Integer(min);
 			String max = matcher.group(2);
 			int maxInt = (max.equals("*")) ? Integer.MAX_VALUE : new Integer(max);
 			if (minInt > maxInt) {
-				throw new RuntimeException("Minimum must be less-than/equals: "+ss);
+				throw new RuntimeException("Minimum ("+min+") must be less-than/equals max ("+max+") in "+ss);
 			}
 			intRange = new IntRange(minInt, maxInt);
 		} else {
@@ -251,6 +285,8 @@ public class ArgumentOption {
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException("Cannot create class for: "+className);
 			}
+		} else {
+			classType = java.lang.String.class;
 		}
 	}
 
@@ -437,7 +473,7 @@ public class ArgumentOption {
 			}
 			doubleValue = (doubleValues.size() == 0) ? defaultDouble : doubleValues.get(0);
 			for (Number number : doubleValues) {
-				if (!valueRange.includes((double)number)) {
+				if (!realValueRange.includes((double)number)) {
 					throw new RuntimeException("bad numeric value: "+number+" should conform to "+valueRangeString);
 				}
 			}
@@ -450,7 +486,7 @@ public class ArgumentOption {
 			}
 			integerValue = (integerValues.size() == 0) ? defaultInteger : integerValues.get(0);
 			for (Number number : integerValues) {
-				if (!valueRange.includes((double)number)) {
+				if (!realValueRange.includes((double)number)) {
 					throw new RuntimeException("bad numeric value: "+number+" should conform to "+valueRangeString);
 				}
 			}
@@ -652,25 +688,56 @@ public class ArgumentOption {
 
 	private String checkPatternValue(String s) {
 		String message = null;
-		if (pattern != null) {
-			Matcher matcher = pattern.matcher(s);
-			message = "Argument for "+verbose +" ("+s+") does not match "+pattern;
+		if (classType != null && classType.isAssignableFrom(String.class)) {
+			if (pattern != null) {
+				Matcher matcher = pattern.matcher(s);
+				message = "Argument for "+verbose +" ("+s+") does not match "+pattern;
+			}
 		}
 		return message;
 	}
 
 	private String checkNumericValue(String s) {
 		String message = null;
+		if (classType == null) {
+			throw new RuntimeException("null classType");
+		} else if (Double.class.isAssignableFrom(classType)) {
+			message = checkDouble(s, message);
+		} else if (Integer.class.isAssignableFrom(classType)) {
+			message = checkInteger(s, message);
+		}
+		
+		return message;
+	}
+
+	private String checkDouble(String s, String message) {
 		Double d = null;
-		if (classType != null && classType.isAssignableFrom(Number.class)) {
-			try {
-				d = new Double(s);
-			} catch (NumberFormatException nfe) {
-				message = "Not a number: "+nfe+"; in "+verbose;
-			}
-			if (!valueRange.includes(d)) {
-				message = "value: "+d+" incompatible with: "+valueRange;
-			}
+		try {
+			d = new Double(s);
+		} catch (NumberFormatException nfe) {
+			message = "Not a number: "+nfe+"; in "+verbose;
+		}
+		if (realValueRange == null) {
+			LOG.error("No value range");
+		}
+		if (d == null || !realValueRange.includes(d)) {
+			message = "value: "+s+" incompatible with: "+realValueRange;
+		}
+		return message;
+	}
+
+	private String checkInteger(String s, String message) {
+		Integer ii = null;
+		try {
+			ii = new Integer(s);
+		} catch (NumberFormatException nfe) {
+			message = "Not a number: "+nfe+"; in "+verbose;
+		}
+		if (intValueRange == null) {
+			LOG.error("No value range");
+		}
+		if (ii == null || !intValueRange.includes(ii)) {
+			message = "value: "+s+" incompatible with: "+intValueRange;
 		}
 		return message;
 	}
