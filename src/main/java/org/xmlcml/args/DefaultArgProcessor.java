@@ -80,6 +80,11 @@ public class DefaultArgProcessor {
 		readArgumentOptions(ARGS_RESOURCE);
 	}
 	
+	public DefaultArgProcessor(String resourceName) {
+		this();
+		readArgumentOptions(resourceName);
+	}
+	
 	public void readArgumentOptions(String resourceName) {
 		ensureArgumentOptionList();
 		try {
@@ -88,7 +93,6 @@ public class DefaultArgProcessor {
 				throw new RuntimeException("Cannot read/find input resource stream: "+resourceName);
 			}
 			Element argElement = new Builder().build(is).getRootElement();
-			LOG.debug("XML"+argElement.toXML());
 			List<Element> elementList = XMLUtil.getQueryElements(argElement, "/*/*[local-name()='arg']");
 			for (Element element : elementList) {
 				ArgumentOption argOption = ArgumentOption.createOption(this.getClass(), element);
