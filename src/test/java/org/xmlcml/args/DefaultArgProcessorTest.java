@@ -61,4 +61,18 @@ public class DefaultArgProcessorTest {
 		Assert.assertEquals("input", 12, argProcessor.getInputList().size());
 		Assert.assertEquals("input", "foo1bof3plugh", argProcessor.getInputList().get(0));
 	}
+	
+	@Test
+	public void testArgCounts() {
+		String[] args = {"-o", "foo"};
+		new DefaultArgProcessor().parseArgs(args);
+		try {
+			args = new String[]{"-o", "foo", "bar"};
+			new DefaultArgProcessor().parseArgs(args);
+		} catch (Exception e) {
+			Assert.assertEquals("too many arguments", 
+					"cannot process argument: -o (IllegalArgumentException: --output; argument count (2) is not compatible with {1,1})",
+					e.getMessage());
+		}
+	}
 }
