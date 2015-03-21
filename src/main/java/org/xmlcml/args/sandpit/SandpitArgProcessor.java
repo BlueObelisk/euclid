@@ -30,8 +30,7 @@ public class SandpitArgProcessor extends DefaultArgProcessor{
 	private IntArray intArray;
 	
 	public SandpitArgProcessor() {
-		super();
-		this.readArgumentOptions(ARGS_RESOURCE);
+		super(ARGS_RESOURCE);
 	}
 
 	public SandpitArgProcessor(String[] args) {

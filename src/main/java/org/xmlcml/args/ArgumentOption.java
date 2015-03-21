@@ -123,6 +123,8 @@ public class ArgumentOption {
 	
 	private void setDefaults() {
 		brief = "";
+		intValueRange = new IntRange(-Integer.MAX_VALUE, Integer.MAX_VALUE);
+		realValueRange = new RealRange(-Double.MAX_VALUE, Double.MAX_VALUE);
 	}
 
 	/** factory method option for ArgumentOptions
@@ -735,6 +737,7 @@ public class ArgumentOption {
 		}
 		if (intValueRange == null) {
 			LOG.error("No value range");
+			
 		}
 		if (ii == null || !intValueRange.includes(ii)) {
 			message = "value: "+s+" incompatible with: "+intValueRange;
