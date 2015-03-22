@@ -99,7 +99,11 @@ public class ArgIterator {
 	}
 
 	// STRING
-	String getString(ArgumentOption option) {
+	public List<String> getStrings(ArgumentOption option) {
+		return createTokenListUpToNextNonDigitMinus(option);
+	}
+
+	public String getString(ArgumentOption option) {
 		List<String> tokens = createTokenListUpToNextNonDigitMinus(option);
 		if (tokens.size() != 1) {
 			throw new RuntimeException("Expected only 1 argument; found: "+tokens.size());
@@ -131,17 +135,23 @@ public class ArgIterator {
 		return dubble;
 	}
 
+	// REAL RANGE
+	
 	public RealRange getRealRange(ArgumentOption option) {
 		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
-		RealRange realRange = null;
-		try {
-			realRange = new RealRange(new Double(tokens.get(0)), new Double(tokens.get(1)));
-		} catch (Exception e) {
-			throw new RuntimeException("need 2 arguments for double range: "+tokens);
+		List<RealRange> intRangeList = RealRange.createRealRangeList(tokens);
+		if (intRangeList.size() != 1) {
+			throw new RuntimeException("requires exactly one RealRange token: "+tokens);
 		}
-		return realRange;
+		return intRangeList.get(0);
+	}
+	
+	public List<RealRange> getRealRangeList(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		return RealRange.createRealRangeList(tokens);
 	}
 
+	// REAL ARRAY
 	public RealArray getDoubleArray(ArgumentOption option) {
 		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
 		RealArray realArray = null;
@@ -165,17 +175,22 @@ public class ArgIterator {
 		return intg;
 	}
 
+	// INT RANGE
 	public IntRange getIntRange(ArgumentOption option) {
 		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
-		IntRange intRange = null;
-		try {
-			intRange = new IntRange((int)new Integer(tokens.get(0)), (int)new Integer(tokens.get(1)));
-		} catch (Exception e) {
-			throw new RuntimeException("need 2 arguments for integer range: "+tokens);
+		List<IntRange> intRangeList = IntRange.createIntRangeList(tokens);
+		if (intRangeList.size() != 1) {
+			throw new RuntimeException("requires exactly one IntRange token: "+tokens);
 		}
-		return intRange;
+		return intRangeList.get(0);
+	}
+	
+	public List<IntRange> getIntRangeList(ArgumentOption option) {
+		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
+		return IntRange.createIntRangeList(tokens);
 	}
 
+	// INT ARRAY
 	public IntArray getIntArray(ArgumentOption option) {
 		List<String> tokens = this.createTokenListUpToNextNonDigitMinus(option);
 		IntArray intArray = null;
