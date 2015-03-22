@@ -111,5 +111,8 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 		return resultElementList.iterator();
 	}
 
-	
+	public int size() {
+		getOrCreateResultElementList();
+		return resultElementList == null ? 0 : resultElementList.size();
+	}
 }

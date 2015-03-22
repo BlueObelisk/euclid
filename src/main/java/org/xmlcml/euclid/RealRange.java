@@ -16,8 +16,13 @@
 
 package org.xmlcml.euclid;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -33,12 +38,20 @@ import java.util.regex.Pattern;
  */
 public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 	 
+	
+	private static final Logger LOG = Logger.getLogger(RealRange.class);
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
+	
 	public enum Direction {
 		HORIZONTAL,
 		VERTICAL
 	};
 	
-	public static Pattern RANGE_PATTERN = Pattern.compile("\\{(\\d+),(\\d+)}");
+	private final static Pattern CURLY_PATTERN1 = Pattern.compile("\\{([^,]+)\\}");
+	private final static Pattern CURLY_PATTERN2 = Pattern.compile("\\{([^,]+),([^,]+)\\}");
+	private final static String ANY = "*";	
 	
     /**
      * maximum of range
@@ -460,16 +473,80 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 	public RealRange getRangeExtendedBy(double minExtend, double maxExtend) {
 		return  new RealRange(minval - minExtend, maxval + maxExtend);
 	}
-	public static RealRange createRange(String rangeString) {
-		RealRange range = null;
-		Matcher matcher =  RANGE_PATTERN.matcher(rangeString);
-		if (matcher.matches()) {
-			Double min = new Double(matcher.group(1));
-			Double max = new Double(matcher.group(2));
-			if (min <= max) {
-				range = new RealRange(min, max);
+	
+//	public static RealRange createRange(String rangeString) {
+//		RealRange range = null;
+//		Matcher matcher =  RANGE_PATTERN.matcher(rangeString);
+//		if (matcher.matches()) {
+//			Double min = new Double(matcher.group(1));
+//			Double max = new Double(matcher.group(2));
+//			if (min <= max) {
+//				range = new RealRange(min, max);
+//			}
+//		}
+//		return range;
+//	}
+//	
+	/** interprets a String as an RealRange.
+	 * 
+	 * {m,n} is interpreted as RealRange(m,n)
+	 * {*,n} is interpreted as RealRange(any,n)
+	 * {m,*} is interpreted as RealRange(m,any)
+	 * {*,*} is interpreted as RealRange(any,any)
+	 * {m} is interpreted as RealRange(m,m)
+	 * {*} is interpreted as RealRange(any,any)
+	 * 
+	 * @param token
+	 * @return null if cannot create a valid RealRange
+	 */
+	public static RealRange parseCurlyBracketString(String token) {
+		RealRange intRange = null;
+		if (token != null) {
+			Double min = null;
+			Double max = null;
+			token = token.replaceAll("\\s+", ""); // strip spaces
+			Matcher matcher = CURLY_PATTERN2.matcher(token);
+			try {
+				if (matcher.matches()) {
+					String minS = matcher.group(1);
+					String maxS = matcher.group(2);
+					min = (ANY.equals(minS)) ? -Double.MAX_VALUE : new Double(minS);
+					max = (ANY.equals(maxS)) ?  Double.MAX_VALUE : new Double(maxS);
+				} else {
+					matcher = CURLY_PATTERN1.matcher(token);
+					if (matcher.matches()) {
+						String minS = matcher.group(1);
+						min = (ANY.equals(minS)) ? -Double.MAX_VALUE : new Double(minS);
+						max = min;
+					}
+				}
+				intRange = new RealRange(min, max);
+			} catch (Exception e) {
+				LOG.error("Cannot parse range: "+token);
 			}
 		}
-		return range;
+		return intRange;
 	}
+
+	/** creates a list of RealRanges from {...} syntax.
+	 * 
+	 * uses parseCurlyBracketString()
+	 * 
+	 * @param tokens
+	 * @return
+	 */
+	public static List<RealRange> createRealRangeList(List<String> tokens) {
+		List<RealRange> realRangeList = new ArrayList<RealRange>();
+		for (String token : tokens) {
+			RealRange realRange = RealRange.parseCurlyBracketString(token);
+			if (realRange == null) {
+				throw new RuntimeException("Cannot parse ("+token+") as RealRange in : "+tokens);
+			}
+			realRangeList.add(realRange);
+		}
+		return realRangeList;
+	}
+	
+
+
 }

@@ -3,6 +3,7 @@ package org.xmlcml.args;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,12 +177,6 @@ public class DefaultArgProcessor {
 		return newStringList;
 	}
 
-//	protected void checkHasNext(ArgIterator argIterator) {
-//		if (!argIterator.hasNext()) {
-//			throw new RuntimeException("ran off end; expected more arguments");
-//		}
-//	}
-
 	private void checkCanAssign(Object obj, Method method) {
 	    if (!method.getDeclaringClass().isAssignableFrom(obj.getClass())) {
 	        throw new IllegalArgumentException(
@@ -304,7 +299,7 @@ public class DefaultArgProcessor {
 		return inputList;
 	}
 
-	public String getSingleInput() {
+	public String getString() {
 		ensureInputList();
 		return (inputList.size() != 1) ? null : inputList.get(0);
 	}
@@ -351,7 +346,7 @@ public class DefaultArgProcessor {
 				String arg = argIterator.next();
 				LOG.trace("arg> "+arg);
 				try {
-					runParseMethod(this.getClass(), argumentOptionList, argIterator, arg);
+					addArgumentOptionsAndRunParseMethods(argIterator, arg);
 				} catch (Exception e) {
 					throw new RuntimeException("cannot process argument: "+arg+" ("+ExceptionUtils.getRootCauseMessage(e)+")", e);
 				}
@@ -437,7 +432,9 @@ public class DefaultArgProcessor {
 	
 	public void runRunMethodsOnChosenArgOptions() {
 		for (ArgumentOption option : chosenArgumentOptionList) {
+			LOG.trace("OPTION: "+option);
 			String runMethodName = option.getRunMethodName();
+			LOG.trace("Method: "+runMethodName);
 			if (runMethodName != null) {
 				try {
 					runRunMethod(option);
@@ -478,32 +475,22 @@ public class DefaultArgProcessor {
 		}
 	}
 
-
-
-	protected void runParseMethod(Class<?> thisClass, List<ArgumentOption> optionList, ArgIterator argIterator, String arg) throws Exception {
+	protected void addArgumentOptionsAndRunParseMethods(ArgIterator argIterator, String arg) throws Exception {
 		ensureChosenArgumentList();
 		boolean processed = false;
 		if (!arg.startsWith(MINUS)) {
 			LOG.error("Parsing failed at: ("+arg+"), expected \"-\" trying to recover");
 		} else {
-			for (ArgumentOption option : optionList) {
-				Method parseMethod = null;
+			for (ArgumentOption option : argumentOptionList) {
 				if (option.matches(arg)) {
-					try {
-						String parseMethodName = option.getParseMethod();
-						if (parseMethodName == null) {
-							throw new RuntimeException("arg: "+arg+" MUST have a parseMethod");
-						}
-						parseMethod = this.getClass().getMethod(parseMethodName, option.getClass(), argIterator.getClass());
-					} catch (NoSuchMethodException nsme) {
-						LOG.debug("methods for "+this.getClass());
-						for (Method meth : thisClass.getDeclaredMethods()) {
-							LOG.debug(meth);
-						}
-						throw new RuntimeException(option.getParseMethod()+"; "+this.getClass()+"; "+option.getClass()+"; \nContact Norma developers: ", nsme);
+					String initMethodName = option.getInitMethodName();
+					if (initMethodName != null) {
+						runInitMethod(option, initMethodName);
 					}
-					parseMethod.setAccessible(true);
-					parseMethod.invoke(this, option, argIterator);
+					String parseMethodName = option.getParseMethodName();
+					if (parseMethodName != null) {
+						runParseMethod(argIterator, option, parseMethodName);
+					}
 					processed = true;
 					chosenArgumentOptionList.add(option);
 					break;
@@ -512,6 +499,47 @@ public class DefaultArgProcessor {
 			if (!processed) {
 				LOG.error("Unknown arg: ("+arg+"), trying to recover");
 			}
+		}
+	}
+
+	private void runInitMethod(ArgumentOption option, String initMethodName) {
+		runMethod(null, option, initMethodName);
+	}
+
+	private void runParseMethod(ArgIterator argIterator, ArgumentOption option, String parseMethodName) {
+		runMethod(argIterator, option, parseMethodName);
+	}
+
+	private void runMethod(ArgIterator argIterator, ArgumentOption option, String methodName) {
+		Method method;
+		try {
+			if (argIterator == null) {
+				method = this.getClass().getMethod(methodName, option.getClass());
+			} else {
+				method = this.getClass().getMethod(methodName, option.getClass(), argIterator.getClass());
+			}
+		} catch (NoSuchMethodException e) {
+			debugMethods();
+			throw new RuntimeException("Cannot find: "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";", e);
+		}
+		method.setAccessible(true);
+		try {
+			if (argIterator == null) {
+					method.invoke(this, option);
+			} else {
+				method.invoke(this, option, argIterator);
+			}
+		} catch (Exception e) {
+			LOG.debug("failed to run "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";"+e.getCause());
+			e.printStackTrace();
+			throw new RuntimeException("Cannot run: "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";", e);
+		}
+	}
+
+	private void debugMethods() {
+		LOG.debug("methods for "+this.getClass());
+		for (Method meth : this.getClass().getDeclaredMethods()) {
+			LOG.debug(meth);
 		}
 	}
 

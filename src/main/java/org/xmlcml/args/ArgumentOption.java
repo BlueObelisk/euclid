@@ -1,6 +1,7 @@
 package org.xmlcml.args;
 
 import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,17 +31,21 @@ public class ArgumentOption {
 	private static final String LONG = "long";
 	private static final String NAME = "name";
 	private static final String HELP = "help";
+	private static final String VALUE = "value";
 	private static final String ARGS = "args";
 	private static final String CLASS_TYPE = "class";
 	private static final String DEFAULT = "default";
-	private static final String FORBIDDEN = "forbidden";
-	private static final String REQUIRED = "required";
 	private static final String COUNT_RANGE = "countRange";
 	private static final String VALUE_RANGE = "valueRange";
 	private static final String FINAL_METHOD = "finalMethod";
+	private static final String INIT_METHOD = "initMethod";
+	private static final String OUTPUT_METHOD = "outputMethod";
 	private static final String PARSE_METHOD = "parseMethod";
 	private static final String RUN_METHOD = "runMethod";
-	private static final String OUTPUT_METHOD = "outputMethod";
+	// these may be obsolete
+	private static final String FORBIDDEN = "forbidden";
+	private static final String REQUIRED = "required";
+	
 	private static final String PATTERN = "pattern";
 	
 	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\*|\\-?\\d+),(\\-?\\d*|\\*)\\}");
@@ -57,7 +62,7 @@ public class ArgumentOption {
 		MANDATORY_ATTRIBUTES.add(NAME);
 		MANDATORY_ATTRIBUTES.add(LONG);
 		MANDATORY_ATTRIBUTES.add(ARGS);
-		MANDATORY_ATTRIBUTES.add(PARSE_METHOD);
+//		MANDATORY_ATTRIBUTES.add(PARSE_METHOD); // not required for some args
 	}
 	private static Set<String> MANDATORY_CHILDREN;
 	static {
@@ -113,8 +118,12 @@ public class ArgumentOption {
 	private String runMethodName;
 	private String outputMethodName;
 	private String finalMethodName;
+	private String initMethodName;
 	
 	private Class<? extends DefaultArgProcessor> argProcessorClass;
+	private List<Element> valueNodes;
+	private List<Element> helpNodes;
+	private Element element;
 	
 	public ArgumentOption(Class<? extends DefaultArgProcessor> argProcessorClass) {
 		setDefaults();
@@ -136,31 +145,53 @@ public class ArgumentOption {
 	public static ArgumentOption createOption(Class<? extends DefaultArgProcessor> argProcessor, Element element) {
 		
 		ArgumentOption argumentOption = new ArgumentOption(argProcessor);
+		argumentOption.setElement(element);
 		Set<String> mandatorySet = new HashSet<String>(MANDATORY_ATTRIBUTES);
 		Map<String, String> optionalAttributes = new HashMap<String, String>(OPTIONAL_ATTRIBUTES);
 		// get class first because so much else depends
 		String classType = element.getAttributeValue(CLASS_TYPE);
+		
 		argumentOption.setClassType(classType);
 		lookForKnownAttributes(element, argumentOption, mandatorySet, optionalAttributes);
-		LOG.trace("B/D "+argumentOption.brief+"/"+argumentOption.defalt+" // "+argumentOption);
 		if (mandatorySet.size() > 0) {
 			throw new RuntimeException("The following attributes for "+argumentOption.name+" are mandatory: "+mandatorySet);
 		}
-		// setDefaults;
+		argumentOption.getDefaults(optionalAttributes);
+		argumentOption.getOrCreateHelpNodes();
+		argumentOption.getOrCreateValues();
+		return argumentOption;
+	}
+
+	private void setElement(Element element) {
+		this.element = element;
+	}
+
+	private void getDefaults(Map<String, String> optionalAttributes) {
 		for (String name : optionalAttributes.keySet()) {
 			String value = optionalAttributes.get(name);
 			if (value != null) {
-				argumentOption.setValue(name, value);
+				this.setValue(name, value);
 			}
 		}
-		// help
-		List<Element> helpNodes = XMLUtil.getQueryElements(element, "./*[local-name()='"+HELP+"']");
-		if (helpNodes.size() != 1) {
-			throw new RuntimeException("No help given for "+argumentOption.name);
-		} else {
-			argumentOption.setHelp(helpNodes.get(0).getValue());
+	}
+
+	public List<Element> getOrCreateHelpNodes() {
+		if (helpNodes == null) {
+			helpNodes = XMLUtil.getQueryElements(element, "./*[local-name()='"+HELP+"']");
+			if (helpNodes.size() != 1) {
+				throw new RuntimeException("No help given for "+this.name);
+			} else {
+				this.setHelp(helpNodes.get(0).getValue());
+			}
 		}
-		return argumentOption;
+		return helpNodes;
+	}
+
+	public List<Element> getOrCreateValues() {
+		if (valueNodes == null) {
+			valueNodes = XMLUtil.getQueryElements(element, "./*[local-name()='"+VALUE+"']");
+		}
+		return valueNodes;
 	}
 
 	private static void lookForKnownAttributes(Element element,
@@ -199,6 +230,8 @@ public class ArgumentOption {
 			this.setRequiredString(value);
 		} else if (FINAL_METHOD.equals(namex)) {
 			this.setFinalMethod(value);
+		} else if (INIT_METHOD.equals(namex)) {
+			this.setInitMethod(value);
 		} else if (OUTPUT_METHOD.equals(namex)) {
 			this.setOutputMethod(value);
 		} else if (PARSE_METHOD.equals(namex)) {
@@ -358,7 +391,7 @@ public class ArgumentOption {
 		this.defalt = defalt;
 	}
 
-	public String getParseMethod() {
+	public String getParseMethodName() {
 		return parseMethodName;
 	}
 
@@ -403,6 +436,23 @@ public class ArgumentOption {
 				throw new RuntimeException("Non-existent outputMethod "+argProcessorClass+"; "+outputMethodName+" (edit ArgProcessor)", e);
 			}
 		}
+	}
+
+	public void setInitMethod(String initMethodName) {
+		if (initMethodName != null) {
+			try {
+//				LOG.debug("INIT METHODNAME "+initMethodName);
+				Method method = argProcessorClass.getMethod(initMethodName, ArgumentOption.class);
+//				LOG.debug("INIT METHOD "+method);
+				this.initMethodName = initMethodName;
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Non-existent initMethod "+argProcessorClass+"; "+initMethodName+" (edit ArgProcessor)", e);
+			}
+		}
+	}
+
+	public String getInitMethodName() {
+		return initMethodName;
 	}
 
 	public void setFinalMethod(String finalMethodName) {
@@ -807,5 +857,6 @@ public class ArgumentOption {
 		return (strings == null) ? new ArrayList<String>() :
 			new ArrayList<String>(Arrays.asList(strings.split("\\s+")));
 	}
+
 
 }

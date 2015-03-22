@@ -15,6 +15,15 @@
  */
 
 package org.xmlcml.euclid;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 /**
  * maximum and minimum values
  * 
@@ -27,6 +36,17 @@ package org.xmlcml.euclid;
  * @author (C) P. Murray-Rust, 1996
  */
 public class IntRange implements EuclidConstants, Comparable<IntRange> {
+	
+	
+	private static final Logger LOG = Logger.getLogger(IntRange.class);
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
+	
+	private final static Pattern CURLY_PATTERN1 = Pattern.compile("\\{([^,]+)\\}");
+	private final static Pattern CURLY_PATTERN2 = Pattern.compile("\\{([^,]+),([^,]+)\\}");
+	private final static String ANY = "*";
+
     /**
      * maximum of range
      */
@@ -281,5 +301,66 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 	public int getMidPoint() {
 		return (minval + maxval)/2;
 	}
+	
+	/** interprets a String as an IntRange.
+	 * 
+	 * {m,n} is interpreted as IntRange(m,n)
+	 * {*,n} is interpreted as IntRange(any,n)
+	 * {m,*} is interpreted as IntRange(m,any)
+	 * {*,*} is interpreted as IntRange(any,any)
+	 * {m} is interpreted as IntRange(m,m)
+	 * {*} is interpreted as IntRange(any,any)
+	 * 
+	 * @param token
+	 * @return null if cannot create a valid IntRange
+	 */
+	public static IntRange parseCurlyBracketString(String token) {
+		IntRange intRange = null;
+		if (token != null) {
+			Integer min = null;
+			Integer max = null;
+			token = token.replaceAll("\\s+", ""); // strip spaces
+			Matcher matcher = CURLY_PATTERN2.matcher(token);
+			try {
+				if (matcher.matches()) {
+					String minS = matcher.group(1);
+					String maxS = matcher.group(2);
+					min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : new Integer(minS);
+					max = (ANY.equals(maxS)) ?  Integer.MAX_VALUE : new Integer(maxS);
+				} else {
+					matcher = CURLY_PATTERN1.matcher(token);
+					if (matcher.matches()) {
+						String minS = matcher.group(1);
+						min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : new Integer(minS);
+						max = min;
+					}
+				}
+				intRange = new IntRange(min, max);
+			} catch (Exception e) {
+				LOG.error("Cannot parse range: "+token);
+			}
+		}
+		return intRange;
+	}
+
+	/** creates a list of IntRanges from {...} syntax.
+	 * 
+	 * uses parseCurlyBracketString()
+	 * 
+	 * @param tokens
+	 * @return
+	 */
+	public static List<IntRange> createIntRangeList(List<String> tokens) {
+		List<IntRange> intRangeList = new ArrayList<IntRange>();
+		for (String token : tokens) {
+			IntRange intRange = IntRange.parseCurlyBracketString(token);
+			if (intRange == null) {
+				throw new RuntimeException("Cannot parse ("+token+") as IntRange in : "+tokens);
+			}
+			intRangeList.add(intRange);
+		}
+		return intRangeList;
+	}
+	
 
 }
