@@ -1,7 +1,6 @@
 package org.xmlcml.args;
 
 import java.lang.reflect.Method;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,9 +28,9 @@ import org.xmlcml.xml.XMLUtil;
 public class ArgumentOption {
 	private static final String BRIEF = "brief";
 	private static final String LONG = "long";
-	private static final String NAME = "name";
+	public static final String NAME = "name";
 	private static final String HELP = "help";
-	private static final String VALUE = "value";
+	public static final String VALUE = "value";
 	private static final String ARGS = "args";
 	private static final String CLASS_TYPE = "class";
 	private static final String DEFAULT = "default";
@@ -50,6 +49,8 @@ public class ArgumentOption {
 	
 	private static final Pattern INT_RANGE = Pattern.compile("\\{(\\*|\\-?\\d+),(\\-?\\d*|\\*)\\}");
 	private static final Pattern DOUBLE_RANGE = Pattern.compile("\\{(\\-?\\+?\\d+\\.?\\d*|\\*),(\\-?\\+?\\d+\\.?\\d*|\\*)\\}");
+
+	public static String CLASSNAME = "className";
 
 	private static final Logger LOG = Logger.getLogger(ArgumentOption.class);
 	static {

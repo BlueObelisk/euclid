@@ -36,6 +36,11 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 		super(TAG);
 	}
 
+	public ResultsElement(ResultsElement element) {
+		this();
+		copyAttributesAndAddChildren(element);
+	}
+
 	public ResultsElement(String title) {
 		this();
 		this.setTitle(title);
@@ -114,5 +119,15 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 	public int size() {
 		getOrCreateResultElementList();
 		return resultElementList == null ? 0 : resultElementList.size();
+	}
+
+	protected void copyAttributesAndAddChildren(ResultsElement resultsElement) {
+		if (resultsElement == null) {
+			throw new RuntimeException("Null ResultsElement");
+		}
+		XMLUtil.copyAttributesFromTo(resultsElement, this);
+		for (ResultElement resultElement : resultsElement) {
+			this.appendChild(resultElement);
+		}
 	}
 }
