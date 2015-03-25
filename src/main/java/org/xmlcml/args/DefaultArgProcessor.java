@@ -354,6 +354,10 @@ public class DefaultArgProcessor {
 			finalizeArgs();
 		}
 	}
+	
+	protected void parseArgs(String args) {
+		parseArgs(args.split("\\s+"));
+	}
 
 	private void finalizeArgs() {
 		processArgumentDependencies();
