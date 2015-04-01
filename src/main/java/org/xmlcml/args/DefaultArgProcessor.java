@@ -3,7 +3,6 @@ package org.xmlcml.args;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -440,11 +439,12 @@ public class DefaultArgProcessor {
 			String runMethodName = option.getRunMethodName();
 			LOG.trace("Method: "+runMethodName);
 			if (runMethodName != null) {
+				LOG.debug("Method " + runMethodName);
 				try {
 					runRunMethod(option);
 				} catch (Exception e) {
 					e.printStackTrace();
-					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")");
+					throw new RuntimeException("cannot process argument: "+option.getVerbose()+" ("+ExceptionUtils.getRootCauseMessage(e)+")", e);
 				}
 			}
 		}
@@ -550,6 +550,7 @@ public class DefaultArgProcessor {
 	protected void runRunMethod(ArgumentOption option) throws Exception {
 		String runMethodName = option.getRunMethodName();
 		if (runMethodName != null) {
+			LOG.debug("running "+runMethodName);
 			Method runMethod = null;
 			try {
 				runMethod = this.getClass().getMethod(runMethodName, option.getClass()); 
@@ -624,5 +625,6 @@ public class DefaultArgProcessor {
 		}
 		runFinalMethodsOnChosenArgOptions();
 	}
+
 
 }

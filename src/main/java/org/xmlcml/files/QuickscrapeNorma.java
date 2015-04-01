@@ -42,6 +42,7 @@ results.json * // a listing of scraped files
 fulltext.xml ? // publishers XML
 fulltext.pdf ? // publishers PDF
 fulltext.html ? // raw HTML
+fulltext.pdf.txt ? // raw text from pdf
 provisional.pdf ? // provisional PDF (often disappears)
 
 foo12345.docx ? // data files numbered by publisher/author
@@ -115,6 +116,7 @@ public class QuickscrapeNorma {
 	public static final String FULLTEXT_DOCX  = "fulltext.docx";
 	public static final String FULLTEXT_HTML  = "fulltext.html";
 	public static final String FULLTEXT_PDF   = "fulltext.pdf";
+	public static final String FULLTEXT_PDF_TXT   = "fulltext.pdf.txt";
 	public static final String FULLTEXT_XML   = "fulltext.xml";
 	public static final String RESULTS_JSON   = "results.json";
 	public static final String RESULTS_XML   = "results.xml";
@@ -128,6 +130,7 @@ public class QuickscrapeNorma {
 					FULLTEXT_DOCX,
 					FULLTEXT_HTML,
 					FULLTEXT_PDF,
+					FULLTEXT_PDF_TXT,
 					FULLTEXT_XML,
 					RESULTS_JSON,
 					RESULTS_XML,
