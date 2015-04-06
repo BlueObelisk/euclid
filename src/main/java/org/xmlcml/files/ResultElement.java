@@ -27,6 +27,7 @@ public class ResultElement extends Element {
 	private static final String EXACT = "exact";
 	public static final String MATCH = "match";
 	public static final String POST = "post";
+	private static final String NAME = "name";
 
 	public ResultElement() {
 		super(TAG);
@@ -60,6 +61,14 @@ public class ResultElement extends Element {
 		setValue(MATCH, value);
 	}
 	
+	public String getName() {
+		return this.getAttributeValue(NAME);
+	}
+	
+	public void setName(String value) {
+		setValue(NAME, value);
+	}
+	
 	public String getPre() {
 		return this.getAttributeValue(PRE);
 	}
@@ -80,5 +89,6 @@ public class ResultElement extends Element {
 		Attribute attribute = new Attribute(name, value);
 		this.addAttribute(attribute);
 	}
+
 	
 }

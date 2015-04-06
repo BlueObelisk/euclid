@@ -130,4 +130,10 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 			this.appendChild(resultElement);
 		}
 	}
+
+	public void setAllResultElementNames(String name) {
+		for (ResultElement resultElement : this) {
+			resultElement.setName(name);
+		}
+	}
 }
