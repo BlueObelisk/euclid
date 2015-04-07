@@ -89,7 +89,7 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 		return newElement;
 	}
 
-	/** transfers with detachment ResultElemen's in one ResultsElement to another.
+	/** transfers with detachment ResultElement's in one ResultsElement to another.
 	 * 
 	 * @param subResultsElement source of ResultElement's
 	 */
@@ -134,6 +134,12 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 	public void setAllResultElementNames(String name) {
 		for (ResultElement resultElement : this) {
 			resultElement.setName(name);
+		}
+	}
+
+	public void setXPath(String xpath) {
+		for (ResultElement resultElement : this) {
+			resultElement.setXPath(xpath);
 		}
 	}
 }
