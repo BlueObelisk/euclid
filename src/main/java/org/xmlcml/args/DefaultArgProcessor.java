@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,6 +70,8 @@ public class DefaultArgProcessor {
 	protected QuickscrapeNormaList quickscrapeNormaList;
 	protected QuickscrapeNorma currentQuickscrapeNorma;
 	protected String summaryFileName;
+	protected Map<String, String> variableByNameMap;
+	private VariableProcessor variableProcessor;
 	
 	
 	
@@ -439,7 +442,7 @@ public class DefaultArgProcessor {
 			String runMethodName = option.getRunMethodName();
 			LOG.trace("Method: "+runMethodName);
 			if (runMethodName != null) {
-				LOG.debug("Method " + runMethodName);
+				LOG.trace("Method " + runMethodName);
 				try {
 					runRunMethod(option);
 				} catch (Exception e) {
@@ -550,7 +553,7 @@ public class DefaultArgProcessor {
 	protected void runRunMethod(ArgumentOption option) throws Exception {
 		String runMethodName = option.getRunMethodName();
 		if (runMethodName != null) {
-			LOG.debug("running "+runMethodName);
+			LOG.trace("running "+runMethodName);
 			Method runMethod = null;
 			try {
 				runMethod = this.getClass().getMethod(runMethodName, option.getClass()); 
@@ -618,6 +621,9 @@ public class DefaultArgProcessor {
 
 	public void runAndOutput() {
 		ensureQuickscrapeNormaList();
+		if (quickscrapeNormaList.size() == 0) {
+			LOG.warn("No CMList found");
+		}
 		for (int i = 0; i < quickscrapeNormaList.size(); i++) {
 			currentQuickscrapeNorma = quickscrapeNormaList.get(i);
 			runRunMethodsOnChosenArgOptions();
@@ -626,5 +632,20 @@ public class DefaultArgProcessor {
 		runFinalMethodsOnChosenArgOptions();
 	}
 
+	protected void addVariableAndExpandReferences(String name, String value) {
+		ensureVariableProcessor();
+		try {
+			variableProcessor.addVariableAndExpandReferences(name, value);
+		} catch (Exception e) {
+			LOG.error("add variable {"+name+", "+value+"} failed");
+		}
+	}
+
+	public VariableProcessor ensureVariableProcessor() {
+		if (variableProcessor == null) {
+			variableProcessor = new VariableProcessor();
+		}
+		return variableProcessor;
+	}
 
 }

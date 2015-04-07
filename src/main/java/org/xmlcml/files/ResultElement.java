@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /** a container for a "result" from an action on a QSNorma.
  * 
@@ -28,6 +30,7 @@ public class ResultElement extends Element {
 	public static final String MATCH = "match";
 	public static final String POST = "post";
 	private static final String NAME = "name";
+	private static final String XPATH = "xpath";
 
 	public ResultElement() {
 		super(TAG);
@@ -88,6 +91,10 @@ public class ResultElement extends Element {
 	public void setValue(String name, String value) {
 		Attribute attribute = new Attribute(name, value);
 		this.addAttribute(attribute);
+	}
+
+	public void setXPath(String xpath) {
+		this.addAttribute(new Attribute(XPATH, xpath));
 	}
 
 	

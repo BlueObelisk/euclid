@@ -354,36 +354,6 @@ public abstract class XMLUtil implements XMLConstants {
 		return root;
 	}
 
-//	public static Document parseHtmlWithTagSoup(InputStream is) {
-//        try {
-//            Builder builder = getTagsoupBuilder();
-//            return builder.build(is);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Exception whilse parsing XML, due to: "+e.getMessage(), e);
-//        }
-//    }
-//
-//	public static Document parseHtmlWithTagSoup(File file) {
-//		try {
-//			return parseHtmlWithTagSoup(new FileInputStream(file));
-//		} catch (FileNotFoundException e) {
-//            throw new RuntimeException("Exception whilse parsing HTML, due to: "+e.getMessage(), e);
-//		}
-//    }
-//
-//	public static Builder getTagsoupBuilder() {
-//		XMLReader tagsoup = null;
-////		try {
-//	    	tagsoup = //XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
-//		    	new org.ccil.cowan.tagsoup.Parser();
-////		} catch (SAXException e) {
-////		    throw new RuntimeException("Exception whilst creating XMLReader from org.ccil.cowan.tagsoup.Parser", e);
-////		}
-//		return new Builder(tagsoup);
-//	}
-
-
-
 	/**
 	 * convenience routine to get query nodes (iterating thorugh get(i) is
 	 * fragile if nodes are removed)
@@ -671,62 +641,6 @@ public abstract class XMLUtil implements XMLConstants {
 	public static void BUG(String message) {
 		Util.BUG(message);
 	}
-
-//	/**
-//	 * returns all prefixes in attributes in descendants. currently accesses all
-//	 * elements
-//	 * 
-//	 * @param element
-//	 * @param attName
-//	 *            attribute name (e.g. ref, dictRef)
-//	 * @return prefixes
-//	 */
-//	public static List<String> getPrefixes(Element element, String attName) {
-//		List<String> prefixList = new ArrayList<String>();
-//		List<Node> refs = CMLUtil.getQueryNodes(element, ".//@" + attName,
-//				CML_XPATH);
-//		for (Node node : refs) {
-//			Attribute attribute = (Attribute) node;
-//			String value = attribute.getValue();
-//			String prefix = CMLUtil.getPrefix(value);
-//			if (!prefixList.contains(prefix)) {
-//				prefixList.add(prefix);
-//			}
-//		}
-//		return prefixList;
-//	}
-
-//	/**
-//	 * returns a list of list of integers. Supply it with an integer of the list
-//	 * size and it will return all possible combinations of all groupings of the
-//	 * integers up to the integer you supply
-//	 * 
-//	 * thus supplying 3 would return: -- blank entry-- 1 2 3 1 2 1 3 2 3 1 2 3
-//	 * 
-//	 * @param max
-//	 * @return list of all possible integer combinations going from 0 to max.
-//	 */
-//	public static List<List<Integer>> generateCombinationList(int max) {
-//		List<List<Integer>> combinationList = new ArrayList<List<Integer>>();
-//		int count = (int) Math.pow(2.0, max);
-//		for (int i = 2; i <= count; i++) {
-//			int thisCount = i;
-//			List<Integer> intSet = new ArrayList<Integer>(max);
-//			for (int j = max; j >= 0; j--) {
-//				int minus = (int) Math.pow(2.0, j);
-//				int test = thisCount;
-//				if (test - minus > 0) {
-//					thisCount -= minus;
-//					intSet.add(j);
-//				}
-//			}
-//			combinationList.add(intSet);
-//		}
-//		// add entry with no values
-//		combinationList.add(new ArrayList<Integer>(0));
-//
-//		return combinationList;
-//	}
 
 	/**
 	 * make id from string. convert to lowercase and replace space by underscore
@@ -1146,16 +1060,6 @@ public abstract class XMLUtil implements XMLConstants {
 		return document;
 	}
 	
-//	public static Document parseQuietlyToCMLDocument(InputStream is) {
-//		Document document = null;
-//		try {
-//			document = new CMLBuilder().build(is);
-//		} catch (Exception e) {
-//			throw new RuntimeException("cannot parse/read stream: ", e);
-//		}
-//		return document;
-//	}
-	
 	public static Document parseResourceQuietlyToDocument(String resource) {
 		Document document = null;
 		try {
@@ -1176,75 +1080,6 @@ public abstract class XMLUtil implements XMLConstants {
 		return document;
 	}
 	
-//	public static CMLElement parseQuietlyIntoCML(String s) {
-//		ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
-//		return parseQuietlyIntoCML(bais);
-//	}
-//	
-//	public static CMLElement parseQuietlyIntoCML(File xmlFile) {
-//		CMLElement rootElement = null;
-//		try {
-//			rootElement = (CMLElement) new CMLBuilder().build(xmlFile).getRootElement();
-//		} catch (Exception e) {
-//			throw new RuntimeException("cannot parse/read file: "+xmlFile.getAbsolutePath(), e);
-//		}
-//		return rootElement;
-//	}
-	
-//	public static CMLElement parseQuietlyIntoCML(InputStream inputStream) {
-//		CMLElement rootElement = null;
-//		try {
-//			rootElement = (CMLElement) new CMLBuilder().build(inputStream).getRootElement();
-//		} catch (Exception e) {
-//			throw new RuntimeException("cannot parse/read inputStream ", e);
-//		}
-//		return rootElement;
-//	}
-//	
-//	public static Document parseQuietlyIntoCMLDocument(File xmlFile) {
-//		Document document = ensureDocument(parseQuietlyIntoCML(xmlFile));
-//		return document;
-//	}
-//
-//	public static List<CMLMolecule> convertNodesToMoleculeList(Nodes moleculeNodes) {
-//		List<CMLMolecule> moleculeList = new ArrayList<CMLMolecule>();
-//		for (int i = 0; i < moleculeNodes.size(); i++) {
-//			moleculeList.add((CMLMolecule) moleculeNodes.get(i));
-//		}
-//		return moleculeList;
-//	}
-//
-//	public static List<CMLMolecule> extractTopLevelMolecules(Node node) {
-//		String xpath = "//*[not(local-name()='molecule')]" +
-//				"/*[local-name()='molecule'] | self::*[local-name()='molecule']";
-//		return CMLUtil.convertNodesToMoleculeList(node.query(xpath));
-//	}
-	
-//	/** recursively delete all non-default and non-cml attributes
-//	 * i.e. any attribute with explicit non-cml namespace
-//	 * includes cmlx
-//	 * 
-//	 * @param element
-//	 */
-//	public static void removeNonCMLAttributes(CMLElement element) {
-//		List<Attribute> attributes = new ArrayList<Attribute>();
-//		for (int i = 0; i < element.getAttributeCount(); i++) {
-//			Attribute attribute = element.getAttribute(i);
-//			String namespaceURI = attribute.getNamespaceURI();
-//			if (namespaceURI != null 
-//					&& !namespaceURI.equals("")
-//					&& !namespaceURI.equals(CMLConstants.CML_NS)) {
-//				attributes.add(attribute);
-//			}
-//		}
-//		for (Attribute attribute : attributes) {
-//			attribute.detach();
-//		}
-//		List<CMLElement> childElementList = element.getChildCMLElements();
-//		for (CMLElement childElement : childElementList) {
-//			removeNonCMLAttributes(childElement);
-//		}
-//	}
 	/**
 <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
           'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
@@ -1407,5 +1242,6 @@ public abstract class XMLUtil implements XMLConstants {
 		}
 		return doc;
 	}
+	
 
 }
