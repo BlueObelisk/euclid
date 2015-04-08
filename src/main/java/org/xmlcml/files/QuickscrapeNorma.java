@@ -507,6 +507,9 @@ public class QuickscrapeNorma {
 			}
 			if (canWrite) {
 				FileUtils.copyDirectory(this.directory, destDir);
+				if (!destDir.exists() || !destDir.isDirectory()) {
+					throw new RuntimeException("failed to create directory: "+destDir);
+				}
 			}
 		}
 	}
@@ -550,7 +553,8 @@ public class QuickscrapeNorma {
 			resultsSubDirectory.mkdirs();
 			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
 			writeResults(resultsFile, resultsElement);
-			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
+			// FIXME
+			LOG.trace("Wrote "+resultsFile.getAbsolutePath());
 		}
 		return resultsSubDirectory;
 	}
