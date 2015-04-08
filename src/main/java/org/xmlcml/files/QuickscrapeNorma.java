@@ -554,7 +554,7 @@ public class QuickscrapeNorma {
 			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
 			writeResults(resultsFile, resultsElement);
 			// FIXME
-			LOG.trace("Wrote "+resultsFile.getAbsolutePath());
+			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
 		}
 		return resultsSubDirectory;
 	}
