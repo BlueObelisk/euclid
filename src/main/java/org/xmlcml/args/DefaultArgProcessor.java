@@ -347,7 +347,7 @@ public class DefaultArgProcessor {
 		} else {
 			String[] totalArgs = addDefaultsAndParsedArgs(commandLineArgs);
 			ArgIterator argIterator = new ArgIterator(totalArgs);
-			LOG.debug("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
+			LOG.trace("args with defaults is: "+new ArrayList<String>(Arrays.asList(totalArgs)));
 			while (argIterator.hasNext()) {
 				String arg = argIterator.next();
 				LOG.trace("arg> "+arg);
@@ -541,8 +541,8 @@ public class DefaultArgProcessor {
 				method.invoke(this, option, argIterator);
 			}
 		} catch (Exception e) {
-			LOG.debug("failed to run "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";"+e.getCause());
-			e.printStackTrace();
+			LOG.trace("failed to run "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";"+e.getCause());
+//			e.printStackTrace();
 			throw new RuntimeException("Cannot run: "+methodName+" in "+this.getClass()+"; from argument "+option.getClass()+";", e);
 		}
 	}
