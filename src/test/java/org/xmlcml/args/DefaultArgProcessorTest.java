@@ -17,7 +17,6 @@ public class DefaultArgProcessorTest {
 		String[] args = {
 			"-i", "foo", "bar", 
 			"-o", "plugh",
-			"-h",
 		};
 		DefaultArgProcessor argProcessor = new DefaultArgProcessor();
 		argProcessor.parseArgs(args);

@@ -235,7 +235,11 @@ public class DefaultArgProcessor {
 		quickscrapeNormaList = new QuickscrapeNormaList();
 		for (String qDirectoryName : qDirectoryNames) {
 			File qDirectory = new File(qDirectoryName);
-			if (!qDirectory.exists() || !qDirectory.isDirectory()) {
+			if (!qDirectory.exists()) {
+				LOG.error("File does not exist: "+qDirectory.getAbsolutePath());
+				continue;
+			}
+			if (!qDirectory.isDirectory()) {
 				LOG.error("Not a directory: "+qDirectory.getAbsolutePath());
 				continue;
 			}
@@ -357,7 +361,7 @@ public class DefaultArgProcessor {
 		}
 	}
 	
-	protected void parseArgs(String args) {
+	public void parseArgs(String args) {
 		parseArgs(args.split("\\s+"));
 	}
 
