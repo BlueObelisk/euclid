@@ -192,6 +192,7 @@ public class ArgumentOption {
 		if (valueNodes == null) {
 			valueNodes = XMLUtil.getQueryElements(element, "./*[local-name()='"+VALUE+"']");
 		}
+		LOG.trace("VALUES: "+valueNodes);
 		return valueNodes;
 	}
 
@@ -442,9 +443,9 @@ public class ArgumentOption {
 	public void setInitMethod(String initMethodName) {
 		if (initMethodName != null) {
 			try {
-//				LOG.debug("INIT METHODNAME "+initMethodName);
+				LOG.trace("INIT METHODNAME "+initMethodName);
 				Method method = argProcessorClass.getMethod(initMethodName, ArgumentOption.class);
-//				LOG.debug("INIT METHOD "+method);
+				LOG.trace("INIT METHOD "+method);
 				this.initMethodName = initMethodName;
 			} catch (NoSuchMethodException e) {
 				throw new RuntimeException("Non-existent initMethod "+argProcessorClass+"; "+initMethodName+" (edit ArgProcessor)", e);
