@@ -99,6 +99,7 @@ public class DefaultArgProcessor {
 			List<Element> elementList = XMLUtil.getQueryElements(argElement, "/*/*[local-name()='arg']");
 			for (Element element : elementList) {
 				ArgumentOption argOption = ArgumentOption.createOption(this.getClass(), element);
+				LOG.trace("created ArgumentOption: "+argOption);
 				argumentOptionList.add(argOption);
 			}
 		} catch (Exception e) {
@@ -494,6 +495,7 @@ public class DefaultArgProcessor {
 		} else {
 			for (ArgumentOption option : argumentOptionList) {
 				if (option.matches(arg)) {
+					LOG.trace("OPTION>> "+option);
 					String initMethodName = option.getInitMethodName();
 					if (initMethodName != null) {
 						runInitMethod(option, initMethodName);
