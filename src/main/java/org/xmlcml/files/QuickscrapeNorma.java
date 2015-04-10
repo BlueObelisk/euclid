@@ -553,8 +553,7 @@ public class QuickscrapeNorma {
 			resultsSubDirectory.mkdirs();
 			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
 			writeResults(resultsFile, resultsElement);
-			// FIXME
-			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
+			LOG.trace("Wrote "+resultsFile.getAbsolutePath());
 		}
 		return resultsSubDirectory;
 	}

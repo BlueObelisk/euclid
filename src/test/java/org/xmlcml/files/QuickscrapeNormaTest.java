@@ -44,6 +44,6 @@ public class QuickscrapeNormaTest {
 		argProcessor.parseArgs(args);
 		QuickscrapeNormaList quickscrapeNormaList = argProcessor.getQuickscrapeNormaList();
 		Assert.assertEquals(1,  quickscrapeNormaList.size());
-		LOG.debug(quickscrapeNormaList.get(0).toString());
+		LOG.trace(quickscrapeNormaList.get(0).toString());
 	}
 }
