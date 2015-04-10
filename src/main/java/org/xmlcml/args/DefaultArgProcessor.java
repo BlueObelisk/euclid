@@ -443,7 +443,6 @@ public class DefaultArgProcessor {
 	
 	public void runRunMethodsOnChosenArgOptions() {
 		for (ArgumentOption option : chosenArgumentOptionList) {
-			LOG.trace("OPTION: "+option);
 			String runMethodName = option.getRunMethodName();
 			LOG.trace("Method: "+runMethodName);
 			if (runMethodName != null) {
