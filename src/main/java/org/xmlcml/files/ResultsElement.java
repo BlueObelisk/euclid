@@ -31,6 +31,7 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 	public static final String TITLE = "title";
 	
 	protected List<ResultElement> resultElementList;
+	public List<String> nameList;
 
 	public ResultsElement() {
 		super(TAG);
@@ -142,4 +143,29 @@ public class ResultsElement extends Element implements Iterable<ResultElement> {
 			resultElement.setXPath(xpath);
 		}
 	}
+
+	public void addMatchAttributes(List<String> matchList) {
+		if (this.size() != matchList.size()) {
+			throw new RuntimeException("name list wrong length ("+matchList.size()+") rather than ("+this.size()+")");
+		}
+		int i = 0;
+		for (ResultElement resultElement : this) {
+			resultElement.setMatch(matchList.get(i));
+			// cosmetic - keeps attributes in natural order
+			resultElement.setPost(resultElement.getPost());
+			i++;
+		}
+	}
+
+	public List<String> getExactList() {
+		if (nameList == null) {
+			nameList = new ArrayList<String>();
+			for (ResultElement resultElement : this) {
+				String name = resultElement.getExact();
+				nameList.add(name);
+			}
+		}
+		return nameList;
+	}
+
 }

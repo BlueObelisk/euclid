@@ -422,14 +422,22 @@ public class QuickscrapeNorma {
 	}
 
 	public void writeFile(String content, String filename) {
+		if (filename == null) {
+			LOG.error("Null output file");
+			return;
+		}
 		File file = new File(directory, filename);
 		if (file.exists()) {
 			LOG.error("file already exists (overwritten) "+file);
 		}
-		try {
-			FileUtils.write(file, content);
-		} catch (IOException e) {
-			throw new RuntimeException("Cannot write file: ", e);
+		if (content != null) {
+			try {
+				FileUtils.write(file, content);
+			} catch (IOException e) {
+				throw new RuntimeException("Cannot write file: ", e);
+			}
+		} else {
+			LOG.trace("Null content");
 		}
 	}
 
@@ -553,7 +561,7 @@ public class QuickscrapeNorma {
 			resultsSubDirectory.mkdirs();
 			File resultsFile = new File(resultsSubDirectory, QuickscrapeNorma.RESULTS_XML);
 			writeResults(resultsFile, resultsElement);
-			LOG.trace("Wrote "+resultsFile.getAbsolutePath());
+			LOG.debug("Wrote "+resultsFile.getAbsolutePath());
 		}
 		return resultsSubDirectory;
 	}
