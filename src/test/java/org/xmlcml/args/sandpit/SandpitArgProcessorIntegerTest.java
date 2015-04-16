@@ -23,7 +23,6 @@ public class SandpitArgProcessorIntegerTest {
 		Assert.assertEquals("int", 4, (int)sandpitArgProcessor.getInteger());
 	}
 	
-	
 	@Test
 	public void testIntegerOutOfRange() {
 		String args[] = new String[]{"--integer", "2"};  // will be out of range

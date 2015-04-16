@@ -180,15 +180,6 @@ public class DefaultArgProcessor {
 		return newStringList;
 	}
 
-	private void checkCanAssign(Object obj, Method method) {
-	    if (!method.getDeclaringClass().isAssignableFrom(obj.getClass())) {
-	        throw new IllegalArgumentException(
-	            "Cannot call method '" + method + "' of class '" + method.getDeclaringClass().getName()
-	            + "' using object '" + obj + "' of class '" + obj.getClass().getName() + "' because"
-	            + " object '" + obj + "' is not an instance of '" + method.getDeclaringClass().getName() + "'");
-	    }
-	}
-
 	// ============ METHODS ===============
 
 	public void parseExtensions(ArgumentOption option, ArgIterator argIterator) {
@@ -222,6 +213,10 @@ public class DefaultArgProcessor {
 
 	public void parseSummaryFile(ArgumentOption option, ArgIterator argIterator) {
 		summaryFileName = argIterator.getString(option);
+	}
+
+	public void outputMethod(ArgumentOption option) {
+		LOG.error("outputMethod NYI");
 	}
 
 	// =====================================
@@ -383,6 +378,7 @@ public class DefaultArgProcessor {
 		for (String input : inputList) {
 			File file = new File(input);
 			if (file.isDirectory()) {
+				LOG.debug("DIR: "+file.getAbsolutePath()+"; "+file.isDirectory());
 				addDirectoryFiles(inputList0, file);
 			} else {
 				inputList0.add(input);
@@ -460,6 +456,7 @@ public class DefaultArgProcessor {
 	public void runOutputMethodsOnChosenArgOptions() {
 		for (ArgumentOption option : chosenArgumentOptionList) {
 			String outputMethodName = option.getOutputMethodName();
+			LOG.trace("OUTPUT "+outputMethodName);
 			if (outputMethodName != null) {
 				try {
 					runOutputMethod(option);
@@ -627,7 +624,7 @@ public class DefaultArgProcessor {
 	public void runAndOutput() {
 		ensureQuickscrapeNormaList();
 		if (quickscrapeNormaList.size() == 0) {
-			LOG.warn("No CMList found");
+			LOG.warn("Could not find list of CMdirs; possible error");
 		}
 		for (int i = 0; i < quickscrapeNormaList.size(); i++) {
 			currentQuickscrapeNorma = quickscrapeNormaList.get(i);
