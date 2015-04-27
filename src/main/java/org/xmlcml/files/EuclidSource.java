@@ -13,6 +13,8 @@ import org.xmlcml.euclid.Euclid;
  * @author pm286
  *
  */
+@Deprecated
+
 public class EuclidSource {
 
 

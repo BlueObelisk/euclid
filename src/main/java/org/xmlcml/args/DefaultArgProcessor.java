@@ -22,6 +22,8 @@ import org.xmlcml.files.QuickscrapeNorma;
 import org.xmlcml.files.QuickscrapeNormaList;
 import org.xmlcml.xml.XMLUtil;
 
+@Deprecated
+
 public class DefaultArgProcessor {
 
 	

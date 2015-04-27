@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
  * @author pm286
  *
  */
+@Deprecated
+
 public class QuickscrapeNormaList implements Iterable<QuickscrapeNorma> {
 
 	

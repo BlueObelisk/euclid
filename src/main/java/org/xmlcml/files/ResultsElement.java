@@ -18,6 +18,7 @@ import org.xmlcml.xml.XMLUtil;
  * @author pm286
  *
  */
+@Deprecated
 
 public class ResultsElement extends Element implements Iterable<ResultElement> {
 
