@@ -15,6 +15,8 @@ import nu.xom.ParentNode;
  * @author pm286
  *
  */
+@Deprecated
+
 public class ResultElement extends Element {
 
 	

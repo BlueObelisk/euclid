@@ -5,6 +5,8 @@ package org.xmlcml.args;
  * @author pm286
  *
  */
+@Deprecated
+
 public class StringPair {
 
 	public String left;

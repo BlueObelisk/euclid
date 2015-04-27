@@ -25,6 +25,8 @@ import org.xmlcml.xml.XMLUtil;
  * @author pm286
  *
  */
+@Deprecated
+
 public class ArgumentOption {
 	private static final String BRIEF = "brief";
 	private static final String LONG = "long";

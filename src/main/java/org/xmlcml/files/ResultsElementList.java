@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
  * @author pm286
  *
  */
+@Deprecated
+
 public class ResultsElementList implements Iterable<ResultsElement> {
 
 	private static final Logger LOG = Logger.getLogger(ResultsElementList.class);

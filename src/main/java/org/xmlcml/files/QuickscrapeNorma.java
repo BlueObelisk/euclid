@@ -97,6 +97,8 @@ The results file include the regexes used and other metadata (more needed!). Aga
  * @author pm286
  *
  */
+@Deprecated
+
 public class QuickscrapeNorma {
 
 
