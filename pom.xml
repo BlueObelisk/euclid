@@ -13,9 +13,9 @@
 	<version>1.1-SNAPSHOT</version>
  	<packaging>jar</packaging>
 
-        <properties>
-           <guava.version>18.0</guava.version>
-        </properties>
+    <properties>
+       <guava.version>18.0</guava.version>
+    </properties>
 
 
 	<name>CML Euclid</name>
@@ -136,16 +136,19 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
+			<!-- 
 			<scope>test</scope>
+			-->
 		</dependency>
 
+<!--
 		<dependency>
 			<groupId>org.xml-cml</groupId>
 			<artifactId>euclid-testutil</artifactId>
 			<version>1.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
