@@ -256,6 +256,16 @@ public class Int2 implements EuclidConstants {
 		return this;
 	}
 	
+	/** compares two Int2s. Any null values return false.
+	 * 
+	 * @param xy0
+	 * @param xy1
+	 * @return
+	 */
+	public static boolean isEqual(Int2 xy0, Int2 xy1) {
+		return (xy0 != null && xy1 != null && xy0.isEqualTo(xy1));
+	}
+	
 }
 /**
  * Int2Array is NOT a Vector of Int2s, but a container for a 2-D array with a
