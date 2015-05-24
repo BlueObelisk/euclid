@@ -1,5 +1,6 @@
 /**
  *    Copyright 2011 Peter Murray-Rust
+
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,6 +54,15 @@ public class Int2 implements EuclidConstants {
     public Int2(Int2 r) {
         this.x = r.x;
         this.y = r.y;
+    }
+
+    /** cast a Real2 into an Int2.
+     * 
+     * @param xy2
+     * @return null if argument is null
+     */
+    public static Int2 getInt2(Real2 xy2) {
+    	return (xy2 == null) ? null : new Int2((int)xy2.x, (int)xy2.y);
     }
     
     public boolean equals(Object obj) {
