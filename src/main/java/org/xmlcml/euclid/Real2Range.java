@@ -31,6 +31,14 @@ import org.xmlcml.euclid.RealRange.Direction;
  * @author (C) P. Murray-Rust, 1996
  */
 public class Real2Range implements EuclidConstants {
+	
+	public enum BoxDirection {
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM
+	}
+	
 	/**
      * X-range
      */
@@ -467,4 +475,22 @@ public class Real2Range implements EuclidConstants {
 		return (xrange == null || yrange == null) ? null : xrange.getRange() * yrange.getRange();
 	}
 
+	/** returns midPoint of box edge.
+	 * 
+	 * @param direction
+	 * @return mid point
+	 */
+	public Real2 getMidPoint(BoxDirection direction) {
+		Real2 midPoint = null;
+		if (BoxDirection.TOP.equals(direction)) {
+			midPoint = new Real2(getXRange().getMidPoint() , getYMax());
+		} else if (BoxDirection.BOTTOM.equals(direction)) {
+			midPoint = new Real2(getXRange().getMidPoint() , getYMin());
+		} else if (BoxDirection.LEFT.equals(direction)) {
+			midPoint = new Real2(getXMin(), getYRange().getMidPoint());
+		} else if (BoxDirection.RIGHT.equals(direction)) {
+			midPoint = new Real2(getXMax(), getYRange().getMidPoint());
+		}
+		return midPoint;
+	}
 }
