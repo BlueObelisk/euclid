@@ -1167,11 +1167,11 @@ public abstract class XMLUtil implements XMLConstants {
 	}
 
 
-	private static String removeScripts(String baosS) {
-		return removeTags("script", baosS);
+	public static String removeScripts(String s) {
+		return removeTags("script", s);
 	}
 	
-	private static String removeTags(String tag, String ss) {
+	public static String removeTags(String tag, String ss) {
 		int current = 0;
 		StringBuilder sb = new StringBuilder();
 		String startTag = "<"+tag;
