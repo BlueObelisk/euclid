@@ -35,5 +35,26 @@ public class XMLUtilTest {
 		Element root = XMLUtil.stripDTDAndParse(ARTICLE);
 		Assert.assertEquals("elements ", 4, XMLUtil.getQueryElements(root, "//*").size());
 	}
+	
+	@Test
+	public void testAddMissingEndTags() {
+		String s = "<a><meta></a>";
+		s = XMLUtil.addMissingEndTags(s, "meta");
+		Assert.assertEquals("<a><meta/></a>", s);
+	}
+
+	@Test
+	public void testAddMissingEndTags1() {
+		String s = "<a><meta></meta></a>";
+		s = XMLUtil.addMissingEndTags(s, "meta");
+		Assert.assertEquals("<a><meta/></a>", s);
+	}
+
+	@Test
+	public void testAddMissingEndTags2() {
+		String s = "<a><meta a=\"b\"></meta></a>";
+		s = XMLUtil.addMissingEndTags(s, "meta");
+		Assert.assertEquals("<a><meta a=\"b\"/></a>", s);
+	}
 
 }

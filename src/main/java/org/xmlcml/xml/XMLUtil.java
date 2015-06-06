@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Builder;
@@ -45,6 +46,7 @@ import nu.xom.canonical.Canonicalizer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.xmlcml.euclid.Util;
 
 /**
@@ -1166,6 +1168,44 @@ public abstract class XMLUtil implements XMLConstants {
 		return root;
 	}
 
+	/** adds missing end tag
+	 * 
+	 * crude - adds /> and then deletes any /></tag> 
+	 * 
+	 * 		String s = "<a><meta></a>";
+		s = XMLUtil.addMissingEndTags(s, "meta");
+		Assert.assertEquals("<a><meta/></a>", s);
+
+	 * @param s
+	 * @param tag
+	 * @return
+	 */
+	public static String addMissingEndTags(String s, String tag) {
+		// convert balanced tags (<tag ...></tag> to <tag .../>
+		s = s.replaceAll(">\\s*</"+tag+">", "/>");
+		StringBuilder sb = new StringBuilder(s);
+		int i = 0;
+		boolean inTag = false;
+		String start = "<"+tag;
+		int stl = start.length();
+		
+		while (i < sb.length()) {
+			if (i < sb.length() - stl && start.equals(sb.substring(i, i + stl))) {
+				inTag = true;
+				i += stl;
+			} else if (inTag && (sb.charAt(i) == '>')) {
+				if (sb.charAt(i-1) != '/') {
+					sb.insert(i, '/');
+					i++;
+				}
+				i++;
+				inTag = false;
+			} else {
+				i++;
+			}
+		}
+		return sb.toString();
+	}
 
 	public static String removeScripts(String s) {
 		return removeTags("script", s);
