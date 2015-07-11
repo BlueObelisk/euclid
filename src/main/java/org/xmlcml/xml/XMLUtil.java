@@ -60,11 +60,13 @@ import org.xmlcml.euclid.Util;
  * 
  */
 public abstract class XMLUtil implements XMLConstants {
+
 	private static Logger LOG = Logger.getLogger(XMLUtil.class);
 
-	private static final String DUMMY = "dummy";
-	private static final String DOCTYPE = "\\<\\!DOCTYPE[^\\>]*\\>";
-	public final static String DTD = ".dtd\">";
+	private static final  String DOCTYPE = "\\<\\!DOCTYPE[^\\>]*\\>";
+	public  final  static String DTD     = ".dtd\">";
+	private static final  String DUMMY   = "dummy";
+	private static final  String TEXT    = "#text";
 
 
 	// ========================== utilities ====================== //
@@ -1281,6 +1283,50 @@ public abstract class XMLUtil implements XMLConstants {
 			throw new RuntimeException(e);
 		}
 		return doc;
+	}
+
+	/** checks that attribute names are in allowed list.
+	 * 
+	 * @param element
+	 * @param allowedAttributeNames
+	 * 
+	 * @throws RuntimeException if unknown attribute
+	 */
+	public static void checkAttributeNames(Element element, List<String> allowedAttributeNames) {
+		for (int i = 0; i < element.getAttributeCount(); i++) {
+			String attributeName = element.getAttribute(i).getLocalName();
+			if (!allowedAttributeNames.contains(attributeName)) {
+				throw new RuntimeException("Unknown attribute: "+attributeName+" in element: "+element.getLocalName());
+			}
+		}
+	}
+	
+	/** checks that childNode names are in allowed list.
+	 * 
+	 * @param element
+	 * @param allowedChildNodeNames 
+	 *     can include element names, #text, - other node types are always allowed
+	 * 
+	 * @throws RuntimeException if unknown childElement
+	 */
+	public static void checkChildElementNames(Element element, List<String> allowedChildNodeNames) {
+		for (int i = 0; i < element.getChildCount(); i++) {
+			Node childNode = element.getChild(i);
+			if (childNode instanceof Text) {
+				// we allow whitespace
+				if (childNode.getValue().trim().length() > 0 
+						&& !allowedChildNodeNames.contains(TEXT)) {
+					
+				}
+			} else if (childNode instanceof Element) {
+				String elementName = element.getAttribute(i).getLocalName();
+				if (!allowedChildNodeNames.contains(elementName)) {
+					throw new RuntimeException("Unknown element: "+elementName+" in element: "+element.getLocalName());
+				}
+			} else {
+				// OK
+			}
+		}
 	}
 	
 
