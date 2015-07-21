@@ -16,6 +16,7 @@
 
 package org.xmlcml.euclid;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1358,6 +1359,29 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
 			integerSet.add(array[i]);
 		}
 		return integerSet;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(array);
+		result = prime * result + nelem;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntArray other = (IntArray) obj;
+		if (!Arrays.equals(array, other.array))
+			return false;
+		if (nelem != other.nelem)
+			return false;
+		return true;
 	}
 }
 class IntegerIterator implements Iterator<Integer> {
