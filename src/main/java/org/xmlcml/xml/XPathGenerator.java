@@ -44,8 +44,10 @@ public class XPathGenerator {
 		if (element == null)
 			return;
 		String name = element.getLocalName();
+		String el = element.toXML();
+//		LOG.debug(">anc>"+el.toString().substring(0,  Math.min(el.length(), 300)));
 		StringBuilder sb1 = new StringBuilder();
-		sb1.append("/" + name);
+		sb1.append("/*[local-name()='" + name + "']");
 		// FIXME this is NOT UNIQUE
 		Attribute attribute = getFirstUsefulAttribute(element);
 		attribute = null; // FIXME
@@ -56,7 +58,9 @@ public class XPathGenerator {
 			int ordinal = getOrdinalOfChildWithName(element, name);
 			sb1.append("[" + ordinal + "]");
 		}
-		sb.insert(0, sb1.toString());
+		String ss = sb1.toString();
+//		LOG.debug(">"+ss);
+		sb.insert(0, ss);
 		ParentNode parent = element.getParent();
 		if (parent != null && parent instanceof Element) {
 			addAncestors(sb, (Element) parent);
