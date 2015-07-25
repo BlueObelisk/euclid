@@ -273,6 +273,19 @@ public abstract class XMLUtil implements XMLConstants {
 			serializer.write(document);
 		}
 	}
+	
+	public static void debug(Element el, File file, int indent) throws IOException {
+		if (file == null) {
+			throw new RuntimeException("null file");
+		}
+		if (file.isDirectory()) {
+			file.mkdirs();
+		} else {
+			file.getParentFile().mkdirs();
+		}
+		debug(el, new FileOutputStream(file), indent);
+	}
+	
 	/** convenience method to avoid trapping exception
 	 * 
 	 * @param elem
