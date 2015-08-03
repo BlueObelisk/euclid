@@ -370,6 +370,24 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
         	}
         }
     }
+    
+    /** interprets list of Strings as numbers.
+     * 
+     * @param stringList
+     * @return null if stringList is null, zero length or has non-numbers
+     */
+    public static RealArray createRealArray(List<String> stringList) {
+    	RealArray realArray = null;
+    	if (stringList != null && stringList.size() > 0) {
+	    	try {
+	    		realArray = new RealArray(stringList.toArray(new String[0]));
+	    	} catch (EuclidRuntimeException ere) {
+	    		// bad strings
+	    	}
+    	}
+    	return realArray;
+    }
+    
     /**
      * create from a space-separated string of doubles.
      * 
