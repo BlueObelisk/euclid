@@ -547,6 +547,10 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 		return realRangeList;
 	}
 	
-
+	public static boolean isEqual(RealRange range0, RealRange range1, double eps) {
+		return (range0 == null && range1 == null) ? false :
+			Real.isEqual(range0.getMin(), range1.getMin(), eps) &&
+			Real.isEqual(range0.getMax(), range1.getMax(), eps);
+	}
 
 }
