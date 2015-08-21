@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 
 public class EuclidTestUtils {
 	/** logger */
-	public final static Logger LOG = Logger.getLogger(EuclidTestUtils.class);
+	private final static Logger LOG = Logger.getLogger(EuclidTestUtils.class);
 	public final static String BASE_RESOURCE = "org/xmlcml/euclid";
 
 }

@@ -55,7 +55,7 @@ import org.xmlcml.xml.XMLUtil;
  */
 public class STMLElement extends Element implements XMLConstants {
 
-	public final static Logger LOG = Logger.getLogger(STMLElement.class);
+	private final static Logger LOG = Logger.getLogger(STMLElement.class);
 	
     final static String ID = "id";
 
