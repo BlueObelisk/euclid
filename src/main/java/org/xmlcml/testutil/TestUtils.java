@@ -80,7 +80,7 @@ import org.xmlcml.xml.XMLUtil;
 public final class TestUtils implements STMLConstants {
 
 	/** logger */
-	public final static Logger logger = Logger.getLogger(TestUtils.class);
+	private final static Logger logger = Logger.getLogger(TestUtils.class);
 
 	public static final String OUTPUT_DIR_NAME = "target/test-outputs";
 
