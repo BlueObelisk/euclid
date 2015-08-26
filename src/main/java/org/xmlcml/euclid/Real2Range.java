@@ -493,4 +493,15 @@ public class Real2Range implements EuclidConstants {
 		}
 		return midPoint;
 	}
+	
+	/** compares boxes independent of origin.
+	 * 
+	 * @param bbox
+	 * @return
+	 */
+	public boolean isLessThan(Real2Range bbox) {
+		return (bbox != null) &&
+			xrange.isLessThan(bbox.getXRange()) &&
+			yrange.isLessThan(bbox.getYRange()); 
+	}
 }
