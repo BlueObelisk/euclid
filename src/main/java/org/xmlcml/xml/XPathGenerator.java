@@ -29,9 +29,14 @@ public class XPathGenerator {
 	private static final String[] TAGS = {ID, NAME, TAGX};
 	
 	private Element xmlElement;
+	private boolean shortFlag = false;
 
 	public XPathGenerator(Element xmlElement) {
 		this.xmlElement = xmlElement;
+	}
+	
+	public void setShort(boolean shortFlag) {
+		this.shortFlag  = shortFlag;
 	}
 	
     public String getXPath() {
@@ -47,7 +52,7 @@ public class XPathGenerator {
 		String el = element.toXML();
 //		LOG.debug(">anc>"+el.toString().substring(0,  Math.min(el.length(), 300)));
 		StringBuilder sb1 = new StringBuilder();
-		sb1.append("/*[local-name()='" + name + "']");
+		sb1.append(((shortFlag) ? "/" + name : "/*[local-name()='" + name + "']"));
 		// FIXME this is NOT UNIQUE
 		Attribute attribute = getFirstUsefulAttribute(element);
 		attribute = null; // FIXME
