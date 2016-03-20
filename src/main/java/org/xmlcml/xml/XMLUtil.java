@@ -404,7 +404,7 @@ public abstract class XMLUtil implements XMLConstants {
 	 */
 	public static List<Node> getQueryNodes(Node node, String xpath) {
 		List<Node> nodeList = new ArrayList<Node>();
-		if (node != null) {
+		if (node != null && xpath != null) {
 			try {
 				Nodes nodes = node.query(xpath);
 				for (int i = 0; i < nodes.size(); i++) {
