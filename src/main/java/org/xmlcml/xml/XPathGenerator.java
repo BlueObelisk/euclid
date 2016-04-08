@@ -8,9 +8,22 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
-/** generates an xpath for an element.
+/** generates an xpath for an element in context.
  * 
- * Heuristic
+ * Heuristic.
+ * 
+ * Because of the problems of namespaces, variable use of IDs etc., There are roughly three strategies:
+ *  (1) ancestor local names e.g. *[local-name()='body']/*[local-name()='div'][1]/*[local-name='p'][2]
+ *  (2) namespaced h:body/h:div[1]/h:p[2]
+ *  (3) ids *[@id='id23']/*[@id='id45']/*[@id='id99']
+ *  
+ *  If the namespaces are not clear then (2) cannot be used. If there are no ids, then maybe we have to generate
+ *  them. but this is fragile against others doing the same with different strategy. (1) is the safest - it fails
+ *  ony when there are elements with different namespaces. so (4) we could probably extract the namespaces and use them explicitli
+ *  (4) *[local-name()='body' and namespace-uri()='http://www.w3.org/1999/xhtml']/*[local-name()='div'][1]/*[local-name='p'][2]
+ *  
+ *  I think (4) is safe, but verbose!!
+
  * 
  * @author pm286
  *
