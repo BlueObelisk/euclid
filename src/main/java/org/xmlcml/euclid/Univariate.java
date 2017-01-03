@@ -419,9 +419,11 @@ public class Univariate {
 				if (counts[i] > 0.1) {
 					valueFrequencyList.set(ii, new Real2(medians.elementAt(i),
 							counts[i]));
+					numNonZero++;
 				} else {
 					valueFrequencyList.set(ii, null);
-					numNonZero++;
+					// this was a bug?
+//					numNonZero++;
 				}
 			}
 			List<Real2> array1 = new ArrayList<Real2>();
