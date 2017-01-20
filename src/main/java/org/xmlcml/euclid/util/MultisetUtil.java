@@ -32,12 +32,20 @@ public class MultisetUtil {
 		return Multisets.copyHighestCountFirst(integerSet).entrySet();
 	}
 
+	public static Iterable<Multiset.Entry<Double>> getDoubleEntriesSortedByCount(Multiset<Double> doubleSet) {
+		return Multisets.copyHighestCountFirst(doubleSet).entrySet();
+	}
+
 	public static Iterable<Entry<String>> getEntriesSortedByValue(Multiset<String> wordSet) {
 		return  ImmutableSortedMultiset.copyOf(wordSet).entrySet();
 	}
 
 	public static Iterable<Entry<Integer>> getIntegerEntriesSortedByValue(Multiset<Integer> integerSet) {
 		return  ImmutableSortedMultiset.copyOf(integerSet).entrySet();		
+	}
+
+	public static Iterable<Entry<Double>> getDoubleEntriesSortedByValue(Multiset<Double> doubleSet) {
+		return  ImmutableSortedMultiset.copyOf(doubleSet).entrySet();		
 	}
 
 

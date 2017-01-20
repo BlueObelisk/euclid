@@ -807,6 +807,21 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
         return m;
     }
     /**
+     * add a scalar to each element. creates new array; does NOT modify
+     * 'this'
+     * 
+     * @param f multiplier
+     * @return the new array
+     */
+    public RealArray plus(double f) {
+        RealArray m = (RealArray) this.clone();
+        for (int i = 0; i < nelem; i++) {
+            m.array[i] += f;
+        }
+        return m;
+    }
+    
+    /**
      * set element value.
      * 
      * @param elem
