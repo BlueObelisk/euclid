@@ -37,4 +37,9 @@ public abstract class ArrayBase implements EuclidConstants {
             this.trim = t;
         }
     }
+    /** splits string versions of arrays. 
+     * 
+     */
+	public final static String ARRAY_REGEX = "\\s+|\\s*\\|\\s*|\\s*\\,\\s*";
+
 }

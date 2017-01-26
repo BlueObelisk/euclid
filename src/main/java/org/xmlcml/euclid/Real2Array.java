@@ -170,7 +170,7 @@ public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
     public static Real2Array createFromPairs(String sss, String delimiter) {
     	Real2Array real2Array = null;
     	if (sss != null) {
-    		String[] ss = sss.split(delimiter);
+    		String[] ss = sss.trim().split(delimiter);
     		if (ss.length % 2 == 0) {
             	RealArray realArray = new RealArray(ss);
     	    	real2Array = Real2Array.createFromPairs(realArray);

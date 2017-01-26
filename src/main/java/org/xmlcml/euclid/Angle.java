@@ -306,6 +306,15 @@ public class Angle {
         return isEqualTo(a.angle);
     }
     /**
+     * are two angles equal
+     * 
+     * @param a
+     * @return ==
+     */
+    public boolean isEqualTo(Angle a, double eps) {
+    	return a != null && Real.isEqual(a.getRadian(), this.getRadian(), eps);
+    }
+    /**
      * is one angle greater than another (after normalisation)
      * 
      * @param a

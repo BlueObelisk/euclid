@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.xmlcml.euclid.ArrayBase;
 import org.xmlcml.euclid.EC;
 import org.xmlcml.euclid.Real2;
 import org.xmlcml.euclid.Real2Array;
@@ -124,7 +125,7 @@ public class Real2ArrayTest {
 	@Test
 	public void testCreateFromPairs() {
 		String s = "1,2 3,4 5,6 7,8";
-		Real2Array real2Array = Real2Array.createFromPairs(s, EC.S_COMMA+S_PIPE+S_SPACE);
+		Real2Array real2Array = Real2Array.createFromPairs(s, ArrayBase.ARRAY_REGEX);
 		Assert.assertEquals("size", 4, real2Array.size());
 		RealArray xarr = real2Array.getXArray();
 		Assert.assertTrue("getXArray", xarr.isEqualTo(new RealArray(
