@@ -16,6 +16,9 @@
 
 package org.xmlcml.euclid.test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +33,7 @@ import org.xmlcml.euclid.IntRange;
 public class IntRangeTest {
 
 	IntRange i0;
-
 	IntRange i1;
-
 	IntRange i2;
 
 	/**
@@ -215,4 +216,70 @@ public class IntRangeTest {
 		Assert.assertEquals("mid", 2, i2.getMidPoint());
 	}
 
+	@Test
+	public void testCanJoin() {
+		IntRange range = new IntRange(1,5);
+		Assert.assertTrue(range.canJoin(new IntRange(5,8), 0));
+		Assert.assertTrue(range.canJoin(new IntRange(5,8), 1));
+		// gap
+		Assert.assertFalse(range.canJoin(new IntRange(6,8), 0));
+		// allowed tolerance
+		Assert.assertTrue(range.canJoin(new IntRange(6,8), 1));
+		// overlap too large
+		Assert.assertFalse(range.canJoin(new IntRange(3,8), 1));
+		// included
+		Assert.assertFalse(range.canJoin(new IntRange(3,5), 1));
+		Assert.assertFalse(range.canJoin(new IntRange(1,5), 1));
+	}
+	
+	/** join ranges
+	 * 
+	 * 
+[(269,364) x 6, (478,554) x 6, (420,478) x 6, (364,420) x 6, (151,269) x 6]
+	 */
+	@Test
+	public void testJoinRanges1() {
+		List<IntRange> rangeList = Arrays.asList(
+				new IntRange[] {
+						new IntRange(269,364),
+						new IntRange(478,554),
+						new IntRange(420,478),
+						new IntRange(364,420),
+						new IntRange(151,269),
+				});
+		String rangeListString = "[(269,364), (478,554), (420,478), (364,420), (151,269)]";
+		Assert.assertEquals(rangeListString,  rangeList.toString());
+		List<IntRange> totalList = IntRange.joinRanges(rangeList, 0);
+		Assert.assertEquals(1,  totalList.size());
+		Assert.assertEquals("(151,554)",  totalList.get(0).toString());
+		Assert.assertEquals(rangeListString,  rangeList.toString());
+		
+	}
+	
+	/** join ranges
+	 * 
+	 * 
+// this has a gap (241-242)
+[(253,265) x 6, (276,288) x 6, (242,253) x 6, (265,276) x 6, (222,241) x 6]
+	 */
+	@Test
+	public void testJoinRanges2() {
+		List<IntRange> intRangeList = Arrays.asList(
+				new IntRange[] {
+						new IntRange(253,265),
+						new IntRange(276,288),
+						new IntRange(242,253),
+						new IntRange(265,276),
+						new IntRange(222,241),
+				});
+		List<IntRange> totalList = IntRange.joinRanges(intRangeList, 0);
+		Assert.assertEquals(2,  totalList.size());
+		Assert.assertEquals("(222,241)",  totalList.get(0).toString());
+		Assert.assertEquals("(242,288)",  totalList.get(1).toString());
+		// allow a tolerance
+		totalList = IntRange.joinRanges(intRangeList, 1);
+		Assert.assertEquals(1,  totalList.size());
+		Assert.assertEquals("(222,288)",  totalList.get(0).toString());
+		
+	}
 }
