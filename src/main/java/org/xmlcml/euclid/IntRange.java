@@ -17,12 +17,19 @@
 package org.xmlcml.euclid;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.xmlcml.euclid.util.MultisetUtil;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
 
 /**
  * maximum and minimum values
@@ -47,6 +54,8 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 	private final static Pattern CURLY_PATTERN2 = Pattern.compile("\\{([^,]+),([^,]+)\\}");
 	private final static String ANY = "*";
 
+	public final static IntRangeComparator ASCENDING_MIN_COMPARATOR = new IntRangeComparator();
+	
     /**
      * maximum of range
      */
@@ -362,5 +371,101 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 		return intRangeList;
 	}
 	
+	/** joins intRanges A and B when A.getMax() == B.getMin().
+	 * Ranges must either "join" within a tolerance or be disjoint.
+	 * Overlapping ranges will throw an RuntimeException.
+	 * 
+	 * (1,5), (5,10), (10,15)
+	 *  creates
+	 *  (1,15)
+	 *  
+	 * (1,5), (5,10), (15,20), (20, 25)
+	 *  creates
+	 *  (1,10) (15, 25)
+	 *  
+	 * (1,5),  (15,20)
+	 *  creates
+	 *  (1,5) (15, 20)
+	 *  
+	 *  (1,5) (2,10) (5, 12) throws an Exception
+	 *  
+	 * @param rangeList can be in any order, not altered 
+	 * @param tolerance allows for overlap, i.e. (1,5) and (4,10) would "touch" , so would (1,5) and (6,10)
+	 * @return List of non-touching joined ranges, sorted by new R.getMin()
+	 */
+	public static List<IntRange> joinRanges(List<IntRange> rangeList, int tolerance) {
+		if (rangeList.size() <= 1) {
+			return rangeList;
+		}
+		List<IntRange> sortedList = new ArrayList<IntRange>();
+		for (IntRange range : rangeList) {
+			sortedList.add(new IntRange(range)); // must copy to preserve original list unaltered
+		}
+		Collections.sort(sortedList, ASCENDING_MIN_COMPARATOR);
+		List<IntRange> newList = new ArrayList<IntRange>();
+		IntRange currentRange = sortedList.get(0);
+		newList.add(currentRange);
+		for (int i = 1; i < sortedList.size(); i++) {
+			IntRange range = sortedList.get(i);
+			if (currentRange.canJoin(range, tolerance)) {
+				currentRange.setMax(range.getMax());
+			} else {
+				if (range.getMin() < currentRange.getMax()) {
+					throw new RuntimeException("ranges overlap: "+currentRange+" / "+range);
+				}
+				currentRange = range;
+				newList.add(currentRange);
+			}
+		}
+		return newList;
+	}
+	
+	/** can two ranges be joined at a common point?
+	 * (1,5) and (5,10) can be joined.
+	 * Because ranges are sometimes created from real numbers, a tolerance is allowed. 
+	 * This should should normally not be set beyond 1
+	 * (1,5) and (6,10) would join with tolerance=1, as would (1,5) and (4,10)
+	 * (1,5) and (3,10) would not be joinable with tolerance=1
+	 * 
+	 * @param range
+	 * @param tolerance
+	 * @return
+	 */
+	public boolean canJoin(IntRange range, int tolerance) {
+		return Math.abs(this.maxval - range.minval) <= tolerance; 
+	}
+//	public static Iterable<Multiset.Entry<Integer>> getIntegerEntriesSortedByCount(Multiset<Integer> integerSet) {
+//		return Multisets.copyHighestCountFirst(integerSet).entrySet();
+//	}
 
+	
+	public static List<Multiset.Entry<IntRange>> getIntRangeEntryListSortedByCount(Multiset<IntRange> intRangeSet) {
+		return Lists.newArrayList(IntRange.getIntRangeEntriesSortedByCount(intRangeSet));
+	}
+	
+	public static Iterable<Multiset.Entry<IntRange>> getIntRangeEntriesSortedByCount(Multiset<IntRange> intRangeSet) {
+		return Multisets.copyHighestCountFirst(intRangeSet).entrySet();
+	}
+
+
+	public void setMax(int max) {
+		if (max >= this.minval) {
+			this.maxval = max;
+		}
+	}
+
+	public void setMin(int min) {
+		if (min <= this.maxval) {
+			this.minval = min;
+		}
+	}
+}
+class IntRangeComparator implements Comparator<IntRange>{
+
+	@Override
+	public int compare(IntRange o1, IntRange o2) {
+		if (o1 == null || o2 == null) return -1;
+		return o1.getMin() - o2.getMin();
+	}
+	
 }

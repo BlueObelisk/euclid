@@ -3,12 +3,14 @@ package org.xmlcml.euclid.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xmlcml.euclid.IntRange;
 import org.xmlcml.xml.XMLUtil;
 
+import com.google.common.collect.ImmutableSortedMultiset;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Multisets;
-import com.google.common.collect.ImmutableSortedMultiset;
 
 import nu.xom.Node;
 
@@ -28,25 +30,29 @@ public class MultisetUtil {
 		return Multisets.copyHighestCountFirst(wordSet).entrySet();
 	}
 
-	public static Iterable<Multiset.Entry<Integer>> getIntegerEntriesSortedByCount(Multiset<Integer> integerSet) {
-		return Multisets.copyHighestCountFirst(integerSet).entrySet();
-	}
-
-	public static Iterable<Multiset.Entry<Double>> getDoubleEntriesSortedByCount(Multiset<Double> doubleSet) {
-		return Multisets.copyHighestCountFirst(doubleSet).entrySet();
-	}
-
 	public static Iterable<Entry<String>> getEntriesSortedByValue(Multiset<String> wordSet) {
 		return  ImmutableSortedMultiset.copyOf(wordSet).entrySet();
 	}
 
+	
 	public static Iterable<Entry<Integer>> getIntegerEntriesSortedByValue(Multiset<Integer> integerSet) {
 		return  ImmutableSortedMultiset.copyOf(integerSet).entrySet();		
 	}
+	
+	public static Iterable<Multiset.Entry<Integer>> getIntegerEntriesSortedByCount(Multiset<Integer> integerSet) {
+		return Multisets.copyHighestCountFirst(integerSet).entrySet();
+	}
+
 
 	public static Iterable<Entry<Double>> getDoubleEntriesSortedByValue(Multiset<Double> doubleSet) {
 		return  ImmutableSortedMultiset.copyOf(doubleSet).entrySet();		
 	}
+	
+	public static Iterable<Multiset.Entry<Double>> getDoubleEntriesSortedByCount(Multiset<Double> doubleSet) {
+		return Multisets.copyHighestCountFirst(doubleSet).entrySet();
+	}
+
+
 
 
 	/** extracts a list of attribute values.
