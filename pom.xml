@@ -20,7 +20,7 @@
 
 	<name>CML Euclid</name>
 	<description>A Java library for 2D and 3D geometric calculations</description>
-	<url>http://bitbucket.org/wwmm/euclid</url>
+	<url>https://github.com/BlueObelisk/euclid</url>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -29,9 +29,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>https://bitbucket.org/wwmm/euclid/src</url>
-		<connection>scm:hg:http://bitbucket.org/wwmm/euclid</connection>
-		<developerConnection>scm:hg:https://bitbucket.org/wwmm/euclid</developerConnection>
+		<url>https://github.com/BlueObelisk/euclid</url>
+		<connection>scm:git:https://github.com/BlueObelisk/euclid</connection>
+		<developerConnection>scm:git:https://github.com/BlueObelisk/euclid</developerConnection>
 	</scm>
 	<developers>
 		<developer>
@@ -136,7 +136,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
-			<!-- 
+			<!--
 			<scope>test</scope>
 			-->
 		</dependency>

@@ -3,5 +3,6 @@ foo
 ^.settings/
 ^.classpath$
 ^.hgignore~$
+^.gitignore~$
 ^target/.*
 /target/
