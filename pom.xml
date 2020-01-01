@@ -124,15 +124,6 @@
     </plugins>
   </build>
 
-<!-- remove <repositories> for releases to central -->
-  <repositories>
-    <repository>
-      <id>ucc-repo</id>
-      <name>UCC Repository</name>
-      <url>https://maven.ch.cam.ac.uk/m2repo</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
