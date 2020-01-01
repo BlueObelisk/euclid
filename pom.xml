@@ -118,6 +118,22 @@
         <artifactId>maven-license-plugin</artifactId>
         <configuration>
           <header>src/main/resources/header.txt</header>
+          <excludes>
+            <!-- some files that live in the root dir -->
+            <exclude>.travis.yml</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>README.md</exclude>
+            <exclude>LICENSE.*</exclude>
+            <exclude>**/README</exclude>
+            <!-- ignore test resources: -->
+            <exclude>src/test/resources/org/xmlcml/files/**</exclude>
+            <!-- igore stern_library -->
+            <exclude>src/*/java/blogspot/software_and_algorithms/stern_library/**</exclude>
+            <!-- some junk- and IDE files: -->
+            <exclude>**/*.java-old</exclude>
+            <exclude>**/junk</exclude>
+            <exclude>.idea/**</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
