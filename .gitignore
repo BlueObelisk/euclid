@@ -5,4 +5,7 @@ foo
 ^.hgignore~$
 ^.gitignore~$
 ^target/.*
-/target/
+target/
+# IntelliJ Idear files
+/.idea/*
+**/*.iml
