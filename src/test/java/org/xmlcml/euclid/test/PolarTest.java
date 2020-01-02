@@ -135,7 +135,7 @@ public class PolarTest {
 		Assert.assertEquals("polar", 40., pb.getY(), EPS);
 		Polar pc = pa.plus(pb);
 		Assert.assertEquals("polar", 40., pc.getX(), EPS);
-		Assert.assertEquals("polar", 60., pc.getY(), EPS);
+		Assert.assertEquals("polar", 60., pc.getY(), 2.0 * EPS);
 	}
 
 	/**
