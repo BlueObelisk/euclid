@@ -11,10 +11,10 @@ It's used a lot in CML tools (JUMBO, JUMBO-converters) and also AMI (for extract
 
 
 ---
-
-*Note:*
+**Note:**  
 As of 2020-01-01 the the official home for CML Euclid is:
 <https://github.com/BlueObelisk/euclid>.
 Euclid's old home at: <https://bitbucket.org/wwmm/euclid> is subject to be
 removed once Bitbucket removes all Mercurial repositories mid-2020.
+
 ---
