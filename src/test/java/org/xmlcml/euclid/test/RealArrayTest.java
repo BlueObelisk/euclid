@@ -17,10 +17,13 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EuclidConstants.EPS;
+import static org.xmlcml.euclid.EuclidConstants.S_EMPTY;
 
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -534,8 +537,9 @@ public class RealArrayTest {
 			Assert.assertEquals("element at", 4.0, a1.elementAt(5),EPS);
 			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
-			Assert.assertEquals("ArrayIndexOutOfBoundsException", "5", e
-					.getMessage());
+			MatcherAssert.assertThat("ArrayIndexOutOfBoundsException", e.getMessage(),
+				CoreMatchers.anyOf(	CoreMatchers.equalTo("5"),
+					CoreMatchers.equalTo("Index 5 out of bounds for length 4")));
 		}
 	}
 
@@ -711,8 +715,8 @@ public class RealArrayTest {
 			a = a1.getSubArray(0, 5);
 			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
-			Assert.assertEquals("subArray ArrayIndexOutOfBoundsException",
-					"java.lang.ArrayIndexOutOfBoundsException", "" + e);
+			MatcherAssert.assertThat("subArray ArrayIndexOutOfBoundsException", S_EMPTY + e,
+					CoreMatchers.startsWith("java.lang.ArrayIndexOutOfBoundsException"));
 		}
 	}
 

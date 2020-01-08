@@ -1040,7 +1040,7 @@ public class ThriftyList<T> extends AbstractList<T> implements List<T>,
 	 */
 	@Override
 	public T[] toArray() {
-		return (T[]) toArray(null);
+		return (T[]) toArray((Object[]) null);
 	}
 
 	/**
