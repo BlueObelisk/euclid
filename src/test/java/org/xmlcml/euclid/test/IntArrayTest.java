@@ -22,6 +22,8 @@ import static org.xmlcml.euclid.EuclidConstants.S_RBRAK;
 
 import java.util.Iterator;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -226,8 +228,9 @@ public class IntArrayTest {
 			Assert.assertEquals("element at", 4, a1.elementAt(5));
 			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
-			Assert.assertEquals("ArrayIndexOutOfBoundsException", "5", e
-					.getMessage());
+			MatcherAssert.assertThat("ArrayIndexOutOfBoundsException", e.getMessage(),
+				CoreMatchers.anyOf(	CoreMatchers.equalTo("5"),
+					CoreMatchers.equalTo("Index 5 out of bounds for length 4")));
 		}
 	}
 
@@ -372,8 +375,8 @@ public class IntArrayTest {
 			a = a1.getSubArray(0, 5);
 			Assert.fail("should always throw " + "ArrayIndexOutOfBoundsException");
 		} catch (ArrayIndexOutOfBoundsException e) {
-			Assert.assertEquals("subArray ArrayIndexOutOfBoundsException",
-					"java.lang.ArrayIndexOutOfBoundsException", S_EMPTY + e);
+			MatcherAssert.assertThat("subArray ArrayIndexOutOfBoundsException", S_EMPTY + e,
+				CoreMatchers.startsWith("java.lang.ArrayIndexOutOfBoundsException"));
 		}
 	}
 
