@@ -1,5 +1,5 @@
 # CML Euclid
-[![Build Status](https://travis-ci.org/BlueObelisk/euclid.svg?branch=master)](https://travis-ci.org/BlueObelisk/euclid)
+[![Build Status](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml/badge.svg)](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml)
 
 A library of numeric, geometric and XML routines
 
@@ -15,6 +15,6 @@ It's used a lot in CML tools (JUMBO, JUMBO-converters) and also AMI (for extract
 As of 2020-01-01 the the official home for CML Euclid is:
 <https://github.com/BlueObelisk/euclid>.
 Euclid's old home at: <https://bitbucket.org/wwmm/euclid> is subject to be
-removed once Bitbucket removes all Mercurial repositories mid-2020.
+removed once Bitbucket removes all Mercurial repositories mid-2022.
 
 ---
