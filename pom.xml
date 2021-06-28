@@ -25,7 +25,7 @@
 
   <scm>
     <url>https://github.com/BlueObelisk/euclid</url>
-    <connection>scm:git:https://github.com/BlueObelisk/euclid</connection>
+    <connection>scm:git:git://github.com/blueobelisk/euclid.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/blueobelisk/euclid.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
