@@ -3,7 +3,7 @@
 
   <groupId>org.blueobelisk</groupId>
   <artifactId>euclid</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -26,7 +26,7 @@
     <url>https://github.com/BlueObelisk/euclid</url>
     <connection>scm:git:git://github.com/blueobelisk/euclid.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/blueobelisk/euclid.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>euclid-1.2</tag>
   </scm>
 
   <developers>
