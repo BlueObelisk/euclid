@@ -1,4 +1,5 @@
 # CML Euclid
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid)
 [![Build Status](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml/badge.svg)](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml)
 
 A library of numeric, geometric and XML routines
