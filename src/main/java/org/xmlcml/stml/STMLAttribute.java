@@ -15,12 +15,11 @@
  */
 package org.xmlcml.stml;
 
-import nu.xom.Attribute;
-import nu.xom.NamespaceConflictException;
-import nu.xom.Node;
-
 import org.apache.log4j.Logger;
 import org.xmlcml.xml.XMLConstants;
+
+import nu.xom.Attribute;
+import nu.xom.NamespaceConflictException;
 
 /**
  * generic subclassed Attribute for CML elements. often further subclassed into
@@ -127,7 +126,7 @@ public class STMLAttribute extends Attribute implements XMLConstants {
      * shallow copy as most fields are not mutable
      * @return copy of node
      */
-    public Node copy() {
+    public Attribute copy() {
     	STMLAttribute newAttribute = new STMLAttribute(this);
         newAttribute.setValue(this.getValue());
         return newAttribute;

@@ -91,7 +91,7 @@ public class DoubleSTAttribute extends STMLAttribute {
 	 * 
 	 * @return copy
 	 */
-	public Node copy() {
+	public Attribute copy() {
 		return new DoubleSTAttribute(this);
 	}
 
