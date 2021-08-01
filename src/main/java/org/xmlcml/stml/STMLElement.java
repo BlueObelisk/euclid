@@ -196,7 +196,7 @@ public class STMLElement extends Element implements XMLConstants {
      * 
      * @return node
      */
-    public Node copy() {
+    public Element copy() {
         return new STMLElement(this);
     }
 

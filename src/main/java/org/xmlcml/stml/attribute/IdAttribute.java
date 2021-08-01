@@ -57,7 +57,7 @@ public class IdAttribute extends StringSTAttribute {
     /** copy constructor.
      * @return IdAttribute copy
      */
-    public Node copy() {
+    public Attribute copy() {
     	return new IdAttribute(this);
     }
     

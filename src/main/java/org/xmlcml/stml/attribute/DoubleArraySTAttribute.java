@@ -90,7 +90,7 @@ public class DoubleArraySTAttribute extends STMLAttribute {
 	 * 
 	 * @return copy
 	 */
-	public Node copy() {
+	public Attribute copy() {
 		return new DoubleArraySTAttribute(this);
 	}
 
