@@ -164,7 +164,7 @@ public class Transform2 extends RealSquareMatrix {
      * @param v2
      *            Description of the Parameter
      * @exception EuclidRuntimeException
-     *                <TT>v1</TT> or <TT>v2</TT> is zero length
+     *                <code>v1</code> or <code>v2</code> is zero length
      */
     public Transform2(Vector2 v1, Vector2 v2) throws EuclidRuntimeException {
         super(3);
@@ -223,7 +223,7 @@ public class Transform2 extends RealSquareMatrix {
      * @param m
      *            Description of the Parameter
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must be 2*2 or 3*3
+     *                <code>m</code> must be 2*2 or 3*3
      */
     public Transform2(RealSquareMatrix m) throws EuclidRuntimeException {
         this();
@@ -250,7 +250,7 @@ public class Transform2 extends RealSquareMatrix {
      * @param v
      *            Description of the Parameter
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must be 2*2
+     *                <code>m</code> must be 2*2
      */
     public Transform2(RealSquareMatrix m, Vector2 v) throws EuclidRuntimeException {
         this(m);
@@ -612,7 +612,7 @@ public class Transform2 extends RealSquareMatrix {
      *            Description of the Parameter
      * @return Description of the Return Value
      * @exception EuclidRuntimeException
-     *                <TT>r</TT> is zero length
+     *                <code>r</code> is zero length
      */
     public static Transform2 flipAboutVector(Real2 r) throws EuclidRuntimeException {
         r = r.getUnitVector();

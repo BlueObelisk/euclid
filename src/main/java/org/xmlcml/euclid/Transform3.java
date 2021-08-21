@@ -449,7 +449,7 @@ public class Transform3 extends RealSquareMatrix {
      * @param v
      *            translation vector
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must be 3*3
+     *                <code>m</code> must be 3*3
      */
     public Transform3(RealSquareMatrix m, Vector3 v) throws EuclidRuntimeException {
         this(m);
