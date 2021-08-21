@@ -1925,7 +1925,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	
 	/** casts an integer array to RealArray
 	 * 
-	 * @param integers
+	 * @param intArray integer array
 	 * @return
 	 */
 	public static RealArray createRealArray(IntArray intArray) {

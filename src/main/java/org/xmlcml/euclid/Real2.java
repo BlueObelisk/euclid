@@ -43,8 +43,8 @@ public class Real2 implements EuclidConstants {
     /**
      * constructor.
      * 
-     * @param x
-     * @param y
+     * @param x the first floating point value
+     * @param y the second floating point value
      */
     public Real2(double x, double y) {
         this.x = x;
@@ -54,18 +54,17 @@ public class Real2 implements EuclidConstants {
     /**
      * constructor.
      * 
-     * @param x
-     * @param y
+     * @param x the first integer value
+     * @param y the second integer value
      */
     public Real2(int x, int y) {
         this((double) x, (double) y);
     }
-    
+
     /**
      * constructor.
-     * 
-     * @param x
-     * @param y
+     *
+     * @param int2 An object of type Int2 containing two integer values
      */
     public Real2(Int2 int2) {
     	this(int2.getX(), int2.getY());
@@ -83,14 +82,15 @@ public class Real2 implements EuclidConstants {
      * OR
      * (real, real)
      * 
-     * @param s
+     * @param s the string containing two reals separated by whitespace
      */
     public Real2(String s) {
     	this(Util.splitToDoubleArray(s, S_SPACE));
     }
     /**
      * two integers separated by delimiter
-     * @param s
+     * @param s the string containing two integers separated by delimiter
+     * @param delimiter the delimiter
      */
     public Real2(String s, String delimiter) {
     	this(Util.splitToDoubleArray(s, delimiter));
@@ -113,7 +113,7 @@ public class Real2 implements EuclidConstants {
     
     /** reads output format from toString()
      * "(x,y)"
-     * @param s
+     * @param s string representation of real, "(x,y)"
      * @return
      */
     public static Real2 createFromString(String s) {
@@ -129,7 +129,7 @@ public class Real2 implements EuclidConstants {
     /**
      * copy constructor
      * 
-     * @param r
+     * @param r the real object to be copied
      */
     public Real2(Real2 r) {
         this.x = r.x;
@@ -167,7 +167,7 @@ public class Real2 implements EuclidConstants {
     /**
      * set x.
      * 
-     * @param xx
+     * @param xx floating point x value to be set
      */
     public void setX(double xx) {
         x = xx;
@@ -175,7 +175,7 @@ public class Real2 implements EuclidConstants {
     /**
      * set y.
      * 
-     * @param yy
+     * @param yy floating point y value to be set
      */
     public void setY(double yy) {
         y = yy;
@@ -214,7 +214,7 @@ public class Real2 implements EuclidConstants {
 
     /**
      * is the point the origin.
-     * @param epsilon
+     * @param epsilon Epsilon
      * @return true if origin
      */
     public boolean isOrigin(double epsilon) {
@@ -224,7 +224,7 @@ public class Real2 implements EuclidConstants {
     /**
      * add two points to give vector sum
      * 
-     * @param r2
+     * @param r2 the specified real to be added with this real
      * @return point
      * 
      */
@@ -234,7 +234,7 @@ public class Real2 implements EuclidConstants {
     /**
      * add two points to give vector sum
      * 
-     * @param r2
+     * @param r2 the specified real to be added and assigned with this real
      * 
      */
     public void plusEquals(Real2 r2) {
@@ -244,7 +244,7 @@ public class Real2 implements EuclidConstants {
     /**
      * subtract two points to give vector difference
      * 
-     * @param r2
+     * @param r2 the specified real to be subtracted from this real
      * @return point
      * 
      */
@@ -261,7 +261,7 @@ public class Real2 implements EuclidConstants {
     /**
      * retuen multiplication of a point by a scalar
      * does not alter this
-     * @param f
+     * @param f a floating point scalar value
      * @return point
      */
     public Real2 multiplyBy(double f) {
@@ -271,7 +271,7 @@ public class Real2 implements EuclidConstants {
     /**
      * multiply a point by a scalar 
      * alters this
-     * @param f
+     * @param f a floating point scalar value
      */
     public void multiplyEquals(double f) {
     	this.x = x * f;
@@ -296,7 +296,7 @@ public class Real2 implements EuclidConstants {
     /**
      * get either value counts from ZERO
      * 
-     * @param elem
+     * @param elem index of element
      * @return value
      * @throws EuclidRuntimeException
      */
@@ -319,7 +319,7 @@ public class Real2 implements EuclidConstants {
     /**
      * get distance to another Real2
      * 
-     * @param r
+     * @param r the specified real to be measured against this real
      * @return distance
      */
     public double getDistance(Real2 r) {
@@ -329,7 +329,7 @@ public class Real2 implements EuclidConstants {
     /**
      * get squared distance to another Real2
      * 
-     * @param r
+     * @param r the specified real to be measured against this real
      * @return dist2
      */
     public double getSquaredDistance(Real2 r) {
@@ -339,7 +339,7 @@ public class Real2 implements EuclidConstants {
     /**
      * point midway between 'this' and 'p'
      * 
-     * @param p
+     * @param p the specified real to be measured against this real
      * @return midpoint
      */
     public Real2 getMidPoint(Real2 p) {
@@ -364,7 +364,7 @@ public class Real2 implements EuclidConstants {
     /**
      * get dot product
      * 
-     * @param r
+     * @param r the specified real to be measured against this real
      * @return dot
      */
     public double dotProduct(Real2 r) {
@@ -373,9 +373,9 @@ public class Real2 implements EuclidConstants {
     /**
      * get angle between 3 Real2s (the second is in the centre)
      * 
-     * @param p1
-     * @param p2
-     * @param p3
+     * @param p1 point 1
+     * @param p2 point 2
+     * @param p3 point 3
      * @return angle is CLOCKWISE from p1 to p3
      */
     public static Angle getAngle(Real2 p1, Real2 p2, Real2 p3) {
@@ -402,7 +402,7 @@ public class Real2 implements EuclidConstants {
      * transforms the point by a rot-trans matrix MODIFIES 'this' Note the next
      * routine is often better
      * 
-     * @param t
+     * @param t rot-trans matrix
      * 
      */
     public void transformBy(Transform2 t) {
@@ -416,7 +416,7 @@ public class Real2 implements EuclidConstants {
     /**
      * gets a point transformed by a rot-trans matrix does NOT MODIFY 'this'
      * 
-     * @param t
+     * @param t rot-trans matrix
      * @return point
      */
     public Real2 getTransformed(Transform2 t) {
@@ -431,11 +431,11 @@ public class Real2 implements EuclidConstants {
      * end that is point1 is points[0] and point2 is points[end] if end == 0,
      * end=>1
      * 
-     * @param point1
-     * @param nPoints
-     * @param point2
-     * @param end
-     * @param repelPoint
+     * @param point1 starting point
+     * @param nPoints number of points in the resulting polygon
+     * @param point2 ending point
+     * @param end index of point2 in points array
+     * @param repelPoint repel point
      * @return points
      * 
      */
@@ -533,7 +533,7 @@ public class Real2 implements EuclidConstants {
     /**
      * get centroid of all points. does not modify this
      * 
-     * @param p2Vector
+     * @param p2Vector list of all real points
      * @return the centroid
      */
     public static Real2 getCentroid(List<Real2> p2Vector) {
@@ -550,8 +550,8 @@ public class Real2 implements EuclidConstants {
     /**
      * get serialNumber of nearest point
      * 
-     * @param p2v
-     * @param point
+     * @param p2v list of all real points
+     * @param point point wrt which serialNumber is calculated
      * @return serial
      */
     public static int getSerialOfNearestPoint(List<Real2> p2v, Real2 point) {
@@ -572,8 +572,8 @@ public class Real2 implements EuclidConstants {
      * matrix need not be square or symmetric unless coords == coords2 d(ij) is
      * distance between coord(i) and coords2(j).
      * 
-     * @param coords1
-     * @param coords2
+     * @param coords1 first coordinate of the rectangle
+     * @param coords2 second coordinate of the rectangle
      * @return distance matrix
      */
     public static RealMatrix getDistanceMatrix(List<Real2> coords1,
@@ -614,7 +614,7 @@ public class Real2 implements EuclidConstants {
     
     /** round to decimal places.
      * 
-     * @param places
+     * @param places max number of decimals (3 = ****.ddd)
      * @return this
      */
     public Real2 format(int places) {

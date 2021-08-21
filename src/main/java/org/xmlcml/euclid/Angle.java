@@ -86,7 +86,7 @@ public class Angle {
     /**
      * create an angle IN RADIANS
      * 
-     * @param a
+     * @param a radian value
      */
     public Angle(double a) {
         angle = a;
@@ -94,8 +94,8 @@ public class Angle {
     /**
      * construct using degrees or radians
      * 
-     * @param a
-     * @param units
+     * @param a value of angle
+     * @param units unit of angle. It can either be in DEGREES or RADIANS
      */
     public Angle(double a, Units units) {
         angle = (units == Units.RADIANS) ? a : a / DEGREES_IN_RADIAN;
@@ -103,8 +103,8 @@ public class Angle {
     /**
      * from X and Y components (uses atan2)
      * 
-     * @param x
-     * @param y
+     * @param x The x coordinate of the point
+     * @param y The y coordinate of the point
      */
     public Angle(double y, double x) {
         angle = Math.atan2(y, x);
@@ -112,7 +112,7 @@ public class Angle {
     /**
      * copy constructor
      * 
-     * @param a
+     * @param a Angle object that needs to be copied
      */
     public Angle(Angle a) {
         angle = a.angle;
@@ -122,7 +122,7 @@ public class Angle {
     /**
      * shallowCopy
      * 
-     * @param a
+     * @param a Angle object that needs to be copied
      */
     public void shallowCopy(Angle a) {
         range = a.range;
@@ -132,7 +132,7 @@ public class Angle {
     /**
      * add two angles
      * 
-     * @param a2
+     * @param a2 the specified angle to be added to this angle
      * @return new angle
      */
     public Angle plus(Angle a2) {
@@ -142,7 +142,7 @@ public class Angle {
     /**
      * subtract two angles
      * 
-     * @param a2
+     * @param a2 the specified angle to be subtracted from this angle
      * @return new angle
      */
     public Angle subtract(Angle a2) {
@@ -152,7 +152,7 @@ public class Angle {
     /**
      * multiply an angle by a scalar
      * 
-     * @param f
+     * @param f a floating point scalar value
      * @return new angle
      */
     public Angle multiplyBy(double f) {

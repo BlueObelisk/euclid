@@ -238,7 +238,7 @@ public class RealRangeArray implements Iterable<RealRange> {
 
 	/** is the range completely contained within any subrange?
 	 * 
-	 * @param lowXRange
+	 * @param rr
 	 * @return
 	 */
 	public boolean includes(RealRange rr) {

@@ -359,8 +359,8 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
      * 3 returns 0
      * 10 returns 0
      * 12 returns -2
-     * @param p null returns Double.NaN
-     * @return 0 if in or on range
+     * @param d
+     * @return 0 if in or on range and if null returns Double.NaN
      */
     public double distanceOutside(double d) {
     	double dd = Double.NaN;
