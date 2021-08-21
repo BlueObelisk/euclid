@@ -1777,8 +1777,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
     }
     
     /**
-	 * @param monotonicity
-	 * @return
+	 * @return monotonicity
 	 */
 	public Monotonicity getMonotonicity() {
 		Monotonicity monotonicity = null;
@@ -1853,10 +1852,10 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * would create {125., 175., 225.}
 	 * 
 	 * allows for x0 > x1
-	 * @param thisx0 low map point of this
-	 * @param thisx1 high map point of this
-	 * @param targetx0 low map point of target
-	 * @param targetx1 high map point of target
+	 * @param thisX0 low map point of this
+	 * @param thisX1 high map point of this
+	 * @param targetX0 low map point of target
+	 * @param targetX1 high map point of target
 	 * @return
 	 */
 	public RealArray createScaledArrayToRange(double thisX0, double thisX1, double targetX0, double targetX1) {
@@ -1886,7 +1885,6 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * would create (5, 7, 9}
 	 * 
 	 * allows for x0 > x1
-	 * @param newRange
 	 * @return
 	 */
 	public RealArray createScaledArrayToRange(double x0, double x1) {
@@ -2006,7 +2004,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	/** interpolate array into new array of different length.
 	 * 
 	 * 
-	 * @param newElem new array length
+	 * @param newNelem new array length
 	 * @return inerpolated array
 	 * 
 	 * 

@@ -96,7 +96,7 @@ public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
 
     /** create with RealArrays of pre-allocated size.
      * 
-     * @param i
+     * @param size
      */
     public Real2Array(int size) {
     	this(new RealArray(size), new RealArray(size));
@@ -162,7 +162,7 @@ public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
     /**
      * make an Real2_Array from pairs of numbers separated by delimiter
      * 
-     * @param s
+     * @param sss
      * @param delimiter (might be a regex e.g. ",| " (comma or space))
      * @exception EuclidRuntimeException
      *                x and x must have number of elements
@@ -182,8 +182,7 @@ public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
     /**
      * make an Real2_Array from pairs of numbers x1,y1 .. x2,y2 .. etc
      * 
-     * @param s
-     * @param delimiter
+     * @param ra
      * @exception EuclidRuntimeException
      *                x and x must have number of elements
      */

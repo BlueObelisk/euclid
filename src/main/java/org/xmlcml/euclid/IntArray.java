@@ -1324,8 +1324,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
 
 
 	/** if all values are equal returns value else null
-	 * 
-	 * @param delta
+     *
 	 * @return null if no values or unequal else value
 	 */
 	public Integer getConstant() {
