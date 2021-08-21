@@ -321,7 +321,7 @@ public class Point3Vector implements EuclidConstants {
      * @param is
      * @return vector
      * @exception EuclidRuntimeException
-     *                an element of <TT>is</TT> is outside range of <TT>this</TT>
+     *                an element of <code>is</code> is outside range of <code>this</code>
      */
     public Point3Vector subArray(IntSet is) throws EuclidRuntimeException {
         Point3Vector sub = new Point3Vector();
@@ -363,7 +363,7 @@ public class Point3Vector implements EuclidConstants {
      * 
      * @param pv2
      * @exception EuclidRuntimeException
-     *                pv2 is different size from <TT>this</TT>
+     *                pv2 is different size from <code>this</code>
      * @return vector
      */
     public Point3Vector plus(Point3Vector pv2) throws EuclidRuntimeException {
@@ -381,7 +381,7 @@ public class Point3Vector implements EuclidConstants {
      * @param pv2
      * @return vector
      * @exception EuclidRuntimeException
-     *                pv2 is different size from <TT>this</TT>
+     *                pv2 is different size from <code>this</code>
      */
     public Point3Vector subtract(Point3Vector pv2) throws EuclidRuntimeException {
         checkConformable(pv2);
@@ -426,7 +426,7 @@ public class Point3Vector implements EuclidConstants {
         return p;
     }
     /**
-     * translate by a vector - do NOT modify <TT>this</TT>
+     * translate by a vector - do NOT modify <code>this</code>
      * 
      * @param v
      * @return vector
@@ -440,7 +440,7 @@ public class Point3Vector implements EuclidConstants {
         return temp;
     }
     /**
-     * translate by a vector - modify <TT>this</TT>
+     * translate by a vector - modify <code>this</code>
      * 
      * @param v
      */
@@ -578,7 +578,7 @@ public class Point3Vector implements EuclidConstants {
      * @param is
      *            of exactly 2 integers
      * @exception EuclidRuntimeException
-     *                <TT>is</TT> must have exactly 2 points
+     *                <code>is</code> must have exactly 2 points
      * @return distance
      */
     public double distance(IntSet is) throws EuclidRuntimeException {
@@ -611,7 +611,7 @@ public class Point3Vector implements EuclidConstants {
      * @param is
      *            of exactly 3 integers
      * @exception EuclidRuntimeException
-     *                <TT>is</TT> must have exactly 3 points
+     *                <code>is</code> must have exactly 3 points
      * @exception EuclidRuntimeException
      *                two points are coincident or identical
      * @return the angle
@@ -648,7 +648,7 @@ public class Point3Vector implements EuclidConstants {
      * @param is
      *            of exactly 3 integers
      * @exception EuclidRuntimeException
-     *                <TT>is</TT> must have exactly 4 points
+     *                <code>is</code> must have exactly 4 points
      * @exception EuclidRuntimeException
      *                either 2 points are identical or coincident or 3
      *                successive points are colinear

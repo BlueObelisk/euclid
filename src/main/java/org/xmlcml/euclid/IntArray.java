@@ -355,7 +355,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param elem
      *            the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <TT>this</TT>
+     *                elem >= size of <code>this</code>
      * @return element value
      */
     public int elementAt(int elem) throws ArrayIndexOutOfBoundsException {
@@ -468,7 +468,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            array to add
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return new array as this + f
      */
     public IntArray plus(IntArray f) throws EuclidRuntimeException {
@@ -485,7 +485,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            array to substract
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return new array as this - f
      */
     public IntArray subtract(IntArray f) throws EuclidRuntimeException {
@@ -502,7 +502,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            array to subtract
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      */
     public void subtractEquals(IntArray f) throws EuclidRuntimeException {
         checkConformable(f);
@@ -558,7 +558,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            value
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <TT>this</TT>
+     *                elem >= size of <code>this</code>
      */
     public void setElementAt(int elem, int f)
             throws ArrayIndexOutOfBoundsException {
@@ -660,7 +660,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            array to multiply
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return dot
      */
     public int dotProduct(IntArray f) throws EuclidRuntimeException {
@@ -688,8 +688,8 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
     }
     /**
      * apply filter. convolute array with another array. This is 1-D image
-     * processing. If <TT>filter</TT> has <= 1 element, return <TT>this</TT>
-     * unchanged. <TT>filter</TT> should have an odd number of elements. The
+     * processing. If <code>filter</code> has <= 1 element, return <code>this</code>
+     * unchanged. <code>filter</code> should have an odd number of elements. The
      * filter can be created with a IntArray constructor filter is moved along
      * stepwise
      * </P>
@@ -999,7 +999,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param idx
      *            array of indexes
      * @exception EuclidRuntimeException
-     *                an element of idx is outside range of <TT>this</TT>
+     *                an element of idx is outside range of <code>this</code>
      * @return array
      */
     public IntArray getReorderedArray(IntSet idx) throws EuclidRuntimeException {

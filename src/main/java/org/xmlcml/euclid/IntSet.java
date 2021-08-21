@@ -37,11 +37,11 @@ import org.apache.log4j.Logger;
  * Inverse mapping. IntSets can be used to map one set of indexed data to
  * another, for example
  * <P>
- * <TT> RealArray x = someFunction();<BR>
+ * <code> RealArray x = someFunction();<BR>
  * InstSet idx = x.indexSortAscending();<BR>
  * for (int i = 0; i < x.size(); i++) {<BR>
  * y[i] = x[idx[i]];<BR> }<BR>
- * </TT> To map the other way, <TT>x[i] = y[inv[i]];</TT> the inverse IntSet
+ * </code> To map the other way, <code>x[i] = y[inv[i]];</code> the inverse IntSet
  * can be used
  * 
  * @author (C) P. Murray-Rust, 1996
@@ -388,8 +388,8 @@ public class IntSet implements EuclidConstants {
     }
 
     /**
-     * Inverse mapping - see introduction if <TT>y[i] = x[this.elementAt(i)];</TT>
-     * then the result supports </TT>x[i] = y[inv.elementAt(i)];</TT>
+     * Inverse mapping - see introduction if <code>y[i] = x[this.elementAt(i)];</code>
+     * then the result supports <code>x[i] = y[inv.elementAt(i)];</code>
      * 
      * @exception ArrayIndexOutOfBoundsException
      *                the set must contain the integers 0...nelem-1

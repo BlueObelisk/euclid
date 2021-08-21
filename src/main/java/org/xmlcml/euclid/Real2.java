@@ -350,7 +350,7 @@ public class Real2 implements EuclidConstants {
      * 
      * @return unit vector
      * @exception EuclidRuntimeException
-     *                <TT>this</TT> was of zero length
+     *                <code>this</code> was of zero length
      */
     public Real2 getUnitVector() {
         double length = this.getLength();

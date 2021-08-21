@@ -36,7 +36,7 @@ import blogspot.software_and_algorithms.stern_library.data_structure.RedBlackTre
  * This implementation is based upon Cormen, Leiserson, Rivest, Stein's
  * Introduction to Algorithms book.
  * 
- * @see Introduction to Algorithms Cormen, Leiserson, Rivest, and Stein.
+ * @see Introduction to Algorithms Cormen, Leiserson, Rivest, and Stein
  *      Introduction to Algorithms. 2nd ed. Cambridge, MA: MIT Press, 2001.
  *      ISBN: 0262032937.
  */
