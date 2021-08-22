@@ -608,7 +608,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * 
      * @param elem the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <TT>this</TT>
+     *                elem >= size of <code>this</code>
      * @return element value
      */
     public double elementAt(int elem) throws ArrayIndexOutOfBoundsException {
@@ -619,7 +619,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * 
      * @param elem the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <TT>this</TT>
+     *                elem >= size of <code>this</code>
      * @return element value
      */
     public double get(int elem) throws ArrayIndexOutOfBoundsException {
@@ -712,7 +712,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            array to add
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return new array as this + f
      */
     public RealArray plus(RealArray f) throws EuclidRuntimeException {
@@ -729,7 +729,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            array to add
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      */
     public void plusEquals(RealArray f) throws EuclidRuntimeException {
         checkConformable(f);
@@ -743,7 +743,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            array to substract
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return new array as this - f
      */
     public RealArray subtract(RealArray f) throws EuclidRuntimeException {
@@ -760,7 +760,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            array to subtract
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      */
     public void subtractEquals(RealArray f) throws EuclidRuntimeException {
         checkConformable(f);
@@ -829,7 +829,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            value
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <TT>this</TT>
+     *                elem >= size of <code>this</code>
      */
     public void setElementAt(int elem, double f)
             throws ArrayIndexOutOfBoundsException {
@@ -953,7 +953,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            array to multiply
      * @exception EuclidRuntimeException
-     *                f is different size from <TT>this</TT>
+     *                f is different size from <code>this</code>
      * @return dot product
      */
     public double dotProduct(RealArray f) throws EuclidRuntimeException {
@@ -989,7 +989,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * get unit vector
      * 
      * @exception EuclidRuntimeException
-     *                elements of <TT>this</TT> are all zero
+     *                elements of <code>this</code> are all zero
      * @return the unit vector
      */
     public RealArray unitVector() throws EuclidRuntimeException {
@@ -1019,8 +1019,8 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
     }
     /**
      * apply filter. convolute array with another array. This is 1-D image
-     * processing. If <TT>filter</TT> has <= 1 element, return <TT>this</TT>
-     * unchanged. <TT>filter</TT> should have an odd number of elements. The
+     * processing. If <code>filter</code> has <= 1 element, return <code>this</code>
+     * unchanged. <code>filter</code> should have an odd number of elements. The
      * filter can be created with a IntArray constructor filter is moved along
      * stepwise
      * </P>
@@ -1331,7 +1331,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param idx
      *            array of indexes
      * @exception EuclidRuntimeException
-     *                an element of idx is outside range of <TT>this</TT>
+     *                an element of idx is outside range of <code>this</code>
      * @return array
      * 
      */
@@ -1777,8 +1777,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
     }
     
     /**
-	 * @param monotonicity
-	 * @return
+	 * @return monotonicity
 	 */
 	public Monotonicity getMonotonicity() {
 		Monotonicity monotonicity = null;
@@ -1853,10 +1852,10 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * would create {125., 175., 225.}
 	 * 
 	 * allows for x0 > x1
-	 * @param thisx0 low map point of this
-	 * @param thisx1 high map point of this
-	 * @param targetx0 low map point of target
-	 * @param targetx1 high map point of target
+	 * @param thisX0 low map point of this
+	 * @param thisX1 high map point of this
+	 * @param targetX0 low map point of target
+	 * @param targetX1 high map point of target
 	 * @return
 	 */
 	public RealArray createScaledArrayToRange(double thisX0, double thisX1, double targetX0, double targetX1) {
@@ -1886,7 +1885,6 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * would create (5, 7, 9}
 	 * 
 	 * allows for x0 > x1
-	 * @param newRange
 	 * @return
 	 */
 	public RealArray createScaledArrayToRange(double x0, double x1) {
@@ -1927,7 +1925,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	
 	/** casts an integer array to RealArray
 	 * 
-	 * @param integers
+	 * @param intArray integer array
 	 * @return
 	 */
 	public static RealArray createRealArray(IntArray intArray) {
@@ -2006,7 +2004,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	/** interpolate array into new array of different length.
 	 * 
 	 * 
-	 * @param newElem new array length
+	 * @param newNelem new array length
 	 * @return inerpolated array
 	 * 
 	 * 

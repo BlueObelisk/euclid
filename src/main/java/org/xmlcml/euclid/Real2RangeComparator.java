@@ -75,7 +75,8 @@ public class Real2RangeComparator implements Comparator<Real2Range> {
 	
 	/** set the tolerance
 	 * negative values are converted to positive
-	 * @param epsilon
+	 * @param comparatorx
+     * @param comparatory
 	 */
 	public void setComparators(RealRangeComparator comparatorx, RealRangeComparator comparatory) {
 		this.comparatorx = comparatorx;

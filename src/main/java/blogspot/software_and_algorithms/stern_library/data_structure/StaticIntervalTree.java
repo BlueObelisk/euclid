@@ -277,7 +277,7 @@ public class StaticIntervalTree<U extends Comparable<U>, T extends Interval<U>> 
 	/**
 	 * Insert the specified interval into this tree. Behavior is undefined when
 	 * the interval was not included in the set of intervals presented at the
-	 * most recent call to {@link #buildTree(Collection)}.
+	 * most recent call to {@link #buildTree(Set)}.
 	 * 
 	 * @param interval
 	 *            the interval to insert.

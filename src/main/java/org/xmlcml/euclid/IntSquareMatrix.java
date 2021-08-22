@@ -111,7 +111,7 @@ public class IntSquareMatrix extends IntMatrix {
      * @param array
      *            of size (rows * rows)
      * @exception EuclidRuntimeException
-     *                <TT>array</TT> size must be multiple of <TT>rows</TT>
+     *                <code>array</code> size must be multiple of <code>rows</code>
      */
     public IntSquareMatrix(int rows, int[] array) {
         super(rows, rows, array);
@@ -162,7 +162,7 @@ public class IntSquareMatrix extends IntMatrix {
      *            matrix to copy reference from
      * 
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must be square (that is cols = rows)
+     *                <code>m</code> must be square (that is cols = rows)
      */
     public IntSquareMatrix(IntMatrix m) throws EuclidRuntimeException {
         super(m.rows, m.cols);
@@ -179,7 +179,7 @@ public class IntSquareMatrix extends IntMatrix {
      * @param matrix
      *            to copy
      * @exception EuclidRuntimeException
-     *                <TT>matrix</TT> is not square (might even not be
+     *                <code>matrix</code> is not square (might even not be
      *                rectangular!)
      */
     public IntSquareMatrix(int[][] matrix) throws EuclidRuntimeException {
@@ -194,8 +194,8 @@ public class IntSquareMatrix extends IntMatrix {
      * @param m
      *            matrix to shallow copy
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      */
     public void shallowCopy(IntSquareMatrix m) throws EuclidRuntimeException {
         super.shallowCopy((IntMatrix) m);
@@ -216,8 +216,8 @@ public class IntSquareMatrix extends IntMatrix {
      * @param m
      *            matrix to add
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      * @return resultant matrix
      */
     public IntSquareMatrix plus(IntSquareMatrix m) throws EuclidRuntimeException {
@@ -231,8 +231,8 @@ public class IntSquareMatrix extends IntMatrix {
      * @param m
      *            matrix to subtract from this
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      * @return resultant matrix
      */
     public IntSquareMatrix subtract(IntSquareMatrix m) throws EuclidRuntimeException {
@@ -243,12 +243,12 @@ public class IntSquareMatrix extends IntMatrix {
     /**
      * matrix multiplication.
      * 
-     * multiplies conformable matrices; result is <TT>this*m </TT>
+     * multiplies conformable matrices; result is <code>this*m </code>
      * 
      * @param m
      *            matrix to multiply by
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows as <TT>this</TT>
+     *                <code>m</code> must have the same number of rows as <code>this</code>
      *                has cols
      * @return new matrix
      */

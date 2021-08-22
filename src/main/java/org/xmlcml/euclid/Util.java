@@ -2649,7 +2649,7 @@ public class Util implements EuclidConstants {
 	 * @param d
 	 *            value to be formatted
 	 * @param ndec
-	 *            max number of decimals (3 = ****.ddd
+	 *            max number of decimals (3 = ****.ddd)
 	 * @return the formatted number
 	 */
 	public static double format(double d, int ndec) {

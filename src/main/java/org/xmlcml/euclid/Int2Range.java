@@ -51,8 +51,8 @@ public class Int2Range implements EuclidConstants {
     /**
      * initialise with min and max values;
      * 
-     * @param xr
-     * @param yr
+     * @param xr X-range
+     * @param yr Y-range
      */
     public Int2Range(IntRange xr, IntRange yr) {
         if (xr.isValid() && yr.isValid()) {
@@ -63,7 +63,7 @@ public class Int2Range implements EuclidConstants {
     /**
      * copy constructor
      * 
-     * @param r
+     * @param r the IntRange object to be copied
      */
     public Int2Range(Int2Range r) {
         if (r.isValid()) {
@@ -75,7 +75,7 @@ public class Int2Range implements EuclidConstants {
     /**
      * copy constructor
      * 
-     * @param r
+     * @param r the IntRange object to be copied
      */
     public Int2Range(Real2Range r) {
         xrange = new IntRange(r.xrange);
@@ -93,7 +93,7 @@ public class Int2Range implements EuclidConstants {
     /**
      * is equal to.
      * 
-     * @param r2
+     * @param r2 the intRange to be compared with this intRange
      * @return true if equal
      */
     public boolean isEqualTo(Int2Range r2) {
@@ -123,7 +123,7 @@ public class Int2Range implements EuclidConstants {
     /**
      * merge two ranges and take the maximum extents
      * 
-     * @param r2
+     * @param r2 the intRange to be added with this intRange
      * @return range
      */
     public Int2Range plus(Int2Range r2) {
@@ -189,8 +189,8 @@ public class Int2Range implements EuclidConstants {
 	 * 
 	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
 	 * 
-	 * @param topSide
-	 * @param bottomSide
+	 * @param topExtend
+	 * @param bottomExtend
 	 */
 	public Int2Range getInt2RangeExtendedInY(int topExtend, int bottomExtend) {
 		Int2Range i2r = new Int2Range(this);

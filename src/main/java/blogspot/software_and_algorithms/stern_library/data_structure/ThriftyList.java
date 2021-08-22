@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
 
 /**
  * A dynamically sized compact data structure implementing both the
- * <tt>Deque</tt> and <tt>List</tt> interfaces. Internally, this data structure
+ * <code>Deque</code> and <code>List</code> interfaces. Internally, this data structure
  * maintains multiple sublists each having size O(sqrt(this.size())), giving a
  * reasonable upper bound on the size of any one contiguous memory block
  * consumed by an instance. Furthermore, the resizing approach taken by this

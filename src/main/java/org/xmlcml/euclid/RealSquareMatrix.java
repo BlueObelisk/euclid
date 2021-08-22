@@ -124,7 +124,7 @@ public class RealSquareMatrix extends RealMatrix {
      * @param array
      *            of size (rows * rows)
      * @exception EuclidRuntimeException
-     *                <TT>array</TT> size must be multiple of <TT>rows</TT>
+     *                <code>array</code> size must be multiple of <code>rows</code>
      */
     public RealSquareMatrix(int rows, double[] array) throws EuclidRuntimeException {
         super(rows, rows, array);
@@ -153,7 +153,7 @@ public class RealSquareMatrix extends RealMatrix {
      *            size of final matrix
      * @exception EuclidRuntimeException
      *                lowrow, lowcol or rows are not consistent with size of
-     *                <TT>m</TT>
+     *                <code>m</code>
      */
     public RealSquareMatrix(RealMatrix m, int lowrow, int lowcol, int rows)
             throws EuclidRuntimeException {
@@ -177,7 +177,7 @@ public class RealSquareMatrix extends RealMatrix {
      *            matrix to copy reference from
      * 
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must be square (that is cols = rows)
+     *                <code>m</code> must be square (that is cols = rows)
      */
     public RealSquareMatrix(RealMatrix m) throws EuclidRuntimeException {
         super(m.rows, m.cols);
@@ -194,7 +194,7 @@ public class RealSquareMatrix extends RealMatrix {
      * @param matrix
      *            to copy
      * @exception EuclidRuntimeException
-     *                <TT>matrix</TT> is not square (might even not be
+     *                <code>matrix</code> is not square (might even not be
      *                rectangular!)
      */
     public RealSquareMatrix(double[][] matrix) throws EuclidRuntimeException {
@@ -209,8 +209,8 @@ public class RealSquareMatrix extends RealMatrix {
      * @param m
      *            matrix to shallow copy
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      */
     public void shallowCopy(RealSquareMatrix m) throws EuclidRuntimeException {
         super.shallowCopy((RealMatrix) m);
@@ -282,8 +282,8 @@ public class RealSquareMatrix extends RealMatrix {
      * @param m
      *            matrix to add
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      * @return resultant matrix
      */
     public RealSquareMatrix plus(RealSquareMatrix m) throws EuclidRuntimeException {
@@ -297,8 +297,8 @@ public class RealSquareMatrix extends RealMatrix {
      * @param m
      *            matrix to subtract from this
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows and cols as
-     *                <TT>this</TT>
+     *                <code>m</code> must have the same number of rows and cols as
+     *                <code>this</code>
      * @return resultant matrix
      */
     public RealSquareMatrix subtract(RealSquareMatrix m) throws EuclidRuntimeException {
@@ -309,12 +309,12 @@ public class RealSquareMatrix extends RealMatrix {
     /**
      * matrix multiplication.
      * 
-     * multiplies conformable matrices; result is <TT>this*m </TT>
+     * multiplies conformable matrices; result is <code>this*m </code>
      * 
      * @param m
      *            matrix to multiply by
      * @exception EuclidRuntimeException
-     *                <TT>m</TT> must have the same number of rows as <TT>this</TT>
+     *                <code>m</code> must have the same number of rows as <code>this</code>
      *                has cols
      * @return new matrix
      */
@@ -420,7 +420,7 @@ public class RealSquareMatrix extends RealMatrix {
      * use jama?
      * 
      * @exception EuclidRuntimeException
-     *                I have only written this for <TT>this.rows</TT> up to 3.
+     *                I have only written this for <code>this.rows</code> up to 3.
      *                If anyone can find a routine, this will disappear ... -(
      * @return the orthonormalized matrix
      */
@@ -645,7 +645,7 @@ public class RealSquareMatrix extends RealMatrix {
      * orthogonalise matrix. (only works for 3x3 at present); MODIFIES this
      * 
      * @exception EuclidRuntimeException
-     *                I have only written this for <TT>this.rows</TT> up to 3.
+     *                I have only written this for <code>this.rows</code> up to 3.
      *                If anyone can find a routine, this will disappear ... -(
      */
     public void orthogonalise() throws EuclidRuntimeException {

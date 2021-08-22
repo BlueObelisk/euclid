@@ -449,7 +449,7 @@ public class Line2 implements EuclidConstants {
 	/** creates point at (signed) distance dist from "from" point
 	 * 
 	 * newPoint = from + (dist / line.length) * vector
-	 * @param length
+	 * @param dist
 	 * @return new Point
 	 * 
 	 */
@@ -466,7 +466,8 @@ public class Line2 implements EuclidConstants {
 	 * 
 	 * vector = xy(1-index) <- xy(index)
 	 * newPoint = xy(index) + (dist / line.length) * vector
-	 * @param length
+	 * @param dist
+     * @param index
 	 * @return new Point
 	 */
 	public Real2 createPointOnLine(Double dist, int index) {

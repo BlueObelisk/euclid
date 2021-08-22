@@ -401,8 +401,7 @@ public class Real2Range implements EuclidConstants {
 
 	/** iterates through all boxes and return true r2r is contained in any range
 	 * 
-	 * @param ranges
-	 * @param r2r
+	 * @param r2rList
 	 * @return
 	 */
 	public boolean isContainedInAnyRange(List<Real2Range> r2rList) {
@@ -455,8 +454,8 @@ public class Real2Range implements EuclidConstants {
 	 * 
 	 * does not alter this. Uses range.extendBy(). Positive numbers will expand the range 
 	 * 
-	 * @param topSide
-	 * @param bottomSide
+	 * @param topExtend
+	 * @param bottomExtend
 	 */
 	public Real2Range getReal2RangeExtendedInY(double topExtend, double bottomExtend) {
 		Real2Range r2r = new Real2Range(this);

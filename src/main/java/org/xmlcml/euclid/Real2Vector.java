@@ -215,7 +215,7 @@ public class Real2Vector implements EuclidConstants {
      * @param is
      * @return sub array
      * @exception EuclidRuntimeException
-     *                an element of is is out of range of <TT>this</TT>
+     *                an element of is is out of range of <code>this</code>
      */
     public Real2Vector subArray(IntSet is) throws EuclidRuntimeException {
         Real2Vector sub = new Real2Vector();
