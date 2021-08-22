@@ -32,7 +32,7 @@ public class RealComparator implements Comparator<Double> {
 	}
 
 	/**
-	 * if Math.abs(d0-d1) <= epsilon  
+	 * if Math.abs(d0-d1) {@literal <}= epsilon
 	 * return -1 if either arg is null
 	 */
 	public int compare(Double d0, Double d1) {

@@ -325,7 +325,7 @@ public class RealSquareMatrix extends RealMatrix {
     }
     /**
      * determinant. hardcoded up to order 3 at present; rest is VERY slow :-(
-     * calls determinant recursively for order > 3
+     * calls determinant recursively for order {@literal >} 3
      * 
      * @return the determinant
      */

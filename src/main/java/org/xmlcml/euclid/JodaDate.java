@@ -33,8 +33,8 @@ The pattern syntax is mostly compatible with java.text.SimpleDateFormat - time z
      Symbol  Meaning                      Presentation  Examples
      ------  -------                      ------------  -------
      G       era                          text          AD
-     C       century of era (>=0)         number        20
-     Y       year of era (>=0)            year          1996
+     C       century of era ({@literal >}=0)         number        20
+     Y       year of era ({@literal >}=0)            year          1996
 
      x       weekyear                     year          1996
      w       week of weekyear             number        27

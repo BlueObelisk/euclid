@@ -56,7 +56,7 @@ public class RealMatrix implements EuclidConstants {
     }
     /**
      * Create matrix with given rows and columns. A rows*cols matrix values set
-     * to 0 (rows or cols < 0 defaults to 0)
+     * to 0 (rows or cols {@literal <} 0 defaults to 0)
      * 
      * @param r
      *            number of rows
@@ -115,7 +115,7 @@ public class RealMatrix implements EuclidConstants {
         }
     }
     /**
-     * create from submatrix of another matrix. fails if lowrow > hirow, lowrow <
+     * create from submatrix of another matrix. fails if lowrow {@literal >} hirow, lowrow {@literal <}
      * 0, etc
      * 
      * COPIES the parts of <code>m</code>
@@ -1043,7 +1043,7 @@ public class RealMatrix implements EuclidConstants {
     }
     /**
      * delete 2 or more adjacent rows (inclusive) from matrix and close up. if
-     * (high > rows-1 high -> rows-1; or low < 0, low -> 0
+     * (high {@literal >} rows-1 high -{@literal >} rows-1; or low {@literal <} 0, low -{@literal >} 0
      * 
      * @param low
      *            start row

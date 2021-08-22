@@ -276,7 +276,7 @@ public class Univariate {
 	 * get quantile.
 	 * 
 	 * @param q
-	 *            the value of the quantile (0 =< q =< 1.0) @ not enough points
+	 *            the value of the quantile (0 ={@literal <} q ={@literal <} 1.0) @ not enough points
 	 * @return quantile
 	 */
 	public double getQuantile(double q) {
@@ -516,7 +516,7 @@ public class Univariate {
 	 * percentage points of normal distribution. upper is true.
 	 * 
 	 * @param p
-	 *            (0 <= p <= 1)
+	 *            (0 {@literal <}= p {@literal <}= 1)
 	 * @return the percentage point (?)
 	 */
 	public static double qnorm(double p) {
@@ -529,7 +529,7 @@ public class Univariate {
 	 * "The Percentage Points of the Normal Distribution" Applied Statistics
 	 * 
 	 * @param p
-	 *            (0 <= p <= 1)
+	 *            (0 {@literal <}= p {@literal <}= 1)
 	 * @param upper
 	 *            if true use upper half (??)
 	 * @return the percentage point (?)
@@ -570,7 +570,7 @@ public class Univariate {
 	 * "The Percentage Points of the Normal Distribution" Applied Statistics
 	 * 
 	 * @param p
-	 *            (0 <= p <= 1)
+	 *            (0 {@literal <}= p {@literal <}= 1)
 	 * @param upper
 	 *            if true use upper half (??)
 	 * @param mu
@@ -651,9 +651,9 @@ public class Univariate {
 	 * CACM 13(10), 619-620, October 1970
 	 * 
 	 * @param p
-	 *            (0 <= p <= 1)
+	 *            (0 {@literal <}= p {@literal <}= 1)
 	 * @param ndf
-	 *            degrees of freedom >= 1
+	 *            degrees of freedom {@literal >}= 1
 	 * @param lower_tail
 	 * @return the integral (?)
 	 */
@@ -719,7 +719,7 @@ public class Univariate {
 	}
 
 	/**
-	 * T-test. ALGORITHM AS 3 APPL. STATIST. (1968) VOL.17, P.189 Computes P(T <
+	 * T-test. ALGORITHM AS 3 APPL. STATIST. (1968) VOL.17, P.189 Computes P(T {@literal <}
 	 * t)
 	 * 
 	 * @param t
@@ -803,7 +803,7 @@ public class Univariate {
 	}
 
 	/**
-	 * betainv ALGORITHM AS 63 APPL. STATIST. VOL.32, NO.1 Computes P(Beta>x)
+	 * betainv ALGORITHM AS 63 APPL. STATIST. VOL.32, NO.1 Computes P(Beta{@literal >}x)
 	 * 
 	 * @param x
 	 * @param p
@@ -868,7 +868,7 @@ public class Univariate {
 	}
 
 	/**
-	 * betainv ALGORITHM AS 63 APPL. STATIST. VOL.32, NO.1 Computes P(F>x)
+	 * betainv ALGORITHM AS 63 APPL. STATIST. VOL.32, NO.1 Computes P(F{@literal >}x)
 	 * 
 	 * @param x
 	 * @param df1

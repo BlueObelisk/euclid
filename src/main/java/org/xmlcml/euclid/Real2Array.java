@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  * and y arrays, and also an array of Real2s The latter is only stored if
  * required, and then is cached.
  * 
- * Note that we also have Real2Vector which acts like a List<Real2>. We may
+ * Note that we also have Real2Vector which acts like a List{@literal (Real2)}. We may
  * therefore obsolete the Real2Array at some time - it is not used in Jumbo
  * elsewhere although it might be useful for spectra.
  * 

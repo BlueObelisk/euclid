@@ -224,11 +224,11 @@ public class Vector3 implements EuclidConstants {
     }
 
     /**
-     * vector length > vector length
+     * vector length {@literal >} vector length
      *
      * @param v
      *            vector to compare
-     * @return true if this > vector
+     * @return true if this {@literal >} vector
      */
     public boolean longerThan(Vector3 v) {
         return (getLength() > v.getLength());
@@ -571,7 +571,7 @@ public class Vector3 implements EuclidConstants {
      * @param v
      *            vector to project onto
      * @exception EuclidRuntimeException
-     *                vector or <TT>this</TT> is zero length
+     *                vector or <code>this</code> is zero length
      * @return projected vector
      */
     public Vector3 projectOnto(Vector3 v) throws EuclidRuntimeException {

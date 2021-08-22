@@ -229,7 +229,7 @@ public abstract class Real implements EuclidConstants {
      * @param b
      *            number
      * 
-     * @return true if a < b within epsx
+     * @return true if a {@literal <} b within epsx
      * 
      */
     public static boolean isLessThan(double a, double b) {
@@ -244,7 +244,7 @@ public abstract class Real implements EuclidConstants {
      * @param b
      *            number
      * 
-     * @return true if a > b within epsx
+     * @return true if a {@literal >} b within epsx
      * 
      */
     public static boolean isGreaterThan(double a, double b) {

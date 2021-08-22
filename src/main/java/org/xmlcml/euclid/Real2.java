@@ -145,14 +145,14 @@ public class Real2 implements EuclidConstants {
         y = t;
     }
     /**
-     * sorts x and y so that x <= y
+     * sorts x and y so that x {@literal <}= y
      */
     public void sortAscending() {
         if (x > y)
             this.swap();
     }
     /**
-     * sorts x and y so that x >= y
+     * sorts x and y so that x {@literal >}= y
      */
     public void sortDescending() {
         if (x < y)
@@ -429,7 +429,7 @@ public class Real2 implements EuclidConstants {
      * 
      * returns a point array from two points Serial numbers of points are 0 and
      * end that is point1 is points[0] and point2 is points[end] if end == 0,
-     * end=>1
+     * end ={@literal >}1
      * 
      * @param point1 starting point
      * @param nPoints number of points in the resulting polygon
