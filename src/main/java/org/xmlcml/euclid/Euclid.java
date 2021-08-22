@@ -20,7 +20,7 @@
 package org.xmlcml.euclid;
 
 /**
- * These routines have evolved over >10 years and have now settled down to
+ * These routines have evolved over {@literal >}10 years and have now settled down to
  * primitive dataTypes to support CML. In general a CML data element (scalar,
  * array, matrix) * (double, int, String) will have a euclid primitive unless it
  * is already provided by Java or not useful. Almost all double types are

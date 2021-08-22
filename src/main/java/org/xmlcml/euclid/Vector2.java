@@ -65,7 +65,7 @@ public class Vector2 extends Real2 {
      * calculates angle between vectors
      * @param v
      * @param eps tolerance in radians (should be non-negative)
-     * @return true if abs(angle) (rad) < eps
+     * @return true if abs(angle) (rad) {@literal <} eps
      */
     public boolean isParallelTo(Vector2 v, double eps) {
     	Angle a = this.getAngleMadeWith(v);
@@ -77,7 +77,7 @@ public class Vector2 extends Real2 {
      * calculates angle between vectors
      * @param v
      * @param eps tolerance in radians (should be non-negative)
-     * @return true if abs(angle) (rad) < eps
+     * @return true if abs(angle) (rad) {@literal <} eps
      */
     public boolean isAntiParallelTo(Vector2 v, double eps) {
     	Angle a = this.getAngleMadeWith(v);

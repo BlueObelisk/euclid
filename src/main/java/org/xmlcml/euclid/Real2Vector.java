@@ -624,7 +624,7 @@ public class Real2Vector implements EuclidConstants {
      * points go anticlockwise 
      * produces points pointn, pointn+1, ... nsides-1, 0
      * if npoint is 1 we get full polygon
-     * if npoint >= nsides returns null
+     * if npoint {@literal >}= nsides returns null
      * @param nsides
      * @param pointn
      * @param dist0n between point0 and npoint

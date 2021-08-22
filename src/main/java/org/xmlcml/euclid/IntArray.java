@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
  * IntArray represents a 1-dimensional vector or array of ints and is basically
  * a wrapper for int[] in Java There are a lot of useful member functions
  * (sorting, ranges, parallel operations The default is an array with zero
- * points All arrays are valid objects. Attempting to create an array with < 0
+ * points All arrays are valid objects. Attempting to create an array with {@literal <} 0
  * points creates a default array (zero points). Since int[] knows its length
  * (unlike C), there are many cases where int[] can be safely used. However it
  * is not a first-class object and IntArray supplies this feature int[] is
@@ -199,7 +199,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param high
      *            inclusive end index of array
      * @throws EuclidRuntimeException
-     *             low > high or negative indices or outside size of m
+     *             low {@literal >} high or negative indices or outside size of m
      */
     public IntArray(IntArray m, int low, int high) throws EuclidRuntimeException {
         if (low < 0 || low > high || high >= m.size()) {
@@ -355,7 +355,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param elem
      *            the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <code>this</code>
+     *                elem {@literal >}= size of <code>this</code>
      * @return element value
      */
     public int elementAt(int elem) throws ArrayIndexOutOfBoundsException {
@@ -558,7 +558,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param f
      *            value
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <code>this</code>
+     *                elem {@literal >}= size of <code>this</code>
      */
     public void setElementAt(int elem, int f)
             throws ArrayIndexOutOfBoundsException {
@@ -587,7 +587,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param a
      *            array to copy
      * @throws ArrayIndexOutOfBoundsException
-     *             start < 0 or start+a.length > this.size()
+     *             start {@literal <} 0 or start+a.length {@literal >} this.size()
      */
     public void setElements(int start, int[] a) {
         if (start < 0 || start + a.length > nelem) {
@@ -688,11 +688,10 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
     }
     /**
      * apply filter. convolute array with another array. This is 1-D image
-     * processing. If <code>filter</code> has <= 1 element, return <code>this</code>
+     * processing. If <code>filter</code> has {@literal <}= 1 element, return <code>this</code>
      * unchanged. <code>filter</code> should have an odd number of elements. The
      * filter can be created with a IntArray constructor filter is moved along
      * stepwise
-     * </P>
      * 
      * @param filter
      *            to apply normally smaller than this
@@ -909,7 +908,7 @@ public class IntArray extends ArrayBase implements Iterable<Integer> {
      * @param high
      *            highest index inclusive
      * @throws ArrayIndexOutOfBoundsException
-     *             low or high out of range or low > high
+     *             low or high out of range or low {@literal >} high
      */
     public void deleteElements(int low, int high)
             throws ArrayIndexOutOfBoundsException {

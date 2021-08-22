@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * Contains two doubles representing the minimum and maximum of an allowed or
  * observed range.
  * <P>
- * Default is range with low > high; this can be regarded as the uninitialised
+ * Default is range with low {@literal >} high; this can be regarded as the uninitialised
  * state. If points are added to a default RealRange it becomes initialised.
  * 
  * @author (C) P. Murray-Rust, 1996
@@ -69,7 +69,7 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
         maxval = Double.NEGATIVE_INFINITY;
     }
     /**
-     * initialise with min and max values; if minv > maxv create inValid
+     * initialise with min and max values; if minv {@literal >} maxv create inValid
      * RealRange
      * 
      * @param minv
@@ -80,12 +80,12 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
     }
     
     /**
-     * initialise with min and max values; if minv > maxv create inValid
+     * initialise with min and max values; if minv {@literal >} maxv create inValid
      * RealRange
      * 
      * @param minv
      * @param maxv
-     * @param normalize swap params if min > max
+     * @param normalize swap params if min {@literal >} max
      */
     public RealRange(double minv, double maxv, boolean normalize) {
     	if (minv > maxv) {
@@ -342,7 +342,7 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
     }
     
     /**
-     * if min > max swap them
+     * if min {@literal >} max swap them
      */
     public void normalize() {
 		if (minval > maxval) {
@@ -414,7 +414,7 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 	/**
 	 * subtracts tolerance from min and adds to max
 	 * if tolerance is negative adds and subtracts
-	 * if this would result in maxval < minval sets them to mean
+	 * if this would result in maxval {@literal <} minval sets them to mean
 	 * @param tolerance
 	 */
 	public void extendBothEndsBy(double tolerance) {

@@ -250,7 +250,7 @@ public class Point3Vector implements EuclidConstants {
      * @param v
      * @param i
      * @exception EuclidRuntimeException
-     *                i is >= number of current points (cann use this to
+     *                i is {@literal >}= number of current points (cann use this to
      *                increase size of Point3Vector)
      */
     public void setElementAt(Vector3 v, int i) throws EuclidRuntimeException {
@@ -351,7 +351,6 @@ public class Point3Vector implements EuclidConstants {
      * multiply all coords - alters this.
      * 
      * @param scale
-     * @return the scaled vector
      */
     public void multiplyByEquals(double scale) {
     	for (int i = 0; i < this.size(); i++) {

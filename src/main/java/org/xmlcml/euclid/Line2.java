@@ -295,7 +295,7 @@ public class Line2 implements EuclidConstants {
 
 	/**
 	 * @param line
-	 * @param eps maximum allowed angle between unsigned lines (i.e. << Math.PI/2)
+	 * @param eps maximum allowed angle between unsigned lines (i.e. {@literal <}{@literal <} Math.PI/2)
 	 * @return null if any arguments null
 	 */
 	public boolean isAntiParallelTo(Line2 line, Angle eps) {
@@ -464,7 +464,7 @@ public class Line2 implements EuclidConstants {
 	
 	/** creates point at (signed) distance dist from index point
 	 * 
-	 * vector = xy(1-index) <- xy(index)
+	 * vector = xy(1-index) {@literal <}- xy(index)
 	 * newPoint = xy(index) + (dist / line.length) * vector
 	 * @param dist
      * @param index

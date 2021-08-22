@@ -572,7 +572,7 @@ public class Util implements EuclidConstants {
 
 /**
 	 * return index of balanced bracket. String MUST start with a generic LH
-	 * bracket (e.g. '{', '<', '(' '[')
+	 * bracket (e.g. '{', '{@literal <}', '(' '[')
 	 * 
 	 * @param lbrack
 	 *            starting character
@@ -1690,7 +1690,7 @@ public class Util implements EuclidConstants {
 	}
 
 	/**
-	 * translate non-printing character to ISO mnemonic. e.g. 1 => SOH
+	 * translate non-printing character to ISO mnemonic. e.g. 1 ={@literal >} SOH
 	 * 
 	 * @param ch
 	 *            [0 - 31] or 127
@@ -1774,7 +1774,7 @@ public class Util implements EuclidConstants {
 
 	/**
 	 * convert 2 UTF8 characters to single IsoLatin1 character. quick and dirty
-	 * UTF8 C2 80 => 80 (etc) UTF8 C3 80 => C0 (i.e. add x40) user has
+	 * UTF8 C2 80 ={@literal >} 80 (etc) UTF8 C3 80 ={@literal >} C0 (i.e. add x40) user has
 	 * responsibility for selecting characters
 	 * 
 	 * @param a
@@ -1797,11 +1797,11 @@ public class Util implements EuclidConstants {
 
 	/**
 	 * convert single IsoLatin1 character to 2 UTF8 characters . quick and dirty
-	 * user has responsibility for selecting characters a >= x80 && a <= xBF ==>
-	 * xC2 a a >= xC0 && a <= xFF ==> xC3 a - x40
+	 * user has responsibility for selecting characters a {@literal >}= x80 && a {@literal <}= xBF =={@literal >}
+	 * xC2 a a {@literal >}= xC0 && a {@literal <}= xFF =={@literal >} xC3 a - x40
 	 * 
 	 * @param a
-	 *            char to be converted (a >= x80 && a <xff)
+	 *            char to be converted (a {@literal >}= x80 && a {@literal <}xff)
 	 * @return 2 characters or null
 	 */
 	public static char[] convertLatin1ToUTF8(char a) {
@@ -1980,7 +1980,7 @@ public class Util implements EuclidConstants {
 	 * 
 	 * Translates a Hex number to its int equivalent. Thus "FE" translates to
 	 * 
-	 * 254. Horrid, but I couldn't find if Java reads hex. All results are >=
+	 * 254. Horrid, but I couldn't find if Java reads hex. All results are {@literal >}=
 	 * 
 	 * 0. Errors return -1
 	 * 

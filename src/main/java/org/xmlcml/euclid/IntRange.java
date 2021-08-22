@@ -37,7 +37,7 @@ import com.google.common.collect.Multisets;
  * Contains two ints representing the minimum and maximum of an allowed or
  * observed range.
  * <P>
- * Default is range with low > high; this can be regarded as the uninitialised
+ * Default is range with low {@literal >} high; this can be regarded as the uninitialised
  * state. If points are added to a default IntRange it becomes initialised.
  * 
  * @author (C) P. Murray-Rust, 1996
@@ -72,7 +72,7 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
         maxval = Integer.MIN_VALUE;
     }
     /**
-     * initialise with min and max values; if minv > maxv create inValid
+     * initialise with min and max values; if minv {@literal >} maxv create inValid
      * IntRange
      * 
      * @param minv

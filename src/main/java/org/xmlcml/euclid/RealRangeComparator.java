@@ -36,7 +36,7 @@ public class RealRangeComparator implements Comparator<RealRange> {
 	}
 
 	/**
-	 * if Math.abs(d0-d1) <= epsilon  
+	 * if Math.abs(d0-d1) {@literal <}= epsilon
 	 * return -1 if either arg is null or any ranges in r0 or r1 are null or comparisons clash
 	 */
 	public int compare(RealRange r0, RealRange r1) {

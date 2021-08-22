@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
  * <P>
  * <code> RealArray x = someFunction();<BR>
  * InstSet idx = x.indexSortAscending();<BR>
- * for (int i = 0; i < x.size(); i++) {<BR>
+ * for (int i = 0; i {@literal <}x.size(); i++) {<BR>
  * y[i] = x[idx[i]];<BR> }<BR>
  * </code> To map the other way, <code>x[i] = y[inv[i]];</code> the inverse IntSet
  * can be used
@@ -82,7 +82,7 @@ public class IntSet implements EuclidConstants {
     }
 
     /**
-     * creates an IntSet with the integers start...end (if start <= end)
+     * creates an IntSet with the integers start...end (if start {@literal <}= end)
      * 
      * @param start
      * @param end

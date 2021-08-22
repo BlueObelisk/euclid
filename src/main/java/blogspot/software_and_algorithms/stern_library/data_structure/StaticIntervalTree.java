@@ -511,8 +511,8 @@ public class StaticIntervalTree<U extends Comparable<U>, T extends Interval<U>> 
 		/**
 		 * Fetch all intervals from this node which overlap the specified
 		 * interval. By contract, the interval must be such that
-		 * {@link Interval#getLow()} <code>{@literal <=}</code> {@link Node#getPoint()}
-		 * <code>{@literal <=}</code> {@link Interval#getHigh()}.
+		 * {@link Interval#getLow()} <code>{@literal <}=</code> {@link Node#getPoint()}
+		 * <code>{@literal <}=</code> {@link Interval#getHigh()}.
 		 * 
 		 * @param target
 		 *            the target Collection into which to place the desired

@@ -86,14 +86,14 @@ public class Int2 implements EuclidConstants {
         y = t;
     }
     /**
-     * sorts x and y so that x <= y
+     * sorts x and y so that x {@literal <}= y
      */
     public void sortAscending() {
         if (x > y)
             this.swap();
     }
     /**
-     * sorts x and y so that x >= y
+     * sorts x and y so that x {@literal >}= y
      */
     public void sortDescending() {
         if (x < y)

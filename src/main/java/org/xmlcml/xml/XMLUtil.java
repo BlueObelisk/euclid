@@ -1184,7 +1184,7 @@ public abstract class XMLUtil implements XMLConstants {
 
 	/** adds missing end tag
 	 * 
-	 * crude - adds /> and then deletes any /></tag> 
+	 * crude - adds /{@literal >} and then deletes any /{@literal >}{@literal (/tag)}
 	 * 
 	 * 		String s = "<a><meta></a>";
 		s = XMLUtil.addMissingEndTags(s, "meta");

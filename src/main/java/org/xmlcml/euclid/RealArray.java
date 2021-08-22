@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  * 
  * The default is an array with zero points All arrays are valid objects.
  * 
- * Attempting to create an array with < 0 points creates a default array (zero
+ * Attempting to create an array with {@literal <} 0 points creates a default array (zero
  * points).
  * 
  * Since double[] knows its length (unlike C), there are many cases where
@@ -230,7 +230,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param high
      *            inclusive end index of array
      * @throws EuclidRuntimeException
-     *             low > high or negative indices or outside size of m
+     *             low {@literal >} high or negative indices or outside size of m
      */
     public RealArray(RealArray m, int low, int high) throws EuclidRuntimeException {
         if (low < 0 || low > high || high >= m.size()) {
@@ -546,7 +546,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * RealArray freq = new RealArray(new double[] {23., 3., 45....)
      * RealArray cumulativeSum = new RealArray();
      * 
-     * for (int i = 0, i < npoints; i++) {
+     * for (int i = 0, i {@literal <} npoints; i++) {
      *   double random = x.getRandomVariate(freq, sumulativeSum);
      * }
      * 
@@ -608,7 +608,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * 
      * @param elem the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <code>this</code>
+     *                elem {@literal >}= size of <code>this</code>
      * @return element value
      */
     public double elementAt(int elem) throws ArrayIndexOutOfBoundsException {
@@ -619,7 +619,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * 
      * @param elem the index
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <code>this</code>
+     *                elem {@literal >}= size of <code>this</code>
      * @return element value
      */
     public double get(int elem) throws ArrayIndexOutOfBoundsException {
@@ -829,7 +829,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param f
      *            value
      * @exception ArrayIndexOutOfBoundsException
-     *                elem >= size of <code>this</code>
+     *                elem {@literal >}= size of <code>this</code>
      */
     public void setElementAt(int elem, double f)
             throws ArrayIndexOutOfBoundsException {
@@ -858,7 +858,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param a
      *            array to copy
      * @throws ArrayIndexOutOfBoundsException
-     *             start < 0 or start+a.length > this.size()
+     *             start {@literal <} 0 or start+a.length {@literal >} this.size()
      */
     public void setElements(int start, double[] a) {
         if (start < 0 || start + a.length > nelem) {
@@ -1019,11 +1019,10 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
     }
     /**
      * apply filter. convolute array with another array. This is 1-D image
-     * processing. If <code>filter</code> has <= 1 element, return <code>this</code>
+     * processing. If <code>filter</code> has {@literal <}= 1 element, return <code>this</code>
      * unchanged. <code>filter</code> should have an odd number of elements. The
      * filter can be created with a IntArray constructor filter is moved along
      * stepwise
-     * </P>
      * 
      * @param filter
      *            to apply normally smaller than this
@@ -1239,7 +1238,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * @param high
      *            highest index inclusive
      * @throws ArrayIndexOutOfBoundsException
-     *             low or high out of range or low > high
+     *             low or high out of range or low {@literal >} high
      */
     public void deleteElements(int low, int high)
             throws ArrayIndexOutOfBoundsException {
@@ -1437,7 +1436,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * some operations on float[] (static)
      */
     /**
-     * delete elements (lo - > hi inclusive) in a float[] and close up; if hi >=
+     * delete elements (lo - {@literal >} hi inclusive) in a float[] and close up; if hi {@literal >}=
      * float.length hi is reset to float.length-1.
      * 
      * @param f
@@ -1851,7 +1850,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * targetx0, targetx1 = {100, 200}
 	 * would create {125., 175., 225.}
 	 * 
-	 * allows for x0 > x1
+	 * allows for x0 {@literal >} x1
 	 * @param thisX0 low map point of this
 	 * @param thisX1 high map point of this
 	 * @param targetX0 low map point of target
@@ -1884,7 +1883,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
 	 * newRange = {5, 9}
 	 * would create (5, 7, 9}
 	 * 
-	 * allows for x0 > x1
+	 * allows for x0 {@literal >} x1
 	 * @return
 	 */
 	public RealArray createScaledArrayToRange(double x0, double x1) {

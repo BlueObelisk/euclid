@@ -184,7 +184,7 @@ public class Angle {
         return Math.tan(angle);
     }
     /**
-     * normalise angle. to range 0 {@literal ->} 2*PI
+     * normalise angle. to range 0 -{@literal >} 2*PI
      * 
      * @param angle the angle to be normalised
      * @return normalised angle
@@ -200,7 +200,7 @@ public class Angle {
         return angle;
     }
 
-    /** normalizes angle to be in range - Math.PI {@literal ->} Math.PI.
+    /** normalizes angle to be in range - Math.PI -{@literal >} Math.PI.
      * 
      */
     public void normalizeToPlusMinusPI() {
@@ -291,7 +291,7 @@ public class Angle {
      * is one angle less than or equal to another (after normalisation)
      * 
      * @param a the specified angle to which this angle is compared to be lesser than or equal to
-     * @return {@literal <=}
+     * @return {@literal <}=
      */
     public boolean lessThanOrEquals(double a) {
         return Angle.normalise(angle) <= Angle.normalise(a);
@@ -328,7 +328,7 @@ public class Angle {
      * is one angle greater than or equal to another (after normalisation)
      * 
      * @param a the specified angle to which this angle is compared to be greater than or equal to (after normalisation)
-     * @return {@literal >=}
+     * @return {@literal >}=
      */
     public boolean greaterThanOrEquals(Angle a) {
         return greaterThanOrEquals(a.angle);
@@ -346,7 +346,7 @@ public class Angle {
      * is one angle less than or equal to another (after normalisation)
      * 
      * @param a the specified angle to which this angle is compared to be lesser than or equal to (after normalisation)
-     * @return {@literal <=}
+     * @return {@literal <}=
      */
     public boolean lessThanOrEquals(Angle a) {
         return lessThanOrEquals(a.angle);
