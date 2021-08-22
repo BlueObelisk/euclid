@@ -267,6 +267,8 @@ public class HungarianAlgorithm {
 
 	/**
 	 * Helper method to record a matching between worker w and job j.
+     * @param w the worker
+     * @param j the job
 	 */
 	protected void match(int w, int j) {
 		matchJobByWorker[w] = j;
@@ -313,6 +315,8 @@ public class HungarianAlgorithm {
 	 * Update labels with the specified slack by adding the slack value for
 	 * committed workers and by subtracting the slack value for committed jobs.
 	 * In addition, update the minimum slack values appropriately.
+     *
+     * @param slack the specified slack for which labels will be updated
 	 */
 	protected void updateLabeling(double slack) {
 		for (int w = 0; w < dim; w++) {

@@ -89,6 +89,9 @@ public class DamerauLevenshteinAlgorithm {
 	/**
 	 * Compute the Damerau-Levenshtein distance between the specified source
 	 * string and the specified target string.
+     * @param source the source string
+     * @param target the target string
+     * @return Damerau-Levenshtein distance between the specified source
 	 */
 	public int execute(String source, String target) {
 		if (source.length() == 0) {

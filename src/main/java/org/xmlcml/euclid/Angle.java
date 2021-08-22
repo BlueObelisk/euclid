@@ -184,9 +184,9 @@ public class Angle {
         return Math.tan(angle);
     }
     /**
-     * normalise angle. to range 0 -> 2*PI
+     * normalise angle. to range 0 {@literal ->} 2*PI
      * 
-     * @param angle
+     * @param angle the angle to be normalised
      * @return normalised angle
      */
     public static double normalise(double angle) {
@@ -200,7 +200,7 @@ public class Angle {
         return angle;
     }
 
-    /** normalizes angle to be in range - Math.PI -> Math.PI.
+    /** normalizes angle to be in range - Math.PI {@literal ->} Math.PI.
      * 
      */
     public void normalizeToPlusMinusPI() {
@@ -242,7 +242,7 @@ public class Angle {
     /**
      * are two normalised angles equal.
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared
      * @return boolean
      * @deprecated // use epsilon method
      * 
@@ -251,11 +251,11 @@ public class Angle {
         return Real.isEqual(Angle.normalise(angle), Angle.normalise(a));
     }
 
-    /** compare anngles allowing for epsilon
+    /** compare angles allowing for epsilon
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared to be equal to
      * @param epsilon tolerance limit for equality
-     * @return
+     * @return boolean
      */
     public boolean isEqualTo(double a, double epsilon) {
         return Real.isEqual(Angle.normalise(angle), Angle.normalise(a), epsilon);
@@ -263,7 +263,7 @@ public class Angle {
     /**
      * is one angle greater than another (after normalisation)
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared to be greater
      * @return greater than
      */
     public boolean greaterThan(double a) {
@@ -272,7 +272,7 @@ public class Angle {
     /**
      * is one angle greater than or equal to another (after normalisation)
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared to be greater than or equal to
      * @return greater than or equals
      */
     public boolean greaterThanOrEquals(double a) {
@@ -281,8 +281,8 @@ public class Angle {
     /**
      * is one angle less than another (after normalisation)
      * 
-     * @param a
-     * @return <
+     * @param a the specified angle to which this angle is compared to be lesser
+     * @return {@literal <}
      */
     public boolean lessThan(double a) {
         return Angle.normalise(angle) < Angle.normalise(a);
@@ -290,8 +290,8 @@ public class Angle {
     /**
      * is one angle less than or equal to another (after normalisation)
      * 
-     * @param a
-     * @return <=
+     * @param a the specified angle to which this angle is compared to be lesser than or equal to
+     * @return {@literal <=}
      */
     public boolean lessThanOrEquals(double a) {
         return Angle.normalise(angle) <= Angle.normalise(a);
@@ -299,7 +299,7 @@ public class Angle {
     /**
      * are two angles equal
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared to be equal to
      * @return ==
      */
     public boolean isEqualTo(Angle a) {
@@ -308,7 +308,8 @@ public class Angle {
     /**
      * are two angles equal
      * 
-     * @param a
+     * @param a the specified angle to which this angle is compared to be equal to
+     * @param eps epsilon tolerance limit for equality
      * @return ==
      */
     public boolean isEqualTo(Angle a, double eps) {
@@ -317,8 +318,8 @@ public class Angle {
     /**
      * is one angle greater than another (after normalisation)
      * 
-     * @param a
-     * @return >
+     * @param a the specified angle to which this angle is compared to be greater (after normalisation)
+     * @return {@literal >}
      */
     public boolean greaterThan(Angle a) {
         return greaterThan(a.angle);
@@ -326,8 +327,8 @@ public class Angle {
     /**
      * is one angle greater than or equal to another (after normalisation)
      * 
-     * @param a
-     * @return >=
+     * @param a the specified angle to which this angle is compared to be greater than or equal to (after normalisation)
+     * @return {@literal >=}
      */
     public boolean greaterThanOrEquals(Angle a) {
         return greaterThanOrEquals(a.angle);
@@ -335,8 +336,8 @@ public class Angle {
     /**
      * is one angle less than another (after normalisation)
      * 
-     * @param a
-     * @return <
+     * @param a the specified angle to which this angle is compared to be lesser (after normalisation)
+     * @return {@literal <}
      */
     public boolean lessThan(Angle a) {
         return lessThan(a.angle);
@@ -344,8 +345,8 @@ public class Angle {
     /**
      * is one angle less than or equal to another (after normalisation)
      * 
-     * @param a
-     * @return <=
+     * @param a the specified angle to which this angle is compared to be lesser than or equal to (after normalisation)
+     * @return {@literal <=}
      */
     public boolean lessThanOrEquals(Angle a) {
         return lessThanOrEquals(a.angle);
@@ -353,7 +354,7 @@ public class Angle {
     /**
      * get angle in radians
      * 
-     * @return anngle
+     * @return angle
      */
     public double getAngle() {
         return adjust(angle);
@@ -375,9 +376,7 @@ public class Angle {
         return adjust(angle) * DEGREES_IN_RADIAN;
     }
     /**
-     * input angle in degrees
-     * 
-     * @param a
+     * @param a angle in degrees
      */
     public void putDegrees(double a) {
         angle = a / DEGREES_IN_RADIAN;
@@ -385,7 +384,7 @@ public class Angle {
     /**
      * set type of range
      * 
-     * @param range
+     * @param range type of range
      */
     public void setRange(Range range) {
         this.range = range;

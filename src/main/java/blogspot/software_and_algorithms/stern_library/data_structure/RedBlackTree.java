@@ -352,7 +352,9 @@ public class RedBlackTree<T> implements Iterable<T> {
 	 * Get the predecessor of the specified node. The predecessor of a node n is
 	 * the node with the largest value in the tree smaller than the value held
 	 * by n.
-	 * 
+	 *
+     * @param node the node compared to which predecessor node will be found
+     * @return the predecessor of the specified node
 	 * @see "CLRS"
 	 */
 	public Node<T> getPredecessor(Node<T> node) {
@@ -391,7 +393,9 @@ public class RedBlackTree<T> implements Iterable<T> {
 	/**
 	 * Get the successor of the specified node. The successor of a node n is the
 	 * node with the smallest value in the tree larger than the value held by n.
-	 * 
+	 *
+     * @param node the node compared to which successor node will be found
+     * @return the successor of the specified node
 	 * @see "CLRS"
 	 */
 	public Node<T> getSuccessor(Node<T> node) {
