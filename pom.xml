@@ -3,7 +3,7 @@
 
   <groupId>org.blueobelisk</groupId>
   <artifactId>euclid</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>jar</packaging>
 
   <properties>
