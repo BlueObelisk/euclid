@@ -9,7 +9,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <guava.version>[30.0-jre,)</guava.version>
+    <guava.version>[31.0.1-jre,)</guava.version>
   </properties>
 
   <name>CML Euclid</name>
