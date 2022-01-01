@@ -66,7 +66,7 @@ public class IntSTAttribute extends STMLAttribute {
     public IntSTAttribute(IntSTAttribute att) {
         super(att);
         if (att.i != null) {
-            this.i = new Integer(att.i.intValue());
+            this.i = att.i.intValue();
         }
     }
     /** copy.
@@ -115,7 +115,7 @@ public class IntSTAttribute extends STMLAttribute {
      */
     public void setSTMLValue(int i) {
         checkValue(i);
-        this.i = new Integer(i);
+        this.i = i;
         this.setValue(S_EMPTY + i);
     }
 

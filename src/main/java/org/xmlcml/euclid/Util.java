@@ -2713,17 +2713,17 @@ public class Util implements EuclidConstants {
 	public static int getPrime(int i) {
 		if (primeList == null) {
 			primeList = new ArrayList<Integer>();
-			primeList.add(new Integer(2));
-			primeList.add(new Integer(3));
-			primeList.add(new Integer(5));
-			primeList.add(new Integer(7));
-			primeList.add(new Integer(11));
+			primeList.add(2);
+			primeList.add(3);
+			primeList.add(5);
+			primeList.add(7);
+			primeList.add(11);
 		}
 		int np = primeList.size();
 		int p = primeList.get(np - 1).intValue();
 		while (np <= i) {
 			p = nextPrime(p);
-			primeList.add(new Integer(p));
+			primeList.add(p);
 			np++;
 		}
 		return primeList.get(i).intValue();

@@ -334,13 +334,13 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 				if (matcher.matches()) {
 					String minS = matcher.group(1);
 					String maxS = matcher.group(2);
-					min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : new Integer(minS);
-					max = (ANY.equals(maxS)) ?  Integer.MAX_VALUE : new Integer(maxS);
+					min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : Integer.parseInt(minS);
+					max = (ANY.equals(maxS)) ?  Integer.MAX_VALUE : Integer.parseInt(maxS);
 				} else {
 					matcher = CURLY_PATTERN1.matcher(token);
 					if (matcher.matches()) {
 						String minS = matcher.group(1);
-						min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : new Integer(minS);
+						min = (ANY.equals(minS)) ? -Integer.MAX_VALUE : Integer.parseInt(minS);
 						max = min;
 					}
 				}

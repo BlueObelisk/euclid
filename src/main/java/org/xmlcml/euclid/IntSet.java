@@ -131,7 +131,7 @@ public class IntSet implements EuclidConstants {
                 throw new EuclidRuntimeException("Duplicate value: " + i);
             }
             array[i++] = ii;
-            set.add(new Integer(ii));
+            set.add(ii);
         }
     }
 
@@ -165,7 +165,7 @@ public class IntSet implements EuclidConstants {
         for (int i = 0; i < nToAdd; i++) {
             array[i] = start + i;
             if (addSet) {
-                set.add(new Integer(array[i]));
+                set.add(array[i]);
             }
         }
     }
@@ -270,7 +270,7 @@ public class IntSet implements EuclidConstants {
             array = temp;
         }
         array[nelem++] = value;
-        set.add(new Integer(value));
+        set.add(value);
         return true;
     }
 

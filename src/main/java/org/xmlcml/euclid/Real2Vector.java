@@ -609,7 +609,7 @@ public class Real2Vector implements EuclidConstants {
      */
     public static Real2Vector regularPolygon(int nsides, double rad, double angle) {
         Real2Vector temp = new Real2Vector();
-        double dangle = 2 * Math.PI / (new Integer(nsides).doubleValue());
+        double dangle = 2 * Math.PI / (new Double(nsides).doubleValue());
         for (int i = 0; i < nsides; i++) {
             Real2 p = new Real2(rad * Math.sin(angle), rad * Math.cos(angle));
             temp.add(p);
