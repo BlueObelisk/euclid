@@ -994,13 +994,13 @@ class Diagonalise implements EuclidConstants {
         }
         if (anorm > ZERO) {
             anorm = Math.sqrt(anorm) * SQRT2;
-            anrmx = anorm * range / (new Double(order).doubleValue());
+            anrmx = anorm * range / ((double)order);
             /* initialize indicators and compute threshold, thr */
             ind = 0;
             thr = anorm;
             // L80:
             while (true) {
-                thr /= new Double(order).doubleValue();
+                thr /= ((double)order);
                 // L90:
                 while (true) {
                     l = 1;

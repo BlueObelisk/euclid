@@ -16,11 +16,8 @@
 
 package org.xmlcml.euclid;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -217,7 +214,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
         array = new double[nelem];
         bufsize = nelem;
         for (int i = 0; i < nelem; i++) {
-            array[i] = (new Double(ia.elementAt(i))).doubleValue();
+            array[i] = ia.elementAt(i);
         }
     }
     /**

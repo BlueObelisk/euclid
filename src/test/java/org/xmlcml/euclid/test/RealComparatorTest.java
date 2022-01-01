@@ -43,11 +43,11 @@ public class RealComparatorTest {
 	@Test
 	public void comparatorTest1() {
 		RealComparator comparator = new RealComparator(0.01);
-		Assert.assertEquals(0, comparator.compare(ONE, new Double(1.001)));
-		Assert.assertEquals(0, comparator.compare(ONE, new Double(0.999)));
+		Assert.assertEquals(0, comparator.compare(ONE, 1.001));
+		Assert.assertEquals(0, comparator.compare(ONE, 0.999));
 		Assert.assertEquals(0, comparator.compare(THREE, SQR3*SQR3));
-		Assert.assertEquals(1, comparator.compare(ONE, new Double(0.98)));
-		Assert.assertEquals(-1, comparator.compare(ONE, new Double(1.02)));
+		Assert.assertEquals(1, comparator.compare(ONE, 0.98));
+		Assert.assertEquals(-1, comparator.compare(ONE, 1.02));
 	}
 	
 	/** HashSet only works with exactness
@@ -56,8 +56,8 @@ public class RealComparatorTest {
 	@Test
 	public void testHashSet(){
 		Set<Double> set = new HashSet<Double>();
-		set.add(new Double(1.0));
-		set.add(new Double(1.0));
+		set.add(1.0);
+		set.add(1.0);
 		Assert.assertEquals(1, set.size());
 	}
 	
@@ -67,8 +67,8 @@ public class RealComparatorTest {
 	@Test
 	public void testHashSet1(){
 		Set<Double> set = new HashSet<Double>();
-		set.add(new Double(1.0));
-		set.add(new Double((Math.sqrt(3.0)*Math.sqrt(3.0))/3.0));
+		set.add(1.0);
+		set.add((Math.sqrt(3.0)*Math.sqrt(3.0))/3.0);
 		Assert.assertEquals(2, set.size());
 	}
 	

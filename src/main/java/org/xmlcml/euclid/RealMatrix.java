@@ -183,7 +183,7 @@ public class RealMatrix implements EuclidConstants {
         this(m.rows, m.cols);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                flmat[i][j] = new Double(m.flmat[i][j]).doubleValue();
+                flmat[i][j] = m.flmat[i][j];
             }
         }
     }

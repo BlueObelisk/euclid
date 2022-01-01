@@ -400,7 +400,7 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 			String[] ss = getSplitContent();
 			dd = new boolean[ss.length];
 			for (int i = 0; i < dd.length; i++) {
-				dd[i] = new Boolean(ss[i]);
+				dd[i] = Boolean.parseBoolean(ss[i]);
 			}
 		}
 		return dd;
@@ -982,7 +982,7 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 		if (XSD_STRING.equals(dataType)) {
 			this.append(content);
 		} else if (XSD_BOOLEAN.equals(dataType)) {
-			this.append(new Boolean(content).booleanValue());
+			this.append(Boolean.parseBoolean(content));
 		} else if (XSD_DATE.equals(dataType)) {
 			this.append(JodaDate.parseDate(content).toString());
 		} else if (XSD_DOUBLE.equals(dataType)) {

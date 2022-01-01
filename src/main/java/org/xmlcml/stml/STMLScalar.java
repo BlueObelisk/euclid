@@ -133,7 +133,7 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 		if (getDataType().equals(XSD_BOOLEAN)) {
 			String content = getXMLContent();
 			if (content != null) {
-				result = new Boolean(content);
+				result = Boolean.parseBoolean(content);
 			}
 		}
 		return result;
