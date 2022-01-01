@@ -3187,11 +3187,13 @@ class StringIntegerComparator implements Comparator<Object> {
 			if (line == null) break;
 			lines.add(line);
 		}
+		br.close();
 		File file1 = new File(outFilename);
 		FileWriter fw = new FileWriter(file1);
 		for (int i = lines.size() - 1; i >= 0; i--) {
 			fw.write(lines.get(i)+"\n");
 		}
+		fw.close();
 	}
 	
  }
