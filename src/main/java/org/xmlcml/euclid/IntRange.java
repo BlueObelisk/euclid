@@ -25,11 +25,6 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.xmlcml.euclid.util.MultisetUtil;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 
 /**
  * maximum and minimum values
@@ -433,18 +428,6 @@ public class IntRange implements EuclidConstants, Comparable<IntRange> {
 	 */
 	public boolean canJoin(IntRange range, int tolerance) {
 		return Math.abs(this.maxval - range.minval) <= tolerance; 
-	}
-//	public static Iterable<Multiset.Entry<Integer>> getIntegerEntriesSortedByCount(Multiset<Integer> integerSet) {
-//		return Multisets.copyHighestCountFirst(integerSet).entrySet();
-//	}
-
-	
-	public static List<Multiset.Entry<IntRange>> getIntRangeEntryListSortedByCount(Multiset<IntRange> intRangeSet) {
-		return Lists.newArrayList(IntRange.getIntRangeEntriesSortedByCount(intRangeSet));
-	}
-	
-	public static Iterable<Multiset.Entry<IntRange>> getIntRangeEntriesSortedByCount(Multiset<IntRange> intRangeSet) {
-		return Multisets.copyHighestCountFirst(intRangeSet).entrySet();
 	}
 
 
