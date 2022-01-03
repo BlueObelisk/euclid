@@ -1,6 +1,7 @@
 # CML Euclid
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid)
 [![Build Status](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml/badge.svg)](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5815148.svg)](https://doi.org/10.5281/zenodo.5815148)
 
 A library of numeric, geometric and XML routines
 
@@ -15,7 +16,7 @@ It's used a lot in CML tools (JUMBO, JUMBO-converters) and also AMI (for extract
 Instructions to increase the version:
 
 ```shell
-mvn versions:set -DnewVersion=1.4-SNAPSHOT
+mvn versions:set -DnewVersion=2.1-SNAPSHOT
 ```
 
 Deploy to Sonatype with the following commands, for snapshots and releases respectively:
