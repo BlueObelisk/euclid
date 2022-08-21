@@ -1,7 +1,7 @@
 foo
-^.project$
-^.settings/
-^.classpath$
+.project
+.settings/
+.classpath
 ^.hgignore~$
 ^.gitignore~$
 ^target/.*
