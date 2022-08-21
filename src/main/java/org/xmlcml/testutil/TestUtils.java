@@ -1135,8 +1135,7 @@ public final class TestUtils implements STMLConstants {
 	 * tests 2 XML objects for equality using canonical XML.
 	 * 
 	 * @param message
-	 * @param refNode
-	 *            first node
+	 * @param refXMLString
 	 * @param testNode
 	 *            second node
 	 * @param stripWhite
@@ -1390,7 +1389,7 @@ public final class TestUtils implements STMLConstants {
 
 	/**
 	 * convenience method to parse test file. 
-	 * @param filename relative to classpath
+	 * @param file relative to classpath
 	 * @return root element
 	 */
 	public static Element parseValidFile(File file) {

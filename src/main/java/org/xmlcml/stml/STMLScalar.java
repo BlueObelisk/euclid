@@ -55,7 +55,7 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 	}
 
 	/**
-	 * contructor.
+	 * constructor.
 	 * 
 	 * @param old
 	 */
@@ -369,8 +369,6 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 	 * 
 	 * @param scalar
 	 *            the scalar to subtract; can have different owner
-	 * @throws CMLException
-	 *             inappropriate dataTypes
 	 * @return new scalar
 	 */
 	public STMLScalar subtract(STMLScalar scalar) {
@@ -392,8 +390,6 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 	 * 
 	 * @param scalar
 	 *            the scalar to subtract; can have different owner
-	 * @throws CMLException
-	 *             inappropriate dataTypes, unequal scalars
 	 */
 	public void subtractEquals(STMLScalar scalar) {
 		checkNumericConformability(scalar);
@@ -412,8 +408,6 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 	 * 
 	 * @param scalar
 	 *            the scalar to add;
-	 * @throws CMLException
-	 *             inappropriate dataTypes
 	 * @return new scalar
 	 */
 	public STMLScalar plus(STMLScalar scalar) {
@@ -435,8 +429,6 @@ public class STMLScalar extends STMLElement implements HasUnits, HasScalar, HasD
 	 * 
 	 * @param scalar
 	 *            the scalar to subtract;
-	 * @throws CMLException
-	 *             inappropriate dataTypes, unequal scalars
 	 */
 	public void plusEquals(STMLScalar scalar) {
 		checkNumericConformability(scalar);

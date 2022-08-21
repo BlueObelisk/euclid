@@ -1500,7 +1500,7 @@ public class RealArray extends ArrayBase implements Iterable<Double> {
      * experimental approach to finding baseline and adjusting to it.
      * Finds peak of distribution
      * read source code if you need to use this
-     * @throws JumboException (many)
+     *
      * @return base offset
      */
  	public double getBaseLine() {

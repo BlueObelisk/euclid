@@ -53,7 +53,7 @@ public interface HasDictRef {
 
     /** set dictRef value.
      * 
-     * @return value
+     * @param dictRef
      */
     void setDictRef(String dictRef);
 

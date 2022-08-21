@@ -298,8 +298,7 @@ public class Transform2 extends RealSquareMatrix {
      *@param  in                       Description of the Parameter
      *@param  out                      Description of the Parameter
      *@param  keepAspectRatio          Description of the Parameter
-     *@exception  ArithmeticException  Description of the Exception
-     *@throws  zero-sized              dimensions
+     *@throws  ArithmeticException
      */
     public Transform2(Window2 in, Window2 out, boolean keepAspectRatio)
              throws ArithmeticException {
@@ -322,8 +321,7 @@ public class Transform2 extends RealSquareMatrix {
      *@param  originOut                Description of the Parameter
      *@param  dimensionOut             Description of the Parameter
      *@param  keepAspectRatio          Description of the Parameter
-     *@exception  ArithmeticException  Description of the Exception
-     *@throws  zero-sized              dimensions
+     *@throws  ArithmeticException
      */
     public Transform2(Real2 originIn, Real2 dimensionIn,
             Real2 originOut, Real2 dimensionOut, boolean keepAspectRatio) throws ArithmeticException {
@@ -612,7 +610,6 @@ public class Transform2 extends RealSquareMatrix {
      *            Description of the Parameter
      * @return Description of the Return Value
      * @exception EuclidRuntimeException
-     *                <code>r</code> is zero length
      */
     public static Transform2 flipAboutVector(Real2 r) throws EuclidRuntimeException {
         r = r.getUnitVector();
@@ -635,7 +632,7 @@ public class Transform2 extends RealSquareMatrix {
     /**
      * get translation component only
      * 
-     * @return The translation value
+     * @param xy
      */
     public void setTranslation(Real2 xy) {
         flmat[0][2] = xy.x;

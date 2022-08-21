@@ -774,7 +774,7 @@ public class Util implements EuclidConstants {
 
 	/**
 	 * remove balanced (well-formed) markup from a string. Crude (that is not
-	 * fully XML-compliant);</BR> Example: "This is &lt;A
+	 * fully XML-compliant);<BR /> Example: "This is &lt;A
 	 * HREF="foo"&gt;bar&lt;/A&gt; and &lt;/BR&gt; a break" goes to "This is bar
 	 * and a break"
 	 * 
@@ -1797,11 +1797,11 @@ public class Util implements EuclidConstants {
 
 	/**
 	 * convert single IsoLatin1 character to 2 UTF8 characters . quick and dirty
-	 * user has responsibility for selecting characters a {@literal >}= x80 && a {@literal <}= xBF =={@literal >}
-	 * xC2 a a {@literal >}= xC0 && a {@literal <}= xFF =={@literal >} xC3 a - x40
+	 * user has responsibility for selecting characters a {@literal >}= x80 AND a {@literal <}= xBF =={@literal >}
+	 * xC2 a a {@literal >}= xC0 AND a {@literal <}= xFF =={@literal >} xC3 a - x40
 	 * 
 	 * @param a
-	 *            char to be converted (a {@literal >}= x80 && a {@literal <}xff)
+	 *            char to be converted (a {@literal >}= x80 AND a {@literal <}xff)
 	 * @return 2 characters or null
 	 */
 	public static char[] convertLatin1ToUTF8(char a) {
@@ -2929,7 +2929,6 @@ public class Util implements EuclidConstants {
 	/** outputs to sysout.
 	 * primarily to allow trapping and tracing of sysout calls
 	 * which we try to avoid anyway
-	 * @param s
 	 */
 	public static void println() {
 		SYSOUT.println();
@@ -3046,9 +3045,9 @@ public class Util implements EuclidConstants {
      * from Stackoverflow:
      * http://stackoverflow.com/questions/204784/how-to-construct-a-relative-path-in-java-from-two-absolute-paths-or-urls
      * 
-     * @param target targetPath is calculated to this file
-     * @param base basePath is calculated from this file
-     * @param separator directory separator. The platform default is not assumed so that we can test Unix behaviour when running on Windows (for example)
+     * @param targetPath targetPath is calculated to this file
+     * @param basePath basePath is calculated from this file
+     * @param pathSeparator directory separator. The platform default is not assumed so that we can test Unix behaviour when running on Windows (for example)
      * @return
      */
     public static String getRelativePath(String targetPath, String basePath, String pathSeparator) {

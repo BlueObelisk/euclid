@@ -426,7 +426,6 @@ public class Line2 implements EuclidConstants {
 	/** set point at either end.
 	 * 
 	 * @param i (0/from or 1/to)
-	 * @return
 	 */
 	public void setXY(Real2 xy, int i) {
 		if (i == 0) {

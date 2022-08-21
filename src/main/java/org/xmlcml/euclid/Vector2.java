@@ -97,7 +97,7 @@ public class Vector2 extends Real2 {
      * projection of this onto vector. does not alter this. result = vector.norm() *
      * (this.norm() dot vector.norm())
      *
-     * @param v vector to project onto
+     * @param v2 vector to project onto
      * @return projected vector
      */
     public Vector2 projectOnto(Vector2 v2) {

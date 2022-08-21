@@ -252,7 +252,7 @@ public class Real2Array implements EuclidConstants ,  Iterable<Real2>  {
      * get element.
      * 
      * @param elem
-     * @return element
+     * @param r2
      */
     public void setElement(int elem, Real2 r2) {
     	xarr.setElementAt(elem, r2.getX());

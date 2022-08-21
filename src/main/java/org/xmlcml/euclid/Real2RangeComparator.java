@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 import org.apache.log4j.Logger;
 
-/** comparator for use with TreeSet<Double> and other tools which normally require equals().
+/** comparator for use with {@code TreeSet<Double>} and other tools which normally require equals().
  * 
  * @author pm286
  *

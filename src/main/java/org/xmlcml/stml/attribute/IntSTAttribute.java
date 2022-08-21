@@ -126,8 +126,6 @@ public class IntSTAttribute extends STMLAttribute {
      * 
      * @param i
      *            the value
-     * @throws STMLException
-     *             wrong type or value fails
      */
     public void checkValue(int i) {
         if (cmlType != null) {

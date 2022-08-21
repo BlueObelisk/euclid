@@ -189,8 +189,6 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	 * 
 	 * @param array
 	 * @param delimiter
-	 * @throws STMLException
-	 *             doubles must not contain delimiter
 	 */
 	public STMLArray(int[] array, String delimiter) {
 		setDelimiter(delimiter);
@@ -251,9 +249,12 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	/**
 	 * creates array of type comptatible with scalar can be used to add
 	 * subsequently scalar contents to array does NOT add scalar contents
-	 * typical use List<STMLScalar> scalars; STMLArray array =
+	 * typical use:
+	 * <pre>
+	 * List&#60;STMLScalar&#62; scalars; STMLArray array =
 	 * STMLArray.createEmptyArray(scalars.get(0)); for (STMLScalar scalar :
 	 * scalars) { array.append(scalar); }
+	 * </pre>
 	 * 
 	 * @param scalar
 	 * @return
@@ -269,7 +270,6 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	
 	/**
 	 * creates a new array formed from a subset of the current array
-	 * @param array
 	 * @param start inclusive start
 	 * @param end inclusive end
 	 * @return new array of correct dataType and dictRef; null if fails
@@ -765,8 +765,6 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	 * 
 	 * @param array
 	 *            the array to test; can have different owner
-	 * @throws STMLException
-	 *             if not of same numeric data type and size
 	 */
 	public void checkNumericConformability(STMLArray array) {
 		String thisDataType = this.getDataType();
@@ -791,8 +789,6 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	 * 
 	 * @param array
 	 *            the array to subtract; can have different owner
-	 * @throws STMLException
-	 *             inappropriate dataTypes, unequal arrays
 	 * @return new array
 	 */
 	public STMLArray subtract(STMLArray array) {
@@ -823,9 +819,6 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	 * 
 	 * @param array
 	 *            the array to add; can have different owner
-	 * @throws STMLException
-	 *             inappropriate dataTypes, unequal arrays
-	 * 
 	 * @return the new array
 	 */
 	public STMLArray plus(STMLArray array) {
@@ -870,8 +863,7 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	/**
 	 * add a double. datatype must have been set to XSD_DOUBLE
 	 * 
-	 * @param d
-	 *            double to add
+	 * @param b
 	 * @throws RuntimeException
 	 *             dataType not XSD_DOUBLE
 	 */
@@ -1053,7 +1045,7 @@ public class STMLArray extends STMLElement implements HasUnits, HasArraySize,
 	/** makes a list of STMLArrays
 	 * 
 	 * @param elements
-	 * @return List<STMLArray>
+	 * @return {@code List<STMLArray>}
 	 */
 	public static List<STMLArray> extractArrays(List<Element> elements) {
 		List<STMLArray> arrayList = new ArrayList<STMLArray>();

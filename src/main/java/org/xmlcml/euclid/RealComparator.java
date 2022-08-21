@@ -17,7 +17,7 @@ package org.xmlcml.euclid;
 
 import java.util.Comparator;
 
-/** comparator for use with TreeSet<Double> and other tools which normally require equals().
+/** comparator for use with {@code TreeSet<Double>} and other tools which normally require equals().
  * epsilon is initially set to zero, so only exact equality matches
  * 
  * @author pm286

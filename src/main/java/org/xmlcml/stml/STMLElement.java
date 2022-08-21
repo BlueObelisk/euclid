@@ -144,7 +144,7 @@ public class STMLElement extends Element implements XMLConstants {
 	
 	/** converts a SVG file to SVGElement
 	 * 
-	 * @param file
+	 * @param is
 	 * @return
 	 */
 	public static STMLElement readAndCreateSTML(InputStream is) {
@@ -294,8 +294,6 @@ public class STMLElement extends Element implements XMLConstants {
      * 
      * @param name
      *            of attribute
-     * @throws STMLException
-     *             standard message
      */
     protected void unknownAttributeName(String name) {
         throw new RuntimeException("Unknown STML attribute " + name + " on "

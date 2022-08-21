@@ -48,12 +48,8 @@ import java.util.NoSuchElementException;
  * this data structure achieves O(sqrt(this.size())) time middle
  * insertion/deletion by maintaining circular lists throughout.
  * <p>
- * 
- * @author Kevin L. Stern
- * 
- * @see ArrayList
- * @see ArrayDeque
- * @techreport{ResizableArraysTR, author = {Andrej Brodnik and Svante Carlsson
+ * <pre>
+ * &#64;techreport{ResizableArraysTR, author = {Andrej Brodnik and Svante Carlsson
  *                                and Erik D. Demaine and J. Ian Munro and
  *                                Robert Sedgewick}, title = {Resizable Arrays
  *                                in Optimal Time and Space}, institution =
@@ -64,10 +60,16 @@ import java.util.NoSuchElementException;
  *                                {http://www.cs.uwaterloo
  *                                .ca/research/tr/1999/09/CS-99-09.pdf}, year =
  *                                {1999}}
- * @misc{Goodrich_tieredvectors:, author = {Michael T. Goodrich and John G.
+ * &#64;misc{Goodrich_tieredvectors:, author = {Michael T. Goodrich and John G.
  *                                Kloss and II}, title = {Tiered Vectors:
  *                                Efficient Dynamic Arrays for Rank-Based
  *                                Sequences}, year = {} }
+ * </pre> 
+ * 
+ * @author Kevin L. Stern
+ * 
+ * @see ArrayList
+ * @see ArrayDeque
  */
 public class ThriftyList<T> extends AbstractList<T> implements List<T>,
 		Deque<T>, Serializable, Cloneable {

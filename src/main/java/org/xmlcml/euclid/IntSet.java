@@ -56,11 +56,6 @@ public class IntSet implements EuclidConstants {
 
     Set<Integer> set;
 
-	/** gets all permutations of integers from 0 to n-1.
-	 * crude
-	 * @param number 
-	 * @return list of all permutations (no special order)
-	 */
 	public static Map<Integer, List<List<Integer>>> integerMap = new HashMap<Integer, List<List<Integer>>>();
 
     /**

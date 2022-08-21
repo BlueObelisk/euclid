@@ -235,8 +235,6 @@ public class Univariate {
 	 * by standard deviation. result (the "z"-values") therefore have mean of
 	 * zero and stdev of 1.0. does not modify this.
 	 * 
-	 * @ arrays too small
-	 * 
 	 * @return the normalized values
 	 */
 	public RealArray getNormalizedValues() {
@@ -256,8 +254,6 @@ public class Univariate {
 	/**
 	 * get deviate values. array transformed by subtrating mean. result
 	 * therefore has mean of zero. does not modify this.
-	 * 
-	 * @ arrays too small
 	 * 
 	 * @return the deviate values
 	 */

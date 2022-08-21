@@ -132,7 +132,6 @@ public abstract class XMLUtil implements XMLConstants {
 	 * uses element.query(xpath, xPathContext);
 	 * @param element
 	 * @param xpath 
-	 * @param xPathContext defines prefix/namespace used in query
 	 * @return value if exactly 1 node (0 or many returns null)
 	 */
 	public static String getSingleValue(Element element, String xpath) {
@@ -231,11 +230,7 @@ public abstract class XMLUtil implements XMLConstants {
 	 * 
 	 * @param el
 	 *            the element
-	 * @param os
-	 *            output stream
-	 * @param indent
-	 *            indentation
-	 * @throws IOException
+	 * @param message
 	 */
 	public static void debug(Element el, String message) {
 		Util.println(">>>>" + message + ">>>>");
@@ -539,8 +534,9 @@ public abstract class XMLUtil implements XMLConstants {
 	}
 
 	/**
-	 * copies atributes of 'from' to 'to'
-	 * @param element
+	 * copies attributes of 'from' to 'to'
+	 * @param from
+	 * @param to
 	 * @throws IllegalArgumentException null arguments
 	 */
 	public static void copyAttributes(Element from, Element to) throws IllegalArgumentException {
@@ -697,8 +693,8 @@ public abstract class XMLUtil implements XMLConstants {
 	 * tests 2 XML objects for equality using recursive descent.
 	 * includes namespace testing
 	 * 
-	 * @param refString xml serialization of first Element
-	 * @param testNode second Element
+	 * @param refNodeXML xml serialization of first Element
+	 * @param testElement second Element
 	 * @param stripWhite if true remove w/s nodes
 	 * @return message of where elements differ (null if identical)
 	 */
@@ -719,8 +715,8 @@ public abstract class XMLUtil implements XMLConstants {
 	 * tests 2 XML objects for equality using recursive descent.
 	 * includes namespace testing
 	 * 
-	 * @param refNode first node
-	 * @param testNode second node
+	 * @param refElement first node
+	 * @param testElement second node
 	 * @param stripWhite if true remove w/s nodes
 	 * @return message of where elements differ (null if identical)
 	 */
@@ -1145,12 +1141,12 @@ public abstract class XMLUtil implements XMLConstants {
 	 * take many seconds or, if offline, can cause failure to parse.
 	 * 
 	 * This is dangerous but so is the DOCTYPE
-	 * 
-<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
-          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+	 * <pre> 
+     * &#60;!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
+     *   'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+     * </pre>
 	 * @param s
 	 * @return
-	 * @throws IOException
 	 */
 	public static String stripDTD(String s) {
 		if (s != null) {
@@ -1171,7 +1167,6 @@ public abstract class XMLUtil implements XMLConstants {
           'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
 	 * @param s
 	 * @return
-	 * @throws IOException
 	 */
 	public static Element stripDTDAndParse(String s) {
 		Element root = null;
@@ -1186,10 +1181,12 @@ public abstract class XMLUtil implements XMLConstants {
 	 * 
 	 * crude - adds /{@literal >} and then deletes any /{@literal >}{@literal (/tag)}
 	 * 
-	 * 		String s = "<a><meta></a>";
-		s = XMLUtil.addMissingEndTags(s, "meta");
-		Assert.assertEquals("<a><meta/></a>", s);
-
+	 * <pre>
+	 * String s = "&#60;a&#62;&#60;meta&#62;&#60;/a&#62;";
+	 * s = XMLUtil.addMissingEndTags(s, "meta");
+	 * Assert.assertEquals("&#60;a&#62;&#60;meta/&#62;&#60;/a&#62;", s);
+	 * </pre>
+     *
 	 * @param s
 	 * @param tag
 	 * @return
@@ -1264,8 +1261,9 @@ public abstract class XMLUtil implements XMLConstants {
 	}
 
 	/**
-	 * copies atributes of 'from' to 'to'
-	 * @param element
+	 * copies attributes of 'from' to 'to'
+	 * @param from
+	 * @param to
 	 */
 	public static void copyAttributesFromTo(Element from, Element to) {
 		int natt = from.getAttributeCount();
