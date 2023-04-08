@@ -21,6 +21,6 @@ mvn versions:set -DnewVersion=2.6-SNAPSHOT
 
 Deploy to Sonatype with the following commands, for snapshots and releases respectively:
 
-```sh1ll
+```shell
 mvn clean deploy
 ```
