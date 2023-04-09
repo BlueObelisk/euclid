@@ -2,6 +2,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.blueobelisk/euclid)
 [![Build Status](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml/badge.svg)](https://github.com/BlueObelisk/euclid/actions/workflows/maven.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5815148.svg)](https://doi.org/10.5281/zenodo.5815148)
+[![codecov](https://codecov.io/gh/BlueObelisk/euclid/branch/main/graph/badge.svg?token=E1NGWVWL04)](https://codecov.io/gh/BlueObelisk/euclid)
 
 A library of numeric, geometric and XML routines
 
