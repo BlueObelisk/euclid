@@ -162,7 +162,7 @@ public class RedBlackTree<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Called by {@link #delete(T)} when the node to be removed is a leaf. In
+	 * Called by {@link #delete} when the node to be removed is a leaf. In
 	 * this case, the node's value is exchanged with its successor as per the
 	 * typical binary tree node removal operation. This method allows a subclass
 	 * to influence value exchange behavior (e.g. if additional node information

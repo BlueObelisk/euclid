@@ -1093,8 +1093,11 @@ public abstract class XMLUtil implements XMLConstants {
 	}
 	
 	/**
-<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
-          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+	 * <code>
+	 * &lt;!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
+          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'&gt;
+     * </code>
+     *
 	 * @param s
 	 * @return
 	 * @throws IOException
@@ -1140,11 +1143,12 @@ public abstract class XMLUtil implements XMLConstants {
 	 * DOCTYPE can cause problems by requiring to load DTD from URL which can
 	 * take many seconds or, if offline, can cause failure to parse.
 	 * 
-	 * This is dangerous but so is the DOCTYPE
+	 * This is dangerous but so is the DOCTYPE:
 	 * <pre> 
      * &#60;!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
-     *   'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+     *   'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'&gt;
      * </pre>
+     *
 	 * @param s
 	 * @return
 	 */
@@ -1161,10 +1165,12 @@ public abstract class XMLUtil implements XMLConstants {
 	 * DOCTYPE can cause problems by requiring to load DTD from URL which can
 	 * take many seconds or, if offline, can cause failure to parse.
 	 * 
-	 * This is dangerous but so is the DOCTYPE
-	 * 
-<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
-          'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+	 * This is dangerous but so is the DOCTYPE:
+	 * <pre> 
+     * &#60;!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'
+     *   'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'&gt;
+     * </pre>
+     *
 	 * @param s
 	 * @return
 	 */

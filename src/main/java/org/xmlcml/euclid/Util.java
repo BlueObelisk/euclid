@@ -774,9 +774,14 @@ public class Util implements EuclidConstants {
 
 	/**
 	 * remove balanced (well-formed) markup from a string. Crude (that is not
-	 * fully XML-compliant);<BR /> Example: "This is &lt;A
+	 * fully XML-compliant);
+	 * 
+	 * Example:
+	 * <code>
+	 * "This is &lt;A
 	 * HREF="foo"&gt;bar&lt;/A&gt; and &lt;/BR&gt; a break" goes to "This is bar
 	 * and a break"
+	 * </code>
 	 * 
 	 * @param s
 	 *            Description of the Parameter
