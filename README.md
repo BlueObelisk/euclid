@@ -17,7 +17,7 @@ It's used a lot in CML tools (JUMBO, JUMBO-converters) and also AMI (for extract
 Instructions to increase the version:
 
 ```shell
-mvn versions:set -DnewVersion=2.7-SNAPSHOT
+mvn versions:set -DnewVersion=2.8-SNAPSHOT
 ```
 
 Deploy to Sonatype with the following commands, for snapshots and releases respectively:
