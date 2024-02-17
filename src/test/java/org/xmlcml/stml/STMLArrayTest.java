@@ -17,22 +17,21 @@ package org.xmlcml.stml;
 import org.junit.Assert;
 import org.junit.Test;
 
-import nu.xom.Attribute;
+import nu.xom.Element;
 
-public class STMLAttributeTest {
+public class STMLArrayTest {
 
 	@Test
 	public void testDefaultConstructor() {
-		STMLAttribute attribute = new STMLAttribute("naam");
-		Assert.assertNotNull(attribute);
-		Assert.assertEquals("naam", attribute.getLocalName());
+		STMLArray array = new STMLArray();
+		Assert.assertNotNull(array);
 	}
 
 	@Test
 	public void testCopy() {
-		STMLAttribute attribute = new STMLAttribute("naam");
-		Attribute copy = attribute.copy();
-		Assert.assertTrue(copy instanceof STMLAttribute);
+		STMLArray array = new STMLArray();
+		Element copy = array.copy();
+		Assert.assertTrue(copy instanceof STMLArray);
 	}
 
 }
