@@ -272,18 +272,18 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>2.22.0</version>
+      <version>2.22.1</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-1.2-api</artifactId>
-      <version>2.22.0</version>
+      <version>2.22.1</version>
     </dependency>
     <dependency> 
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.22.0</version>
+      <version>2.22.1</version>
     </dependency>
 
     <dependency>
@@ -300,7 +300,7 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.12.5</version>
+      <version>2.12.7</version>
     </dependency>
 
     <dependency>
