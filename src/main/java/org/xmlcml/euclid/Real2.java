@@ -543,7 +543,7 @@ public class Real2 implements EuclidConstants {
         for (int j = 0; j < p2Vector.size(); j++) {
             p = p.plus(p2Vector.get(j));
         }
-        double scale = 1.0 / (new Double(p2Vector.size()).doubleValue());
+        double scale = 1.0 / (Double.valueOf(p2Vector.size()).doubleValue());
         p = p.multiplyBy(scale);
         return p;
     }

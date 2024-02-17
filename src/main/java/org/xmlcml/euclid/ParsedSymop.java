@@ -114,7 +114,7 @@ public class ParsedSymop {
 		if (!matched) {
 			throw new RuntimeException("Cannot parse as symmetry operator: "+s);
 		}
-		number = (numberS != null) ? new Double(numberS) : ((fractS != null) ? calculateFract() : null);
+		number = (numberS != null) ? Double.valueOf(numberS) : ((fractS != null) ? calculateFract() : null);
 	}
 
 	public String getXyz() {
@@ -134,7 +134,7 @@ public class ParsedSymop {
 		if (!matcher.matches()) {
 			throw new RuntimeException("Cannot parse as fraction: "+fractS);
 		}
-		return new Double(matcher.group(1))/new Double(matcher.group(2));
+		return Double.valueOf(matcher.group(1))/Double.valueOf(matcher.group(2));
 	}
 
 //	Pattern.compile(SIGNED_XYZ+"("+SIGNED_XYZ+"?)");  // signedxyz signedxyz?

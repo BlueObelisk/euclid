@@ -895,7 +895,7 @@ public class Point3Vector implements EuclidConstants {
         RealArray cc = c.getXYZ();
         tt = tt.subtract(cc);
         return Math.sqrt(tt.innerProduct())
-                / (new Double(size())).doubleValue();
+                / (Double.valueOf(size())).doubleValue();
     }
     /**
      * get point furthest from another. useful for alignments

@@ -2770,7 +2770,7 @@ public class Util implements EuclidConstants {
 	public static boolean isInt(String s) {
 		boolean couldBeInt = true;
 		try {
-			new Integer(s);
+			Integer.valueOf(s);
 		} catch (NumberFormatException e) {
 			couldBeInt = false;
 		}
@@ -2822,7 +2822,7 @@ public class Util implements EuclidConstants {
 	public static boolean isFloat(String s) {
 		boolean couldBeFloat = true;
 		try {
-			new Double(s);
+			Double.valueOf(s);
 		} catch (NumberFormatException e) {
 			couldBeFloat = false;
 		}
@@ -2876,7 +2876,7 @@ public class Util implements EuclidConstants {
 	public static double getDouble(String s) {
 		double d = Double.NaN;
 		try {
-			d = new Double(s).doubleValue();
+			d = Double.valueOf(s).doubleValue();
 		} catch (NumberFormatException nfe) {
 			throw new RuntimeException("Bad double: " + s);
 		}
@@ -3172,7 +3172,7 @@ class StringIntegerComparator implements Comparator<Object> {
 		if (ss.length() == 0) {
 			ss = "0";
 		}
-		return new Integer(ss);
+		return Integer.valueOf(ss);
 	}
 
 	/** reverses lines in file.

@@ -82,7 +82,7 @@ public class DoubleSTAttribute extends STMLAttribute {
 	public DoubleSTAttribute(DoubleSTAttribute att) {
 		super(att);
 		if (att.d != null) {
-			this.d = new Double(att.d.doubleValue());
+			this.d = Double.valueOf(att.d.doubleValue());
 		}
 	}
 
@@ -152,7 +152,7 @@ public class DoubleSTAttribute extends STMLAttribute {
 	 */
 	public void setSTMLValue(double d) {
 		checkValue(d);
-		this.d = new Double(d);
+		this.d = Double.valueOf(d);
 		this.setValue("" + d);
 	}
 

@@ -510,13 +510,13 @@ public class RealRange implements EuclidConstants, Comparable<RealRange>  {
 				if (matcher.matches()) {
 					String minS = matcher.group(1);
 					String maxS = matcher.group(2);
-					min = (ANY.equals(minS)) ? -Double.MAX_VALUE : new Double(minS);
-					max = (ANY.equals(maxS)) ?  Double.MAX_VALUE : new Double(maxS);
+					min = (ANY.equals(minS)) ? -Double.MAX_VALUE : Double.valueOf(minS);
+					max = (ANY.equals(maxS)) ?  Double.MAX_VALUE : Double.valueOf(maxS);
 				} else {
 					matcher = CURLY_PATTERN1.matcher(token);
 					if (matcher.matches()) {
 						String minS = matcher.group(1);
-						min = (ANY.equals(minS)) ? -Double.MAX_VALUE : new Double(minS);
+						min = (ANY.equals(minS)) ? -Double.MAX_VALUE : Double.valueOf(minS);
 						max = min;
 					}
 				}

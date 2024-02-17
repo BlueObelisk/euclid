@@ -276,7 +276,7 @@ public class IntSet implements EuclidConstants {
      * @return tur if contains
      */
     public boolean contains(int value) {
-        return set.contains(new Integer(value));
+        return set.contains(Integer.valueOf(value));
     }
 
     /**
@@ -476,7 +476,7 @@ public class IntSet implements EuclidConstants {
 			if (number.equals(0)) {
 	    		listList.add(new ArrayList<Integer>());
 			} else {
-		    	List<List<Integer>> listListMinus = IntSet.getPermutations0(new Integer(number - 1));
+		    	List<List<Integer>> listListMinus = IntSet.getPermutations0(Integer.valueOf(number - 1));
 		    	for (List<Integer> listMinus : listListMinus) {
 	    			for (Integer ii = 0; ii < number; ii++) {
 	    				List<Integer> copyList = IntSet.copy(listMinus);
