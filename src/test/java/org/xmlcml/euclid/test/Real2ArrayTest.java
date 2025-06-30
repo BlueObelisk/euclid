@@ -17,9 +17,6 @@
 package org.xmlcml.euclid.test;
 
 import static org.xmlcml.euclid.EuclidConstants.EPS;
-import static org.xmlcml.euclid.EuclidConstants.S_PIPE;
-import static org.xmlcml.euclid.EuclidConstants.S_SPACE;
-
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;

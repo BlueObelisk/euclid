@@ -18,8 +18,6 @@ package org.xmlcml.stml.attribute;
 import java.text.ParseException;
 
 import nu.xom.Attribute;
-import nu.xom.Node;
-
 import org.xmlcml.euclid.Util;
 import org.xmlcml.stml.STMLAttribute;
 

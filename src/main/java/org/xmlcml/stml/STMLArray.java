@@ -21,8 +21,6 @@ import java.util.List;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-import nu.xom.Node;
-
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.xmlcml.euclid.EuclidRuntimeException;

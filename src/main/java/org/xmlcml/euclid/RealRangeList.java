@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.xmlcml.euclid.RealRange;
 
 /**
  * a sorted list of ranges.

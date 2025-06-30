@@ -19,7 +19,6 @@ import org.xmlcml.stml.STMLAttribute;
 import org.xmlcml.stml.STMLConstants;
 
 import nu.xom.Attribute;
-import nu.xom.Node;
 
 /**
  * attribute representing a string value.

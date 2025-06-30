@@ -16,7 +16,6 @@
 package org.xmlcml.stml.attribute;
 
 import nu.xom.Attribute;
-import nu.xom.Node;
 
 /**
  * user-modifiable class supporting "id". 

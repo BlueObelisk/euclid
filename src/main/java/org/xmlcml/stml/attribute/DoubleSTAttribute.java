@@ -21,7 +21,6 @@ import org.xmlcml.euclid.Util;
 import org.xmlcml.stml.STMLAttribute;
 
 import nu.xom.Attribute;
-import nu.xom.Node;
 
 /**
  * attribute representing a double value.
