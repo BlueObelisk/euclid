@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: Euclid
-version: 2.19
-date-released: 2026-06-19
+version: 2.20
+date-released: 2026-11-07
 url: "https://github.com/BlueObelisk/euclid"
 preferred-citation:
   type: article
